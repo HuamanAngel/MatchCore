@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
 public class EnemyPlayerController : PlayerBase
 {
@@ -33,11 +35,11 @@ public class EnemyPlayerController : PlayerBase
         User theUser = _dataUserGameObject.userEnemy;
         for (int i = 0; i < theUser.CharInCombat.Count; i++)
         {
-            GameObject goHe = Instantiate(theUser.CharInCombat[i].prefabCharInBattle);
+            GameObject goHe = player1Tiers[i];
+            // goHe.tag = "Player2";
             goHe.AddComponent<EnemyController>();
-            goHe.tag = "Enemies";
-            goHe.transform.position = new Vector3(5.5f - i, 0.53f, -21.682f);
             goHe.GetComponent<EnemyController>().player1Tiers = player1Tiers[i];
+            player1Tiers[i].SetActive(true);
             goHe.GetComponent<EnemyController>().inBattle = true;
             goHe.GetComponent<EnemyController>().objectQuantitySpheresRed = objectQuantitySpheresRed;
             goHe.GetComponent<EnemyController>().objectQuantitySpheresBlue = objectQuantitySpheresBlue;
@@ -47,14 +49,36 @@ public class EnemyPlayerController : PlayerBase
             goHe.GetComponent<EnemyController>().textureIcon = theUser.CharInCombat[i].iconChar;
             goHe.GetComponent<EnemyController>().costForMovement = theUser.CharInCombat[i].blue;
             // goHe.GetComponent<EnemyController>().moveType = theUser.CharInCombat[i].movementType;
-
-            for (int j = 0; j < theUser.CharInCombat[i].theSkills.Count; j++)
+            goHe.GetComponent<EnemyController>().allSKill = new List<Skill>();
+            GameObject toIcon = UtilitiesClass.FindChildByName(player1Tiers[i], "PanelSkills");
+            List<GameObject> skillsCanvas = UtilitiesClass.FindAllChildWithTag(toIcon, "SkillCanvas");
+            int quantity = 0;
+            if(theUser.CharInCombat[i].theSkills.Count > skillsCanvas.Count)
             {
+                quantity = skillsCanvas.Count;
+            }else{
+                quantity = theUser.CharInCombat[i].theSkills.Count;
+            }
+
+            for (int j = 0; j < quantity; j++)
+            {
+
+                GameObject objSkill = UtilitiesClass.FindChildByName(skillsCanvas[j], "ImageSkill");
+                GameObject objInformation = UtilitiesClass.FindChildByName(skillsCanvas[j], "Information");
+                GameObject objYellow = UtilitiesClass.FindChildByName(objInformation, "yellow");
+                GameObject objRed = UtilitiesClass.FindChildByName(objInformation, "red");
+                GameObject objBlue = UtilitiesClass.FindChildByName(objInformation, "blue");
+
+                objSkill.GetComponent<RawImage>().texture = theUser.CharInCombat[i].theSkills[j].iconSkill;
+                objYellow.GetComponent<TMP_Text>().text = "x" + theUser.CharInCombat[i].theSkills[j].yellow;
+                objRed.GetComponent<TMP_Text>().text = "x" + theUser.CharInCombat[i].theSkills[j].red;
+                objBlue.GetComponent<TMP_Text>().text = "x" + theUser.CharInCombat[i].theSkills[j].blue;
+
                 goHe.GetComponent<EnemyController>().allSKill.Add(theUser.CharInCombat[i].theSkills[j]);
             }
             _allHeroInPlay.Add(goHe);
-            goHe.AddComponent<EnemyInteligence>();
-            goHe.AddComponent<EnemyInteligence>().NumberOrden = i;
+            // goHe.AddComponent<EnemyInteligence>();
+            // goHe.AddComponent<EnemyInteligence>().NumberOrden = i;
         }
     }
     public void ChangeControlToOtherEnemy()

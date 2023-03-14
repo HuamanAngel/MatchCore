@@ -24,12 +24,6 @@ public class LogicGame : MonoBehaviour
     public GameObject objectToShowText3Panels;
     private GameObject infoPanel;
     public int Turn { get => turn; }
-    [SerializeField] private Tilemap floorMap = null;
-    [SerializeField] private Tilemap bonusMap = null;
-    public GameObject objectSphereRed;
-    public GameObject objectSphereBlue;
-    public GameObject objectSphereYellow;
-    private List<GameObject> _floorGameObject;
     public GameObject objectTextFloating;
     public GameObject objBoxSkillFloating;
     public GameObject objBoxSkillEmptyFloating;
@@ -73,9 +67,6 @@ public class LogicGame : MonoBehaviour
     public void ChangeTextTurn(int turnValue)
     {
         objectTurn.GetComponent<TMP_Text>().text = "Turno " + turnValue;
-        float posX = iconObjectTurn.transform.position.x;
-        iconObjectTurn.transform.position = new Vector3(-175, 0, 0);
-        // Debug.Log(iconObjectTurn.transform.position.x);
     }
 
     public void CheckTurnPlayer(int turnPlayer)
@@ -83,13 +74,11 @@ public class LogicGame : MonoBehaviour
         GameObject auxPrefabNextTurn = Instantiate(toNextTurnPrefab, canvas.transform);
         List<GameObject> spheresEmpties = UtilitiesClass.FindAllChildWithTag(auxPrefabNextTurn, "EmptySphere");
         auxPrefabNextTurn.transform.position = new Vector3(Screen.width * 0.5f, Screen.height * 0.5f, 0);
-        CreateRandomSpheresInMap(2);
         if (turnPlayer == 1)
         {
             GiveSpheres(1, spheresEmpties, 3);
             UserPlayerController.GetInstance().SetQuantitySpheres();
             // Create text in the center
-            // auxPrefabNextTurn.transform.parent = canvas.transform;
             Debug.Log("Turn to player 1");
             // Disable all for the player 2
         }
@@ -104,9 +93,7 @@ public class LogicGame : MonoBehaviour
 
     void Start()
     {
-        // _thePlayer = UserPlayerController.GetInstance();
-        _floorGameObject = UtilitiesClass.FindAllChildByLayer(floorMap.gameObject, "Floor");
-                    _thePlayer = UserPlayerController.GetInstance();
+        _thePlayer = UserPlayerController.GetInstance();
 
     }
 
@@ -119,69 +106,16 @@ public class LogicGame : MonoBehaviour
 
     public void PressOption1P1()
     {
-
-        // if (whatTurn == 1)
-        // {
-        //     if (HeroController.GetInstance().CheckIfSuccessAttack())
-        //     {
-        //         HeroController.GetInstance().Attack();
-        //         EnemyController.GetInstance().ReceivedDamage(HeroController.GetInstance().CalculateDmg());
-        //     }
-        //     else
-        //     {
-        //         Debug.Log("No se pudo ejecutar el ataque");
-        //     }
-        // }
     }
 
     public void PressOption1P1Interrogation(Transform trans)
     {
-        // Skill auxFirstSkill = HeroController.GetInstance().FirstSkill;
-        // if (infoPanel != null)
-        // {
-        //     Destroy(infoPanel);
-        // }
-        // if (auxFirstSkill.skillSpecial == "None")
-        // {
-        //     infoPanel = Instantiate(objectToShowText3Panels, canvas.transform);
-        // }
-        // else
-        // {
-        //     infoPanel = Instantiate(objectToShowText4Panels, canvas.transform);
-        //     GameObject special = UtilitiesClass.FindChildByName(infoPanel, "Special");
-        //     special.GetComponent<TMP_Text>().text = auxFirstSkill.skillSpecial;
-        // }
-        // var positionM = infoPanel.GetComponent<RectTransform>().rect;
-        // // Debug.Log("vaca" + positionM);
-        // infoPanel.transform.position = new Vector3(trans.position.x + 30, trans.position.y - trans.position.y / 6 - 6, trans.position.z);
 
-        // GameObject name = UtilitiesClass.FindChildByName(infoPanel, "Name");
-        // GameObject info = UtilitiesClass.FindChildByName(infoPanel, "Info");
-        // GameObject requiredBlue = UtilitiesClass.FindChildByName(infoPanel, "TextBlue");
-        // GameObject requiredRed = UtilitiesClass.FindChildByName(infoPanel, "TextRed");
-        // GameObject requiredYellow = UtilitiesClass.FindChildByName(infoPanel, "TextYellow");
-
-        // name.GetComponent<TMP_Text>().text = auxFirstSkill.name;
-        // info.GetComponent<TMP_Text>().text = auxFirstSkill.type + "\n" + HeroController.GetInstance().damageMax + " - " + HeroController.GetInstance().damageMin + "\n" + auxFirstSkill.quality;
-        // requiredBlue.GetComponent<TMP_Text>().text = "x" + auxFirstSkill.blue;
-        // requiredRed.GetComponent<TMP_Text>().text = "x" + auxFirstSkill.red;
-        // requiredYellow.GetComponent<TMP_Text>().text = "x" + auxFirstSkill.yellow;
     }
 
     public void PressOption1P2()
     {
-        // if (whatTurn == 2)
-        // {
-        //     if (EnemyController.GetInstance().CheckIfSuccessAttack())
-        //     {
-        //         EnemyController.GetInstance().Attack();
-        //         HeroController.GetInstance().ReceivedDamage(EnemyController.GetInstance().CalculateDmg());
-        //     }
-        //     else
-        //     {
-        //         Debug.Log("No se pudo ejecutar el ataque");
-        //     }
-        // }
+
     }
     public void OnExitFromInterrogation()
     {
@@ -189,36 +123,6 @@ public class LogicGame : MonoBehaviour
     }
     public void PressOption1P2Interrogation(Transform trans)
     {
-        // Skill auxFirstSkill = EnemyController.GetInstance().FirstSkill;
-        // // GameObject infoPanel;
-        // Debug.Log("Pressed" + trans.position);
-        // if (infoPanel != null)
-        // {
-        //     Destroy(infoPanel);
-        // }
-        // if (auxFirstSkill.skillSpecial == "None")
-        // {
-        //     infoPanel = Instantiate(objectToShowText3Panels, canvas.transform);
-        // }
-        // else
-        // {
-        //     infoPanel = Instantiate(objectToShowText4Panels, canvas.transform);
-        //     GameObject special = UtilitiesClass.FindChildByName(infoPanel, "Special");
-        //     special.GetComponent<TMP_Text>().text = auxFirstSkill.skillSpecial;
-        // }
-        // // infoPanel.transform.position = trans.position;
-        // infoPanel.transform.position = new Vector3(trans.position.x - 30, trans.position.y - trans.position.y / 6 - 6, trans.position.z);
-        // GameObject name = UtilitiesClass.FindChildByName(infoPanel, "Name");
-        // GameObject info = UtilitiesClass.FindChildByName(infoPanel, "Info");
-        // GameObject requiredBlue = UtilitiesClass.FindChildByName(infoPanel, "TextBlue");
-        // GameObject requiredRed = UtilitiesClass.FindChildByName(infoPanel, "TextRed");
-        // GameObject requiredYellow = UtilitiesClass.FindChildByName(infoPanel, "TextYellow");
-
-        // name.GetComponent<TMP_Text>().text = auxFirstSkill.name;
-        // info.GetComponent<TMP_Text>().text = auxFirstSkill.type + "\n" + EnemyController.GetInstance().damageMax + " - " + EnemyController.GetInstance().damageMin + "\n" + auxFirstSkill.quality;
-        // requiredBlue.GetComponent<TMP_Text>().text = "x" + auxFirstSkill.blue;
-        // requiredRed.GetComponent<TMP_Text>().text = "x" + auxFirstSkill.red;
-        // requiredYellow.GetComponent<TMP_Text>().text = "x" + auxFirstSkill.yellow;
 
     }
 
@@ -292,45 +196,6 @@ public class LogicGame : MonoBehaviour
         }
     }
 
-
-    public void CreateRandomSpheresInMap(int quantityForTurn)
-    {
-        RandomHelper random = new RandomHelper();
-        RaycastHit objectHit;
-
-        for (int i = 0; i < quantityForTurn; i++)
-        {
-            int randomVal = random.RandomInt(0, _floorGameObject.Count);
-            int randomVal2 = random.RandomInt(0, 3);
-            // Debug.DrawRay(_floorGameObject[randomVal].transform.position + new Vector3(0, 2, 0), Vector3.down * 2, Color.green, 30);
-            GameObject sphereObj;
-            if (Physics.Raycast(_floorGameObject[randomVal].transform.position + new Vector3(0, 2, 0), Vector3.down * 2, out objectHit))
-            {
-                if (objectHit.collider.transform.gameObject.layer != LayerMask.NameToLayer("Items") && objectHit.collider.transform.gameObject.layer != LayerMask.NameToLayer("CellHero"))
-                {
-                    switch (randomVal2)
-                    {
-                        case 0:
-                            sphereObj = objectSphereBlue;
-                            break;
-                        case 1:
-                            sphereObj = objectSphereRed;
-                            break;
-                        case 2:
-                            sphereObj = objectSphereYellow;
-                            break;
-                        default:
-                            sphereObj = objectSphereRed;
-                            Debug.Log("error Por defecto aprecera rojo");
-                            break;
-                    }
-                    GameObject go = Instantiate(sphereObj, new Vector3(_floorGameObject[randomVal].transform.position.x, bonusMap.transform.position.y, _floorGameObject[randomVal].transform.position.z), Quaternion.identity);
-                    go.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
-                    go.transform.SetParent(bonusMap.transform);
-                }
-            }
-        }
-    }
     public void StartCoroutineUtil(Vector3 positionToFloating, string text, Color32 startColorA, Color32 endColorA)
     {
         StartCoroutine(FloatingText(positionToFloating, text, startColorA, endColorA));

@@ -21,8 +21,8 @@ public abstract class Character : MonoBehaviour
     public int BlueSphereG { get => blueSphere; set => blueSphere = value; }
     public Skill SkillSelectedCurrent { get => skillSelectedCurrent; set => skillSelectedCurrent = value; }
     public Skill SkillSelectedHover { get => skillSelectedHover; set => skillSelectedHover = value; }
-    // public AttackGrid.TypeOfAttack moveType = AttackGrid.TypeOfAttack.GRID_CROSS;
-    // public AttackGrid.TypeOfAttack attackType = AttackGrid.TypeOfAttack.GRID_CROSS;
+    public AttackGrid.TypeOfAttack moveType = AttackGrid.TypeOfAttack.GRID_CROSS;
+    public AttackGrid.TypeOfAttack attackType = AttackGrid.TypeOfAttack.GRID_CROSS;
     protected Dictionary<string, int> _dataGrid = new Dictionary<string, int>();
     protected Animator _animator;
     public Skill FirstSkill { get => firstSkill; }

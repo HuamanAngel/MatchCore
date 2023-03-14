@@ -27,7 +27,6 @@ public class EnemyController : Character
     private void Awake()
     {
         _animator = GetComponent<Animator>();
-        allSKill = new List<Skill>();
         _dataGrid.Add("SelectPlayer", 0);
         _dataGrid.Add("SelectAttack", 0);
         _dataGrid.Add("SelectMovement", 0);
@@ -51,7 +50,7 @@ public class EnemyController : Character
             player1Tiers.SetActive(true);
             objLife = UtilitiesClass.FindChildWithTag(player1Tiers, "Life");
             objArmor = UtilitiesClass.FindChildWithTag(player1Tiers, "Armor");
-            objIcons = UtilitiesClass.FindChildByName(player1Tiers, "Character");
+            objIcons = UtilitiesClass.FindChildWithTag(player1Tiers, "IconCharacter");
 
             objLife.GetComponent<TMP_Text>().text = "" + life;
             objArmor.GetComponent<TMP_Text>().text = "" + defense;

@@ -34,7 +34,7 @@ public class HeroController : Character
     private void Awake()
     {
         _animator = GetComponent<Animator>();
-        allSKill = new List<Skill>();
+        // allSKill = new List<Skill>();
 
         if (inBattle)
         {
@@ -48,15 +48,6 @@ public class HeroController : Character
             _dataGrid.Add("SecondSkillSelected", 0);
             _dataGrid.Add("ThirdSkillSelected", 0);
             _dataGrid.Add("FourSkillSelected", 0);
-
-            GameObject[] option1 = GameObject.FindGameObjectsWithTag("LOption1");
-            foreach (GameObject obj in option1)
-            {
-                Lopt1 = obj;
-                break;
-            }
-
-
         }
     }
     void Start()
@@ -70,7 +61,7 @@ public class HeroController : Character
             player1Tiers.SetActive(true);
             objLife = UtilitiesClass.FindChildWithTag(player1Tiers, "Life");
             objArmor = UtilitiesClass.FindChildWithTag(player1Tiers, "Armor");
-            objIcons = UtilitiesClass.FindChildByName(player1Tiers, "Character");
+            objIcons = UtilitiesClass.FindChildWithTag(player1Tiers, "IconCharacter");
 
             objLife.GetComponent<TMP_Text>().text = "" + life;
             objArmor.GetComponent<TMP_Text>().text = "" + defense;
@@ -88,54 +79,29 @@ public class HeroController : Character
     // Update is called once per frame
     void Update()
     {
-        if (!inBattle)
-        {
-            float horizontal = Input.GetAxisRaw("Horizontal");
-            float vertical = Input.GetAxisRaw("Vertical");
-            Vector3 direccion = new Vector3(horizontal, 0f, vertical).normalized; //Normalized es para que al moverse en diagonal no vaya más rápido
-                                                                                  // _animator.SetFloat("isRuning", (Mathf.Abs(vertical) + Mathf.Abs(horizontal)));
+        // if (!inBattle)
+        // {
+        //     float horizontal = Input.GetAxisRaw("Horizontal");
+        //     float vertical = Input.GetAxisRaw("Vertical");
+        //     Vector3 direccion = new Vector3(horizontal, 0f, vertical).normalized; //Normalized es para que al moverse en diagonal no vaya más rápido
+        //                                                                           // _animator.SetFloat("isRuning", (Mathf.Abs(vertical) + Mathf.Abs(horizontal)));
 
-            if (direccion.magnitude >= 0.1f)
-            {
-                float anguloARotar = Mathf.Atan2(direccion.x, direccion.z) * Mathf.Rad2Deg;
-                float angulo = Mathf.SmoothDampAngle(transform.eulerAngles.y, anguloARotar, ref velocidadRotacionSuave, rotacionSuave);
-                transform.rotation = Quaternion.Euler(0f, angulo, 0f);
-                Vector3 direccionDelMovimiento;
-                Vector3 positionCamera = Camera.main.transform.forward;
-                if (Input.GetKey(KeyCode.W))
-                {
-                    direccionDelMovimiento = Quaternion.Euler(0f, anguloARotar, 0f) * Vector3.forward;
-                    transform.Translate(new Vector3(positionCamera.x, 0, positionCamera.z) * Time.deltaTime * speedTheMovement);
-                    // Debug.Log(Camera.main.transform.forward);
-                }
-                // if (Input.GetKey(KeyCode.S))
-                // {
-                //     direccionDelMovimiento = Quaternion.Euler(0f, anguloARotar, 0f) * Vector3.back;
-                //     transform.Translate(direccionDelMovimiento * Time.deltaTime * 5);
-                // }
-                // if (Input.GetKey(KeyCode.A))
-                // {
-                //     direccionDelMovimiento = Quaternion.Euler(0f, anguloARotar, 0f) * Vector3.right;
-                //     transform.Translate(direccionDelMovimiento * Time.deltaTime * 5);
-                // }
-                // if (Input.GetKey(KeyCode.D))
-                // {
-                //     direccionDelMovimiento = Quaternion.Euler(0f, anguloARotar, 0f) * Vector3.left;
-                //     transform.Translate(Camera.main.transform.right * Time.deltaTime * 5);
-                // }
-            }
-        }
+        //     if (direccion.magnitude >= 0.1f)
+        //     {
+        //         float anguloARotar = Mathf.Atan2(direccion.x, direccion.z) * Mathf.Rad2Deg;
+        //         float angulo = Mathf.SmoothDampAngle(transform.eulerAngles.y, anguloARotar, ref velocidadRotacionSuave, rotacionSuave);
+        //         transform.rotation = Quaternion.Euler(0f, angulo, 0f);
+        //         Vector3 direccionDelMovimiento;
+        //         Vector3 positionCamera = Camera.main.transform.forward;
+        //         if (Input.GetKey(KeyCode.W))
+        //         {
+        //             direccionDelMovimiento = Quaternion.Euler(0f, anguloARotar, 0f) * Vector3.forward;
+        //             transform.Translate(new Vector3(positionCamera.x, 0, positionCamera.z) * Time.deltaTime * speedTheMovement);
+        //         }
+        //     }
+        // }
 
     }
-    public void CurrentClickedGameObject(GameObject gameObject)
-    {
-        Debug.Log(gameObject.tag);
-        if (gameObject.tag == "LOption1")
-        {
-            Debug.Log("Click in option 1");
-        }
-    }
-
     public bool CheckIfSuccessAttack()
     {
         if (_thePlayer.RedSphereG >= firstSkill.red && _thePlayer.YellowSphereG >= firstSkill.yellow && _thePlayer.BlueSphereG >= firstSkill.blue)
