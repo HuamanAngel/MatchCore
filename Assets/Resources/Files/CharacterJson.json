@@ -1,0 +1,59 @@
+{
+    "data": [
+        {
+            "id": 1,
+            "name": "Golem",
+            "yellow": 0,
+            "red": 0,
+            "blue": 1,
+            "quality": "Muy Comun",
+            "movementTypeGridString": "GRID_CROSS",
+            "skillId1": 3,
+            "skillId2": 0,
+            "skillId3": 0,
+            "skillId4": 0,
+            "lifeBase" : 120,
+            "armorBase" : 4,
+            "pathImage" : "Images/CharacterIcons/i_golem",
+            "pathPrefab" : "Prefab/Character/Hold/Golem_1",
+            "pathPrefabInBattle" : "Prefab/Character/InBattle/Golem_1"
+        },
+        {
+            "id": 2,
+            "name": "Terra",
+            "yellow": 0,
+            "red": 0,
+            "blue": 1,
+            "quality": "Muy Comun",
+            "movementTypeGridString": "GRID_CROSS_L",
+            "skillId1": 3,
+            "skillId2": 2,
+            "skillId3": 0,
+            "skillId4": 0,
+            "lifeBase" : 80,
+            "armorBase" : 2,
+            "pathImage" : "Images/CharacterIcons/i_golem",
+            "pathPrefab" : "Prefab/Character/Hold/Golem_1",
+            "pathPrefabInBattle" : "Prefab/Character/InBattle/Golem_1"
+        },
+        {
+            "id": 3,
+            "name": "Golem de Fuego",
+            "yellow": 0,
+            "red": 0,
+            "blue": 1,
+            "quality": "Muy Comun",
+            "movementTypeGridString": "GRID_CROSS_L",
+            "skillId1": 4,
+            "skillId2": 3,
+            "skillId3": 5,
+            "skillId4": 0,
+            "lifeBase" : 80,
+            "armorBase" : 2,
+            "pathImage" : "Images/CharacterIcons/i_golem",
+            "pathPrefab" : "Prefab/Character/Hold/Golem_1",
+            "pathPrefabInBattle" : "Prefab/Character/InBattle/GolemFireV2A"
+        }
+
+    ]
+}
