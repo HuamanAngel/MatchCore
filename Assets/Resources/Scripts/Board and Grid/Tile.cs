@@ -1,26 +1,4 @@
-﻿/*
- * Copyright (c) 2017 Razeware LLC
- * 
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- * 
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- */
-
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -32,14 +10,23 @@ public class Tile : MonoBehaviour
     public int Identity { get => identity; set => identity = value; }
     private SpriteRenderer render;
     private bool isSelected = false;
-
+    private LogicGame _logicGame;
     private Vector2[] adjacentDirections = new Vector2[] { Vector2.up, Vector2.down, Vector2.left, Vector2.right };
-
+    private int quantityMatch = 0;
+    private Spheres.TypeOfSpheres myTypeSphere;
+    public Spheres.TypeOfSpheres MyTypeSphere { get => myTypeSphere; set => myTypeSphere = value; }
+    private Spheres.TypeOfSpheres prevTypeSphere;
     void Awake()
     {
         render = GetComponent<SpriteRenderer>();
     }
 
+
+    private void Start()
+    {
+        GameObject[] go = GameObject.FindGameObjectsWithTag("LogicGame");
+        _logicGame = go[0].GetComponent<LogicGame>();
+    }
     private void Select()
     {
         isSelected = true;
@@ -57,7 +44,7 @@ public class Tile : MonoBehaviour
 
     void OnMouseDown()
     {
-        Debug.Log("La identidad es : " + identity);
+        // Debug.Log("La identidad es : " + identity);
         // Debug.Log("la identidad anterior es : " + previousSelected.gameObject.GetComponent<Tile>().Identity);
         // Not Selectable conditions
         if (render.sprite == null || BoardManager.instance.IsShifting)
@@ -72,19 +59,21 @@ public class Tile : MonoBehaviour
         else
         {
             if (previousSelected == null)
-            { // Is it the first tile selected?
+            {
+                // Is it the first tile selected?
                 Select();
             }
             else
             {
-                Debug.Log(GetAllAdjacentTiles().Contains(previousSelected.gameObject));
-                // Debug.Log("Content previes" + previousSelected.gameObject);
                 if (GetAllAdjacentTiles().Contains(previousSelected.gameObject))
-                { // Is it an adjacent tile?
+                {
+                    // Is it an adjacent tile?
                     SwapSprite(previousSelected.render);
-                    previousSelected.ClearAllMatches();
+                    prevTypeSphere = previousSelected.MyTypeSphere;
+                    previousSelected.ClearAllMatches(MyTypeSphere);
                     previousSelected.Deselect();
-                    ClearAllMatches();
+                    ClearAllMatches(prevTypeSphere);
+                    // prevTypeSphere = null;
                 }
                 else
                 {
@@ -105,10 +94,31 @@ public class Tile : MonoBehaviour
         Sprite tempSprite = render2.sprite;
         render2.sprite = render.sprite;
         render.sprite = tempSprite;
+        myTypeSphere = InsertTypeSphereByNameSprite(render2.sprite.name);
+        previousSelected.MyTypeSphere = InsertTypeSphereByNameSprite(render.sprite.name);
         SFXManager.instance.PlaySFX(Clip.Swap);
         GUIManager.instance.MoveCounter--; // Add this line here
     }
+    public Spheres.TypeOfSpheres InsertTypeSphereByNameSprite(string nameSprite)
+    {
+        if (nameSprite == "ability_with_dimension")
+        {
+            return Spheres.TypeOfSpheres.SPHERE_YELLOW;
+        }
+        else if (nameSprite == "attack_with_dimension")
+        {
+            return Spheres.TypeOfSpheres.SPHERE_RED;
+        }
+        else if (nameSprite == "movement_with_dimension")
+        {
+            return Spheres.TypeOfSpheres.SPHERE_BLUE;
+        }
+        else
+        {
+            return Spheres.TypeOfSpheres.SPHERE_RED;
+        }
 
+    }
     private GameObject GetAdjacent(Vector2 castDir)
     {
         RaycastHit hit;
@@ -162,9 +172,10 @@ public class Tile : MonoBehaviour
     {
         List<GameObject> matchingTiles = new List<GameObject>();
         for (int i = 0; i < paths.Length; i++) { matchingTiles.AddRange(FindMatch(paths[i])); }
-        // Debug.Log("Quantity of match : " + matchingTiles.Count );
         if (matchingTiles.Count >= 2)
         {
+            // Debug.Log("Quantity of match : " + matchingTiles.Count );
+            quantityMatch += matchingTiles.Count;
             for (int i = 0; i < matchingTiles.Count; i++)
             {
                 matchingTiles[i].GetComponent<SpriteRenderer>().sprite = null;
@@ -174,21 +185,28 @@ public class Tile : MonoBehaviour
     }
 
     private bool matchFound = false;
-    public void ClearAllMatches()
+    public void ClearAllMatches(Spheres.TypeOfSpheres theSphere = Spheres.TypeOfSpheres.SPHERE_RED)
     {
         if (render.sprite == null)
             return;
 
         ClearMatch(new Vector2[2] { Vector2.left, Vector2.right });
         ClearMatch(new Vector2[2] { Vector2.up, Vector2.down });
+        // Debug.Log("name actual : " + MyTypeSphere);
+        // Debug.Log("name previes : " + prevTypeSphere);
+        if (quantityMatch != 0)
+        {
+            _logicGame.GiveSpheres(quantityMatch, theSphere);
+        }
+        // Debug.Log("Quantity total match : " + quantityMatch);
+        quantityMatch = 0;
         if (matchFound)
         {
             render.sprite = null;
             matchFound = false;
-            // StopCoroutine(BoardManager.instance.FindNullTiles()); //Add this line
-            // StartCoroutine(BoardManager.instance.FindNullTiles()); //Add this line
+            // StopCoroutine(BoardManager.instance.FindNullTiles());
+            // StartCoroutine(BoardManager.instance.FindNullTiles());
             SFXManager.instance.PlaySFX(Clip.Clear);
         }
     }
-
 }

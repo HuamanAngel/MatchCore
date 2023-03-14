@@ -44,7 +44,7 @@ public class LogicGame : MonoBehaviour
 
     public void NextTurn()
     {
-        animatorHourGlass.SetBool("IsPressed",true);
+        animatorHourGlass.SetBool("IsPressed", true);
         turn = turn + 1;
         if (whatTurn == 1)
         {
@@ -60,8 +60,9 @@ public class LogicGame : MonoBehaviour
     }
     public IEnumerator animationHourSand()
     {
-        yield return new WaitForSeconds(0.517f);
-        animatorHourGlass.SetBool("IsPressed",false);
+        yield return new WaitForSeconds(1.0f);
+        animatorHourGlass.SetBool("IsPressed", false);
+        toNextTurnPrefab.SetActive(false);
 
     }
     public void ChangeTextTurn(int turnValue)
@@ -71,21 +72,22 @@ public class LogicGame : MonoBehaviour
 
     public void CheckTurnPlayer(int turnPlayer)
     {
-        GameObject auxPrefabNextTurn = Instantiate(toNextTurnPrefab, canvas.transform);
-        List<GameObject> spheresEmpties = UtilitiesClass.FindAllChildWithTag(auxPrefabNextTurn, "EmptySphere");
-        auxPrefabNextTurn.transform.position = new Vector3(Screen.width * 0.5f, Screen.height * 0.5f, 0);
+        // GameObject auxPrefabNextTurn = Instantiate(toNextTurnPrefab, canvas.transform);
+        toNextTurnPrefab.SetActive(true);
+        // List<GameObject> spheresEmpties = UtilitiesClass.FindAllChildWithTag(auxPrefabNextTurn, "EmptySphere");
+        // auxPrefabNextTurn.transform.position = new Vector3(Screen.width * 0.5f, Screen.height * 0.5f, 0);
         if (turnPlayer == 1)
         {
-            GiveSpheres(1, spheresEmpties, 3);
-            UserPlayerController.GetInstance().SetQuantitySpheres();
+            // GiveSpheres(1, spheresEmpties, 3);
+            // UserPlayerController.GetInstance().SetQuantitySpheres();
             // Create text in the center
             Debug.Log("Turn to player 1");
             // Disable all for the player 2
         }
         else
         {
-            GiveSpheres(2, spheresEmpties, 3);
-            EnemyPlayerController.GetInstance().SetQuantitySpheres();
+            // GiveSpheres(2, spheresEmpties, 3);
+            // EnemyPlayerController.GetInstance().SetQuantitySpheres();
             Debug.Log("Turn to player 2");
             // Disable all for the player 1
         }
@@ -139,62 +141,92 @@ public class LogicGame : MonoBehaviour
         Debug.Log("pressed in option 1 from option in battle ");
     }
 
-
-    public void GiveSpheres(int playerNumber, List<GameObject> spheresEmpties, int quantitySpheresForTurn = 3)
+    public void GiveSpheres(int quantityMatch, Spheres.TypeOfSpheres theSphereType)
     {
-        RandomHelper random = new RandomHelper();
-        int typeSpheres;
-        for (int i = 0; i < quantitySpheresForTurn; i++)
+        PlayerBase theUserPlayer;
+        int quantityAdd = 0;
+        if (whatTurn == 1)
         {
-            typeSpheres = 0;
-            typeSpheres = random.RandomInt(1, quantitySpheresForTurn + 1);
-            switch (typeSpheres)
-            {
-                case 1:
-                    spheresEmpties[i].GetComponent<RawImage>().texture = sphereBlue;
-                    if (playerNumber == 1)
-                    {
-                        UserPlayerController.GetInstance().BlueSphereG = UserPlayerController.GetInstance().BlueSphereG + 1;
-                    }
-                    else
-                    {
-                        EnemyPlayerController.GetInstance().BlueSphereG = EnemyPlayerController.GetInstance().BlueSphereG + 1;
-                    }
-                    // Debug.Log("Give sphere blue");
-                    break;
-                case 2:
-                    spheresEmpties[i].GetComponent<RawImage>().texture = sphereYellow;
-                    if (playerNumber == 1)
-                    {
-                        UserPlayerController.GetInstance().YellowSphereG = UserPlayerController.GetInstance().YellowSphereG + 1;
-                    }
-                    else
-                    {
-                        EnemyPlayerController.GetInstance().YellowSphereG = EnemyPlayerController.GetInstance().YellowSphereG + 1;
-                    }
-
-                    // Debug.Log("Give sphere yellow");
-                    break;
-                case 3:
-                    spheresEmpties[i].GetComponent<RawImage>().texture = sphereRed;
-                    if (playerNumber == 1)
-                    {
-                        UserPlayerController.GetInstance().RedSphereG = UserPlayerController.GetInstance().RedSphereG + 1;
-                    }
-                    else
-                    {
-                        EnemyPlayerController.GetInstance().RedSphereG = EnemyPlayerController.GetInstance().RedSphereG + 1;
-                    }
-
-                    // Debug.Log("Give sphere red");
-                    break;
-                case 4:
-                    // Debug.Log("Nothing nothing nothing");
-                    break;
-
-            }
+            theUserPlayer = UserPlayerController.GetInstance();
         }
+        else
+        {
+            theUserPlayer = EnemyPlayerController.GetInstance();
+        }
+        quantityAdd = quantityMatch - 1;
+        Debug.Log("a agregar : " + quantityMatch + " " +theSphereType);
+        switch (theSphereType)
+        {
+            case Spheres.TypeOfSpheres.SPHERE_RED:
+                theUserPlayer.RedSphereG = theUserPlayer.RedSphereG + quantityAdd;
+                break;
+            case Spheres.TypeOfSpheres.SPHERE_BLUE:
+                theUserPlayer.BlueSphereG = theUserPlayer.BlueSphereG + quantityAdd;
+                break;
+            case Spheres.TypeOfSpheres.SPHERE_YELLOW:
+                theUserPlayer.YellowSphereG = theUserPlayer.YellowSphereG + quantityAdd;
+                break;
+            default:
+                theUserPlayer.RedSphereG = theUserPlayer.RedSphereG + quantityAdd;
+                break;
+        }
+        theUserPlayer.SetQuantitySpheres();
     }
+    // public void GiveSpheresRandom(int playerNumber, List<GameObject> spheresEmpties, int quantitySpheresForTurn = 3)
+    // {
+    //     RandomHelper random = new RandomHelper();
+    //     int typeSpheres;
+    //     for (int i = 0; i < quantitySpheresForTurn; i++)
+    //     {
+    //         typeSpheres = 0;
+    //         typeSpheres = random.RandomInt(1, quantitySpheresForTurn + 1);
+    //         switch (typeSpheres)
+    //         {
+    //             case 1:
+    //                 spheresEmpties[i].GetComponent<RawImage>().texture = sphereBlue;
+    //                 if (playerNumber == 1)
+    //                 {
+    //                     UserPlayerController.GetInstance().BlueSphereG = UserPlayerController.GetInstance().BlueSphereG + 1;
+    //                 }
+    //                 else
+    //                 {
+    //                     EnemyPlayerController.GetInstance().BlueSphereG = EnemyPlayerController.GetInstance().BlueSphereG + 1;
+    //                 }
+    //                 // Debug.Log("Give sphere blue");
+    //                 break;
+    //             case 2:
+    //                 spheresEmpties[i].GetComponent<RawImage>().texture = sphereYellow;
+    //                 if (playerNumber == 1)
+    //                 {
+    //                     UserPlayerController.GetInstance().YellowSphereG = UserPlayerController.GetInstance().YellowSphereG + 1;
+    //                 }
+    //                 else
+    //                 {
+    //                     EnemyPlayerController.GetInstance().YellowSphereG = EnemyPlayerController.GetInstance().YellowSphereG + 1;
+    //                 }
+
+    //                 // Debug.Log("Give sphere yellow");
+    //                 break;
+    //             case 3:
+    //                 spheresEmpties[i].GetComponent<RawImage>().texture = sphereRed;
+    //                 if (playerNumber == 1)
+    //                 {
+    //                     UserPlayerController.GetInstance().RedSphereG = UserPlayerController.GetInstance().RedSphereG + 1;
+    //                 }
+    //                 else
+    //                 {
+    //                     EnemyPlayerController.GetInstance().RedSphereG = EnemyPlayerController.GetInstance().RedSphereG + 1;
+    //                 }
+
+    //                 // Debug.Log("Give sphere red");
+    //                 break;
+    //             case 4:
+    //                 // Debug.Log("Nothing nothing nothing");
+    //                 break;
+
+    //         }
+    //     }
+    // }
 
     public void StartCoroutineUtil(Vector3 positionToFloating, string text, Color32 startColorA, Color32 endColorA)
     {

@@ -33,10 +33,14 @@ public class BoardManager : MonoBehaviour {
 	private GameObject[,] tiles;
 
 	public bool IsShifting { get; set; }
-
+	private List<string> namesSprites;
 	void Start () {
 		instance = GetComponent<BoardManager>();
-
+		namesSprites =  new List<string>();
+		for(int i = 0; i < characters.Count;i++)
+		{
+			// namesSprites.Add(characters[i].name);
+		}
 		Vector2 offset = tile.GetComponent<SpriteRenderer>().bounds.size;
         CreateBoard(offset.x, offset.y);
     }
@@ -61,14 +65,27 @@ public class BoardManager : MonoBehaviour {
 
 				possibleCharacters.Remove(previousLeft[y]);
 				possibleCharacters.Remove(previousBelow);
-
-				Sprite newSprite = possibleCharacters[Random.Range(0, possibleCharacters.Count)];
+				int randomValue = Random.Range(0, possibleCharacters.Count);
+				Sprite newSprite = possibleCharacters[randomValue];
 				newTile.GetComponent<SpriteRenderer>().sprite = newSprite;
 				previousLeft[y] = newSprite;
 				previousBelow = newSprite;
 				// Set identification
-
+				string nameSprite = newSprite.name;
 				newTile.GetComponent<Tile>().Identity = theIds;
+				if( nameSprite == "ability_with_dimension")
+				{
+					newTile.GetComponent<Tile>().MyTypeSphere = Spheres.TypeOfSpheres.SPHERE_YELLOW;
+				}else if(nameSprite == "attack_with_dimension")
+				{
+					newTile.GetComponent<Tile>().MyTypeSphere = Spheres.TypeOfSpheres.SPHERE_RED;
+				}else if(nameSprite == "movement_with_dimension")
+				{
+					newTile.GetComponent<Tile>().MyTypeSphere = Spheres.TypeOfSpheres.SPHERE_BLUE;
+				}else{
+					newTile.GetComponent<Tile>().MyTypeSphere = Spheres.TypeOfSpheres.SPHERE_RED;					
+				}
+				// Debug.Log("The name send : " + newTile.GetComponent<Tile>().MyTypeSphere + " theNameSprite " +newSprite);
 				theIds ++;				
 			}
         }
