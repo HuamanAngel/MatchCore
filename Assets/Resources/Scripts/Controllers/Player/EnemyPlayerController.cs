@@ -63,11 +63,20 @@ public class EnemyPlayerController : PlayerBase
             for (int j = 0; j < quantity; j++)
             {
 
+                Dictionary<string, GameObject> dInformation = new Dictionary<string, GameObject>(); 
                 GameObject objSkill = UtilitiesClass.FindChildByName(skillsCanvas[j], "ImageSkill");
                 GameObject objInformation = UtilitiesClass.FindChildByName(skillsCanvas[j], "Information");
                 GameObject objYellow = UtilitiesClass.FindChildByName(objInformation, "yellow");
                 GameObject objRed = UtilitiesClass.FindChildByName(objInformation, "red");
                 GameObject objBlue = UtilitiesClass.FindChildByName(objInformation, "blue");
+
+                dInformation["yellow"] = objYellow;
+                dInformation["red"] = objRed;
+                dInformation["blue"] = objBlue;
+
+                skillsCanvas[j].GetComponent<ButtonSkill>().CharacterBelong = goHe; 
+                skillsCanvas[j].GetComponent<ButtonSkill>().TheSkill = theUser.CharInCombat[i].theSkills[j]; 
+                skillsCanvas[j].GetComponent<ButtonSkill>().ElementsInformation = dInformation; 
 
                 objSkill.GetComponent<RawImage>().texture = theUser.CharInCombat[i].theSkills[j].iconSkill;
                 objYellow.GetComponent<TMP_Text>().text = "x" + theUser.CharInCombat[i].theSkills[j].yellow;
@@ -75,6 +84,8 @@ public class EnemyPlayerController : PlayerBase
                 objBlue.GetComponent<TMP_Text>().text = "x" + theUser.CharInCombat[i].theSkills[j].blue;
 
                 goHe.GetComponent<EnemyController>().allSKill.Add(theUser.CharInCombat[i].theSkills[j]);
+                skillsCanvas[j].GetComponent<ButtonSkill>().enabled = true;
+                skillsCanvas[j].GetComponent<Button>().enabled = true;
             }
             _allHeroInPlay.Add(goHe);
             // goHe.AddComponent<EnemyInteligence>();

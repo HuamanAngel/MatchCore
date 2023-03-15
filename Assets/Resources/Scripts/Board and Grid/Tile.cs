@@ -51,37 +51,40 @@ public class Tile : MonoBehaviour
         {
             return;
         }
-
-        if (isSelected)
-        { // Is it already selected?
-            Deselect();
-        }
-        else
+        if (!LogicGame.GetInstance().IsCurrentSelectedSkill)
         {
-            if (previousSelected == null)
-            {
-                // Is it the first tile selected?
-                Select();
+            if (isSelected)
+            { // Is it already selected?
+                Deselect();
             }
             else
             {
-                if (GetAllAdjacentTiles().Contains(previousSelected.gameObject))
+                if (previousSelected == null)
                 {
-                    // Is it an adjacent tile?
-                    SwapSprite(previousSelected.render);
-                    prevTypeSphere = previousSelected.MyTypeSphere;
-                    previousSelected.ClearAllMatches(MyTypeSphere);
-                    previousSelected.Deselect();
-                    ClearAllMatches(prevTypeSphere);
-                    // prevTypeSphere = null;
+                    // Is it the first tile selected?
+                    Select();
                 }
                 else
                 {
-                    previousSelected.GetComponent<Tile>().Deselect();
-                    Select();
+                    if (GetAllAdjacentTiles().Contains(previousSelected.gameObject))
+                    {
+                        // Is it an adjacent tile?
+                        SwapSprite(previousSelected.render);
+                        prevTypeSphere = previousSelected.MyTypeSphere;
+                        previousSelected.ClearAllMatches(MyTypeSphere);
+                        previousSelected.Deselect();
+                        ClearAllMatches(prevTypeSphere);
+                        // prevTypeSphere = null;
+                    }
+                    else
+                    {
+                        previousSelected.GetComponent<Tile>().Deselect();
+                        Select();
+                    }
                 }
             }
         }
+
     }
 
     public void SwapSprite(SpriteRenderer render2)

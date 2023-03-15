@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
+    using TMPro;
 public class UserPlayerController : PlayerBase
 {
     // Start is called before the first frame update
@@ -23,7 +23,7 @@ public class UserPlayerController : PlayerBase
         GameObject[] goCh = GameObject.FindGameObjectsWithTag("DataUser");
         _dataUserGameObject = goCh[0].GetComponent<UserController>();
         RandomSphere(4, 8);
-
+        User theUser = _dataUserGameObject.user;
         for (int i = 0; i < _dataUserGameObject.user.CharInCombat.Count; i++)
         {
             GameObject goHe = player1Tiers[i];
@@ -35,10 +35,10 @@ public class UserPlayerController : PlayerBase
             goHe.GetComponent<HeroController>().objectQuantitySpheresRed = objectQuantitySpheresRed;
             goHe.GetComponent<HeroController>().objectQuantitySpheresBlue = objectQuantitySpheresBlue;
             goHe.GetComponent<HeroController>().objectQuantitySpheresYellow = objectQuantitySpheresYellow;
-            goHe.GetComponent<HeroController>().life = _dataUserGameObject.user.CharInCombat[i].lifeTotal;
-            goHe.GetComponent<HeroController>().defense = _dataUserGameObject.user.CharInCombat[i].armorTotal;
-            goHe.GetComponent<HeroController>().textureIcon = _dataUserGameObject.user.CharInCombat[i].iconChar;
-            goHe.GetComponent<HeroController>().costForMovement = _dataUserGameObject.user.CharInCombat[i].blue;
+            goHe.GetComponent<HeroController>().life = theUser.CharInCombat[i].lifeTotal;
+            goHe.GetComponent<HeroController>().defense = theUser.CharInCombat[i].armorTotal;
+            goHe.GetComponent<HeroController>().textureIcon = theUser.CharInCombat[i].iconChar;
+            goHe.GetComponent<HeroController>().costForMovement = theUser.CharInCombat[i].blue;
             // goHe.GetComponent<HeroController>().firstSkill = _dataUserGameObject.user.CharInCombat[i].theSkills[0];
             // goHe.GetComponent<HeroController>().moveType = _dataUserGameObject.user.CharInCombat[i].movementType;
             goHe.GetComponent<HeroController>().allSKill = new List<Skill>();
@@ -57,18 +57,30 @@ public class UserPlayerController : PlayerBase
             // for (int j = 0; j < _dataUserGameObject.user.CharInCombat[i].theSkills.Count; j++)
             for (int j = 0; j < quantity; j++)
             {
+                Dictionary<string, GameObject> dInformation = new Dictionary<string, GameObject>(); 
                 GameObject objSkill = UtilitiesClass.FindChildByName(skillsCanvas[j], "ImageSkill");
                 GameObject objInformation = UtilitiesClass.FindChildByName(skillsCanvas[j], "Information");
                 GameObject objYellow = UtilitiesClass.FindChildByName(objInformation, "yellow");
                 GameObject objRed = UtilitiesClass.FindChildByName(objInformation, "red");
                 GameObject objBlue = UtilitiesClass.FindChildByName(objInformation, "blue");
 
-                objSkill.GetComponent<RawImage>().texture = _dataUserGameObject.user.CharInCombat[i].theSkills[j].iconSkill;
-                objYellow.GetComponent<TMP_Text>().text = "x" + _dataUserGameObject.user.CharInCombat[i].theSkills[j].yellow;
-                objRed.GetComponent<TMP_Text>().text = "x" + _dataUserGameObject.user.CharInCombat[i].theSkills[j].red;
-                objBlue.GetComponent<TMP_Text>().text = "x" + _dataUserGameObject.user.CharInCombat[i].theSkills[j].blue;
+                dInformation["yellow"] = objYellow;
+                dInformation["red"] = objRed;
+                dInformation["blue"] = objBlue;
 
-                goHe.GetComponent<HeroController>().allSKill.Add(_dataUserGameObject.user.CharInCombat[i].theSkills[j]);
+                skillsCanvas[j].GetComponent<ButtonSkill>().CharacterBelong = goHe; 
+                skillsCanvas[j].GetComponent<ButtonSkill>().TheSkill = theUser.CharInCombat[i].theSkills[j]; 
+                skillsCanvas[j].GetComponent<ButtonSkill>().ElementsInformation = dInformation; 
+
+                objSkill.GetComponent<RawImage>().texture = theUser.CharInCombat[i].theSkills[j].iconSkill;
+                objYellow.GetComponent<TMP_Text>().text = "x" + theUser.CharInCombat[i].theSkills[j].yellow;
+                objRed.GetComponent<TMP_Text>().text = "x" + theUser.CharInCombat[i].theSkills[j].red;
+                objBlue.GetComponent<TMP_Text>().text = "x" + theUser.CharInCombat[i].theSkills[j].blue;
+
+                goHe.GetComponent<HeroController>().allSKill.Add(theUser.CharInCombat[i].theSkills[j]);
+                skillsCanvas[j].GetComponent<ButtonSkill>().enabled = true;
+                skillsCanvas[j].GetComponent<Button>().enabled = true;
+
             }
             _allHeroInPlay.Add(goHe);
         }

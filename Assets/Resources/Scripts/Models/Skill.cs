@@ -17,6 +17,7 @@ public class Skill
     public string type;
     public double damage_max;
     public double damage_min;
+    public int cooldown;
     public string quality;
     public double value1;
     public double value2;

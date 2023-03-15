@@ -31,6 +31,7 @@ public abstract class Character : MonoBehaviour
     public Skill FourSkill { get => fourSkill; }
     protected LogicGame _logicGame;
     protected PlayerBase _thePlayer;
+    public PlayerBase ThePlayer { get => _thePlayer; set => _thePlayer = value; }
     public void SetDataGrid(string key, int value)
     {
         if (_dataGrid.ContainsKey(key))
@@ -79,6 +80,16 @@ public abstract class Character : MonoBehaviour
             _thePlayer.BlueSphereG = _thePlayer.BlueSphereG - theSkill.blue;
             _thePlayer.RedSphereG = _thePlayer.RedSphereG - theSkill.red;
             _thePlayer.YellowSphereG = _thePlayer.YellowSphereG - theSkill.yellow;
+            _thePlayer.SetQuantitySpheres();
+            return true;
+        }
+        return false;
+    }
+
+    public bool OnlyCheckIfCanAttack(Skill theSkill)
+    {
+        if (_thePlayer.RedSphereG >= theSkill.red && _thePlayer.YellowSphereG >= theSkill.yellow && _thePlayer.BlueSphereG >= theSkill.blue)
+        {
             return true;
         }
         return false;

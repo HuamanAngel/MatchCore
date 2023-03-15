@@ -21,18 +21,18 @@ public class UserController : MonoBehaviour
 
 
         Charac oneCharacter = JsonReaderA.SearchCharacterById(1);
-        Charac secondCharacter = JsonReaderA.SearchCharacterById(3);
+        // Charac secondCharacter = JsonReaderA.SearchCharacterById(3);
 
         oneCharacter.lvl = 1;
         oneCharacter.InitialValuesDerived();
-        secondCharacter.lvl = 4;
-        secondCharacter.InitialValuesDerived();
+        // secondCharacter.lvl = 4;
+        // secondCharacter.InitialValuesDerived();
         // RecalculateValuesDerived
         // Add to user data
         user.CharInCombat.Add(oneCharacter);
-        user.CharInCombat.Add(secondCharacter);
+        // user.CharInCombat.Add(secondCharacter);
         user.CharAll.Add(oneCharacter);
-        user.CharAll.Add(secondCharacter);
+        // user.CharAll.Add(secondCharacter);
 
         user.LvlGeneral = 1;
         user.Name = "Oxipusio";

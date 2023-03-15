@@ -23,6 +23,8 @@ public class LogicGame : MonoBehaviour
     public GameObject objectToShowText4Panels;
     public GameObject objectToShowText3Panels;
     private GameObject infoPanel;
+    private int _quantityMatchTotal = 0;
+    public int QuantityMatchTotal { get => _quantityMatchTotal; }
     public int Turn { get => turn; }
     public GameObject objectTextFloating;
     public GameObject objBoxSkillFloating;
@@ -33,9 +35,28 @@ public class LogicGame : MonoBehaviour
     private Character _theCharacter;
     // private List<int> _existItemInPlace;
     // Animator to Hour Glass
+    public static LogicGame _instance;
     public Animator animatorHourGlass;
+
+
+    // Selected options
+    private bool isCurrentSelectedSkill = false;
+    private bool isCurrentSelectedCharacterToAttack = false;
+    private Skill skillSelected;
+    private GameObject buttonSkillSelected;
+    private GameObject buttonCharacterSelectedToAttack;
+    public bool IsCurrentSelectedSkill { get => isCurrentSelectedSkill; set => isCurrentSelectedSkill = value; }
+    public bool IsCurrentSelectedCharacterToAttack { get => isCurrentSelectedCharacterToAttack; set => isCurrentSelectedCharacterToAttack = value; }
+    public Skill SkillSelected { get => skillSelected; set => skillSelected = value; }
+    public GameObject ButtonSkillSelected { get => buttonSkillSelected; set => buttonSkillSelected = value; }
+    public GameObject ButtonCharacterSelectedToAttack { get => buttonCharacterSelectedToAttack; set => buttonCharacterSelectedToAttack = value; }
+    public static LogicGame GetInstance()
+    {
+        return _instance;
+    }
     private void Awake()
     {
+        _instance = this;
         turn = 1;
         whatTurn = 1; // 1 for player 1, 2 for player 2
         ChangeTextTurn(turn);
@@ -102,9 +123,15 @@ public class LogicGame : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (isCurrentSelectedSkill)
+        {
+            if (Input.GetKeyUp(KeyCode.Mouse1))
+            {
+                buttonSkillSelected.GetComponent<ButtonSkill>().DeselectedSkill();
+            }
 
+        }
     }
-
 
     public void PressOption1P1()
     {
@@ -141,6 +168,7 @@ public class LogicGame : MonoBehaviour
         Debug.Log("pressed in option 1 from option in battle ");
     }
 
+    // Only for match
     public void GiveSpheres(int quantityMatch, Spheres.TypeOfSpheres theSphereType)
     {
         PlayerBase theUserPlayer;
@@ -154,7 +182,7 @@ public class LogicGame : MonoBehaviour
             theUserPlayer = EnemyPlayerController.GetInstance();
         }
         quantityAdd = quantityMatch - 1;
-        Debug.Log("a agregar : " + quantityMatch + " " +theSphereType);
+        _quantityMatchTotal++;
         switch (theSphereType)
         {
             case Spheres.TypeOfSpheres.SPHERE_RED:
@@ -323,5 +351,51 @@ public class LogicGame : MonoBehaviour
         {
             Destroy(_clonesBoxSkill[i]);
         }
+    }
+
+
+    public void ProcessAttackSelected(GameObject targetAttack)
+    {
+        GameObject originAttack = buttonSkillSelected.GetComponent<ButtonSkill>().CharacterBelong;
+        Character characterTmp;
+        if (originAttack.GetComponent<HeroController>() != null)
+        {
+            characterTmp = originAttack.GetComponent<HeroController>();
+        }
+        else if (originAttack.GetComponent<EnemyController>() != null)
+        {
+            characterTmp = originAttack.GetComponent<EnemyController>();
+        }
+        else
+        {
+            characterTmp = null;
+        }
+
+
+        if (targetAttack.GetComponent<HeroController>() != null)
+        {
+            if (characterTmp.CheckifCanAttackSpheres(buttonSkillSelected.GetComponent<ButtonSkill>().TheSkill))
+            {
+                int damageMin = (int)buttonSkillSelected.GetComponent<ButtonSkill>().TheSkill.damage_min;
+                int damageMax = (int)buttonSkillSelected.GetComponent<ButtonSkill>().TheSkill.damage_max;
+                targetAttack.GetComponent<HeroController>().ReceivedDamage(Random.Range(damageMin, damageMax));
+                buttonSkillSelected.GetComponent<ButtonSkill>().DeselectedSkill(1);
+            }
+        }
+        else if (targetAttack.GetComponent<EnemyController>() != null)
+        {
+            if (characterTmp.CheckifCanAttackSpheres(buttonSkillSelected.GetComponent<ButtonSkill>().TheSkill))
+            {
+                int damageMin = (int)buttonSkillSelected.GetComponent<ButtonSkill>().TheSkill.damage_min;
+                int damageMax = (int)buttonSkillSelected.GetComponent<ButtonSkill>().TheSkill.damage_max;
+                targetAttack.GetComponent<EnemyController>().ReceivedDamage(Random.Range(damageMin, damageMax));
+                buttonSkillSelected.GetComponent<ButtonSkill>().DeselectedSkill(1);
+            }
+        }
+        else
+        {
+        }
+
+
     }
 }
