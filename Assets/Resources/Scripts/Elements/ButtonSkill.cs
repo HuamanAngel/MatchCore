@@ -154,35 +154,57 @@ public class ButtonSkill : MonoBehaviour
     }
     public void UseSkill()
     {
-        if (turnActivateSkill == -1 || (turnActivateSkill + theSkill.cooldown) <= LogicGame.GetInstance().Turn)
+        if (LogicGame.GetInstance().WhatTurn == 1)
         {
-            if (_characterBelong.GetComponent<Character>().OnlyCheckIfCanAttack(theSkill))
+            if (_characterBelong.GetComponent<HeroController>() != null)
             {
-                myLine = new GameObject();
-                myLine.AddComponent<LineRenderer>();
-                lr = myLine.GetComponent<LineRenderer>();
-                lr.positionCount = lengthOfLineRenderer;
-                lr.SetWidth(0.1f, 0.1f);
-                Vector3 end = new Vector3(transform.position.x, transform.position.y, -1);
-                // myLine.transform.position = new Vector3(transform.position.x, transform.position.y, -1);
-                lr.SetPosition(0, end);
+                LogicLineAttack();
+            }
 
-                LogicGame.GetInstance().IsCurrentSelectedSkill = true;
-                LogicGame.GetInstance().SkillSelected = theSkill;
-                LogicGame.GetInstance().ButtonSkillSelected = this.gameObject;
-                _isPressed = true;
-            }
-            else
-            {
-                Debug.Log("Nees more resources for the attack");
-            }
         }
-        else
+        else if (LogicGame.GetInstance().WhatTurn == 2)
         {
-            Debug.Log("Aun en coldown");
+            if (_characterBelong.GetComponent<EnemyController>() != null)
+            {
+                LogicLineAttack();
+            }
         }
     }
 
+    private void LogicLineAttack()
+    {
+        if (!LogicGame.GetInstance().IsCurrentSelectedSkill)
+        {
+            if (turnActivateSkill == -1 || (turnActivateSkill + theSkill.cooldown) <= LogicGame.GetInstance().Turn)
+            {
+                if (_characterBelong.GetComponent<Character>().OnlyCheckIfCanAttack(theSkill))
+                {
+                    myLine = new GameObject();
+                    myLine.AddComponent<LineRenderer>();
+                    lr = myLine.GetComponent<LineRenderer>();
+                    lr.positionCount = lengthOfLineRenderer;
+                    lr.SetWidth(0.1f, 0.1f);
+                    Vector3 end = new Vector3(transform.position.x, transform.position.y, -1);
+                    // myLine.transform.position = new Vector3(transform.position.x, transform.position.y, -1);
+                    lr.SetPosition(0, end);
+
+                    LogicGame.GetInstance().IsCurrentSelectedSkill = true;
+                    LogicGame.GetInstance().SkillSelected = theSkill;
+                    LogicGame.GetInstance().ButtonSkillSelected = this.gameObject;
+                    _isPressed = true;
+                }
+                else
+                {
+                    Debug.Log("Nees more resources for the attack");
+                }
+            }
+            else
+            {
+                Debug.Log("Aun en coldown");
+            }
+
+        }
+    }
     public void DeselectedSkill(int mode = 0)
     {
         if (mode == 0)

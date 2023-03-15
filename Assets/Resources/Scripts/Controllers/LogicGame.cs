@@ -50,6 +50,8 @@ public class LogicGame : MonoBehaviour
     public Skill SkillSelected { get => skillSelected; set => skillSelected = value; }
     public GameObject ButtonSkillSelected { get => buttonSkillSelected; set => buttonSkillSelected = value; }
     public GameObject ButtonCharacterSelectedToAttack { get => buttonCharacterSelectedToAttack; set => buttonCharacterSelectedToAttack = value; }
+
+
     public static LogicGame GetInstance()
     {
         return _instance;
