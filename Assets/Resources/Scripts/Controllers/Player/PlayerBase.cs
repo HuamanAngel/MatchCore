@@ -8,14 +8,23 @@ public class PlayerBase : MonoBehaviour
     protected int redSphere = 0;
     protected int blueSphere = 0;
     protected int yellowSphere = 0;
+    protected int quantityMovementBoard = 1;
+    protected int quantityMovementBoardCurrent;
     protected UserController _dataUserGameObject;
     public GameObject[] player1Tiers;
     public GameObject objectQuantitySpheresBlue;
     public GameObject objectQuantitySpheresYellow;
     public GameObject objectQuantitySpheresRed;
+    public TMP_Text textQuantityMoves;
+    public int QuantityMovementBoard { get => quantityMovementBoard; set => quantityMovementBoard = value; }
+    public int QuantityMovementBoardCurrent { get => quantityMovementBoardCurrent; set => quantityMovementBoardCurrent = value; }
     public int YellowSphereG { get => yellowSphere; set => yellowSphere = value; }
     public int RedSphereG { get => redSphere; set => redSphere = value; }
     public int BlueSphereG { get => blueSphere; set => blueSphere = value; }
+    public PlayerBase()
+    {
+        quantityMovementBoardCurrent = quantityMovementBoard;
+    }
     public virtual void ResetSphere()
     {
         redSphere = 0;
@@ -33,9 +42,23 @@ public class PlayerBase : MonoBehaviour
 
     public void SetQuantitySpheres()
     {
+        Color32 redColor = new Color32(0xFF,0x00,0x00,0xFF);
+        Color32 defaultColor = new Color32(0xFF,0xFF,0xFF,0xFF);
+
+
         objectQuantitySpheresRed.GetComponent<TMP_Text>().text = "x" + RedSphereG;
         objectQuantitySpheresBlue.GetComponent<TMP_Text>().text = "x" + BlueSphereG;
         objectQuantitySpheresYellow.GetComponent<TMP_Text>().text = "x" + YellowSphereG;
-    }
+        textQuantityMoves.text = "x" + quantityMovementBoardCurrent;
 
+        objectQuantitySpheresRed.GetComponent<TMP_Text>().color = RedSphereG > 0 ? defaultColor : redColor;  
+        objectQuantitySpheresBlue.GetComponent<TMP_Text>().color = BlueSphereG > 0 ? defaultColor : redColor;  
+        objectQuantitySpheresYellow.GetComponent<TMP_Text>().color = YellowSphereG > 0 ? defaultColor : redColor;  
+        textQuantityMoves.color = quantityMovementBoardCurrent > 0 ? defaultColor : redColor;  
+        
+    }
+    public void ResetQuantityMovementBoard()
+    {
+        quantityMovementBoardCurrent = quantityMovementBoard;
+    }
 }

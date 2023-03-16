@@ -32,7 +32,7 @@ public class Tile : MonoBehaviour
         isSelected = true;
         render.color = selectedColor;
         previousSelected = gameObject.GetComponent<Tile>();
-        SFXManager.instance.PlaySFX(Clip.Select);
+        SoundManager.instance.PlaySFX(SoundManager.ClipItem.Select);
     }
 
     private void Deselect()
@@ -44,14 +44,16 @@ public class Tile : MonoBehaviour
 
     void OnMouseDown()
     {
-        // Debug.Log("La identidad es : " + identity);
-        // Debug.Log("la identidad anterior es : " + previousSelected.gameObject.GetComponent<Tile>().Identity);
-        // Not Selectable conditions
         if (render.sprite == null || BoardManager.instance.IsShifting)
         {
             return;
         }
-        if (!LogicGame.GetInstance().IsCurrentSelectedSkill)
+        if (LogicGame.GetInstance().CheckIfDoneMovementAvaible())
+        {
+            Vector3 originPosition = new Vector3(transform.position.x,transform.position.y,-1);
+            LogicGame.GetInstance().StartCoroutineTextFloating(originPosition,"No tienes mas movimientos",new Color32(0xFF,0x00,0x00,0xFF),new Color32(0xFF,0x00,0x00,0x00));
+        }
+        if (!LogicGame.GetInstance().IsCurrentSelectedSkill && !LogicGame.GetInstance().CheckIfDoneMovementAvaible())
         {
             if (isSelected)
             { // Is it already selected?
@@ -68,6 +70,7 @@ public class Tile : MonoBehaviour
                 {
                     if (GetAllAdjacentTiles().Contains(previousSelected.gameObject))
                     {
+                        LogicGame.GetInstance().IncrementMovement();
                         // Is it an adjacent tile?
                         SwapSprite(previousSelected.render);
                         prevTypeSphere = previousSelected.MyTypeSphere;
@@ -99,7 +102,7 @@ public class Tile : MonoBehaviour
         render.sprite = tempSprite;
         myTypeSphere = InsertTypeSphereByNameSprite(render2.sprite.name);
         previousSelected.MyTypeSphere = InsertTypeSphereByNameSprite(render.sprite.name);
-        SFXManager.instance.PlaySFX(Clip.Swap);
+        SoundManager.instance.PlaySFX(SoundManager.ClipItem.Swap);
         GUIManager.instance.MoveCounter--; // Add this line here
     }
     public Spheres.TypeOfSpheres InsertTypeSphereByNameSprite(string nameSprite)
@@ -209,7 +212,7 @@ public class Tile : MonoBehaviour
             matchFound = false;
             // StopCoroutine(BoardManager.instance.FindNullTiles());
             // StartCoroutine(BoardManager.instance.FindNullTiles());
-            SFXManager.instance.PlaySFX(Clip.Clear);
+            SoundManager.instance.PlaySFX(SoundManager.ClipItem.Clear);
         }
     }
 }

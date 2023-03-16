@@ -32,6 +32,7 @@ public class EnemyPlayerController : PlayerBase
         GameObject[] goCh = GameObject.FindGameObjectsWithTag("DataUser");
         _dataUserGameObject = goCh[0].GetComponent<UserController>();
         RandomSphere(4, 8);
+        SetQuantitySpheres();
         User theUser = _dataUserGameObject.userEnemy;
         for (int i = 0; i < theUser.CharInCombat.Count; i++)
         {

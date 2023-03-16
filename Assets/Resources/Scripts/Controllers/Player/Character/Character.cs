@@ -95,10 +95,10 @@ public abstract class Character : MonoBehaviour
         return false;
     }
 
-    public void TextFloatingAnimation()
-    {
-        StartCoroutine(_logicGame.FloatingText(new Vector3(1, 1, 1), "+" + 1, new Color32(23, 22, 222, 255), new Color32(23, 22, 222, 0)));
-    }
+    // public void TextFloatingAnimation()
+    // {
+    //     StartCoroutine(_logicGame.FloatingText(new Vector3(1, 1, 1), "+" + 1, new Color32(23, 22, 222, 255), new Color32(23, 22, 222, 0)));
+    // }
 
     public Skill GetSkillSelected(Character _character)
     {

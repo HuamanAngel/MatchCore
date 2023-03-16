@@ -23,6 +23,7 @@ public class UserPlayerController : PlayerBase
         GameObject[] goCh = GameObject.FindGameObjectsWithTag("DataUser");
         _dataUserGameObject = goCh[0].GetComponent<UserController>();
         RandomSphere(4, 8);
+        SetQuantitySpheres();
         User theUser = _dataUserGameObject.user;
         for (int i = 0; i < _dataUserGameObject.user.CharInCombat.Count; i++)
         {

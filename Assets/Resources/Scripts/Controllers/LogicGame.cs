@@ -33,12 +33,13 @@ public class LogicGame : MonoBehaviour
     public int WhatTurn { get => whatTurn; }
     private PlayerBase _thePlayer;
     private Character _theCharacter;
+    private int _movementDone = 0;
+    public int MovementDone { get => _movementDone; set => _movementDone = value; }
+    public PlayerBase ThePlayer { get => _thePlayer; }
     // private List<int> _existItemInPlace;
     // Animator to Hour Glass
     public static LogicGame _instance;
     public Animator animatorHourGlass;
-
-
     // Selected options
     private bool isCurrentSelectedSkill = false;
     private bool isCurrentSelectedCharacterToAttack = false;
@@ -77,6 +78,10 @@ public class LogicGame : MonoBehaviour
         {
             whatTurn = 1;
         }
+        _movementDone = 0;
+        SetPlayer();
+        _thePlayer.ResetQuantityMovementBoard();
+        _thePlayer.SetQuantitySpheres();
         StartCoroutine(animationHourSand());
         ChangeTextTurn(turn);
         CheckTurnPlayer(whatTurn);
@@ -118,8 +123,7 @@ public class LogicGame : MonoBehaviour
 
     void Start()
     {
-        _thePlayer = UserPlayerController.GetInstance();
-
+        SetPlayer();
     }
 
     // Update is called once per frame
@@ -135,6 +139,17 @@ public class LogicGame : MonoBehaviour
         }
     }
 
+    public void SetPlayer()
+    {
+        if (whatTurn == 1)
+        {
+            _thePlayer = UserPlayerController.GetInstance();
+        }
+        else if (whatTurn == 2)
+        {
+            _thePlayer = EnemyPlayerController.GetInstance();
+        }
+    }
     public void PressOption1P1()
     {
     }
@@ -156,20 +171,6 @@ public class LogicGame : MonoBehaviour
     {
 
     }
-
-    public void PressOption2()
-    {
-        Debug.Log("pressed in option 1 from option in battle ");
-    }
-    public void PressOption3()
-    {
-        Debug.Log("pressed in option 1 from option in battle ");
-    }
-    public void PressOption4()
-    {
-        Debug.Log("pressed in option 1 from option in battle ");
-    }
-
     // Only for match
     public void GiveSpheres(int quantityMatch, Spheres.TypeOfSpheres theSphereType)
     {
@@ -202,80 +203,29 @@ public class LogicGame : MonoBehaviour
         }
         theUserPlayer.SetQuantitySpheres();
     }
-    // public void GiveSpheresRandom(int playerNumber, List<GameObject> spheresEmpties, int quantitySpheresForTurn = 3)
-    // {
-    //     RandomHelper random = new RandomHelper();
-    //     int typeSpheres;
-    //     for (int i = 0; i < quantitySpheresForTurn; i++)
-    //     {
-    //         typeSpheres = 0;
-    //         typeSpheres = random.RandomInt(1, quantitySpheresForTurn + 1);
-    //         switch (typeSpheres)
-    //         {
-    //             case 1:
-    //                 spheresEmpties[i].GetComponent<RawImage>().texture = sphereBlue;
-    //                 if (playerNumber == 1)
-    //                 {
-    //                     UserPlayerController.GetInstance().BlueSphereG = UserPlayerController.GetInstance().BlueSphereG + 1;
-    //                 }
-    //                 else
-    //                 {
-    //                     EnemyPlayerController.GetInstance().BlueSphereG = EnemyPlayerController.GetInstance().BlueSphereG + 1;
-    //                 }
-    //                 // Debug.Log("Give sphere blue");
-    //                 break;
-    //             case 2:
-    //                 spheresEmpties[i].GetComponent<RawImage>().texture = sphereYellow;
-    //                 if (playerNumber == 1)
-    //                 {
-    //                     UserPlayerController.GetInstance().YellowSphereG = UserPlayerController.GetInstance().YellowSphereG + 1;
-    //                 }
-    //                 else
-    //                 {
-    //                     EnemyPlayerController.GetInstance().YellowSphereG = EnemyPlayerController.GetInstance().YellowSphereG + 1;
-    //                 }
-
-    //                 // Debug.Log("Give sphere yellow");
-    //                 break;
-    //             case 3:
-    //                 spheresEmpties[i].GetComponent<RawImage>().texture = sphereRed;
-    //                 if (playerNumber == 1)
-    //                 {
-    //                     UserPlayerController.GetInstance().RedSphereG = UserPlayerController.GetInstance().RedSphereG + 1;
-    //                 }
-    //                 else
-    //                 {
-    //                     EnemyPlayerController.GetInstance().RedSphereG = EnemyPlayerController.GetInstance().RedSphereG + 1;
-    //                 }
-
-    //                 // Debug.Log("Give sphere red");
-    //                 break;
-    //             case 4:
-    //                 // Debug.Log("Nothing nothing nothing");
-    //                 break;
-
-    //         }
-    //     }
-    // }
-
-    public void StartCoroutineUtil(Vector3 positionToFloating, string text, Color32 startColorA, Color32 endColorA)
+    public bool CheckIfDoneMovementAvaible()
     {
-        StartCoroutine(FloatingText(positionToFloating, text, startColorA, endColorA));
+        return _thePlayer.QuantityMovementBoard <= _movementDone;
     }
-    public IEnumerator FloatingText(Vector3 positionToFloating, string text, Color32 startColorA, Color32 endColorA)
+    public void StartCoroutineTextFloating(Vector3 positionToFloating, string text, Color32 startColorA, Color32 endColorA)
+    {
+        StartCoroutine(FloatingText(objectTextFloating, positionToFloating, text, startColorA, endColorA));
+    }
+
+    public IEnumerator FloatingText(GameObject objectToFloating, Vector3 positionToFloating, string text, Color32 startColorA, Color32 endColorA)
     {
         // adwa
         Color32 startColor = startColorA;
         Color32 endColor = endColorA;
 
-        GameObject go = Instantiate(objectTextFloating, positionToFloating, Quaternion.identity);
-        go.transform.Rotate(Camera.main.transform.localRotation.eulerAngles.x, go.transform.localRotation.eulerAngles.y, go.transform.localRotation.eulerAngles.z);
+        GameObject go = Instantiate(objectToFloating, positionToFloating, Quaternion.identity);
+        // go.transform.Rotate(Camera.main.transform.localRotation.eulerAngles.x, go.transform.localRotation.eulerAngles.y, go.transform.localRotation.eulerAngles.z);
         go.GetComponent<TMP_Text>().text = text;
         go.GetComponent<TMP_Text>().color = startColor;
         float speed = 1.0f;
         float step = speed * Time.deltaTime;
         float t = 0;
-        Vector3 vectorTarget = go.transform.position + new Vector3(0, 0, 1);
+        Vector3 vectorTarget = go.transform.position + new Vector3(0, 1, 1);
         while (t < 1)
         {
             go.GetComponent<TMP_Text>().color = Color32.Lerp(startColor, endColor, t);
@@ -382,6 +332,7 @@ public class LogicGame : MonoBehaviour
                 int damageMax = (int)buttonSkillSelected.GetComponent<ButtonSkill>().TheSkill.damage_max;
                 targetAttack.GetComponent<HeroController>().ReceivedDamage(Random.Range(damageMin, damageMax));
                 buttonSkillSelected.GetComponent<ButtonSkill>().DeselectedSkill(1);
+                SoundManager.instance.PlaySFX(SoundManager.ClipItem.Attack);
             }
         }
         else if (targetAttack.GetComponent<EnemyController>() != null)
@@ -392,6 +343,7 @@ public class LogicGame : MonoBehaviour
                 int damageMax = (int)buttonSkillSelected.GetComponent<ButtonSkill>().TheSkill.damage_max;
                 targetAttack.GetComponent<EnemyController>().ReceivedDamage(Random.Range(damageMin, damageMax));
                 buttonSkillSelected.GetComponent<ButtonSkill>().DeselectedSkill(1);
+                SoundManager.instance.PlaySFX(SoundManager.ClipItem.Attack);
             }
         }
         else
@@ -400,4 +352,11 @@ public class LogicGame : MonoBehaviour
 
 
     }
+
+    public void IncrementMovement(int increment = 1)
+    {
+        _movementDone += increment;
+        _thePlayer.QuantityMovementBoardCurrent = _thePlayer.QuantityMovementBoardCurrent - 1;
+    }
+
 }
