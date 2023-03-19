@@ -9,18 +9,20 @@ public class hourglass_script : MonoBehaviour
     void Start()
     {
         GameObject[] go = GameObject.FindGameObjectsWithTag("LogicGame");
-        _logicGame = go[0].GetComponent<LogicGame>();        
+        _logicGame = go[0].GetComponent<LogicGame>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     void OnMouseDown()
     {
-        _logicGame.NextTurn();
-        Debug.Log("Pressed");
+        if (!GameManager.instance.GameOver)
+        {
+            _logicGame.NextTurn();
+        }
     }
 }

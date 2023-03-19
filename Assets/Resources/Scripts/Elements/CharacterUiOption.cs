@@ -11,14 +11,18 @@ public class CharacterUiOption : MonoBehaviour, IPointerEnterHandler, IPointerEx
     private Color colorDefault = Color.white;
     void Update()
     {
-        if (LogicGame.GetInstance().IsCurrentSelectedSkill)
+        if (!GameManager.instance.GameOver)
         {
-            isActive = true;
-        }
-        else
-        {
-            GetComponent<Image>().color = colorDefault;
-            isActive = false;
+            if (LogicGame.GetInstance().IsCurrentSelectedSkill)
+            {
+                isActive = true;
+            }
+            else
+            {
+                GetComponent<Image>().color = colorDefault;
+                isActive = false;
+            }
+
         }
     }
 

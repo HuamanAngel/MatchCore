@@ -7,7 +7,6 @@ using UnityEditor;
 public class HeroController : Character
 {
     // Start is called before the first frame update
-    public int life = 200;
     // public int damage = 20;
 
     public int damageMax = 20;
@@ -31,6 +30,7 @@ public class HeroController : Character
     private UserController _dataUserGameObject;
     public Texture textureIcon;
     private float speedTheMovement = 5.0f;
+
     private void Awake()
     {
         _animator = GetComponent<Animator>();
@@ -122,32 +122,22 @@ public class HeroController : Character
         SetQuantitySpheres();
     }
 
-    public override int CalculateDmg()
-    {
-        RandomHelper random = new RandomHelper();
-        int randomDmg = random.RandomInt(damageMin, damageMax + 1);
-        if (firstSkill.id == 1)
-        {
-
-        }
-        if (firstSkill.id == 2)
-        {
-            int toLife = (int)(randomDmg * (firstSkill.value1 / 100));
-            Debug.Log("Like life : " + toLife);
-            life = life + toLife;
-            UpdateAllStats();
-
-        }
-        return randomDmg;
-    }
-
     public override void ReceivedDamage(int damageH)
     {
-        life = life - ((damageH - defense) * (100 - perAbsortion) / 100);
-        UpdateAllStats();
+        int lifeBefore = life;
+        int totalDamage = ((damageH - defense) * (100 - perAbsortion) / 100);
+        Vector3 originPosition = new Vector3(transform.position.x*3/4, transform.position.y, -1);
+        life = life - totalDamage;
+        if (countingCoroutine != null)
+        {
+            StopCoroutine(countingCoroutine);
+        }
+        countingCoroutine = StartCoroutine(EffectText.CountNumber(((result) => objLife.GetComponent<TMP_Text>().text = result), lifeBefore, life));
+        LogicGame.GetInstance().StartCoroutineTextFloating(originPosition, "" + totalDamage, new Color32(0xFF, 0x00, 0x00, 0xFF), new Color32(0xFF, 0x00, 0x00, 0x00));
     }
     public override void UpdateAllStats()
     {
+
         objLife.GetComponent<TMP_Text>().text = "" + life;
         objArmor.GetComponent<TMP_Text>().text = "" + defense;
         objectQuantitySpheresRed.GetComponent<TMP_Text>().text = "x" + _thePlayer.RedSphereG;

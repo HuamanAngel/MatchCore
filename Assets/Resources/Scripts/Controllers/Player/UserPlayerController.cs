@@ -84,6 +84,7 @@ public class UserPlayerController : PlayerBase
 
             }
             _allHeroInPlay.Add(goHe);
+            _allCharactersAlive[goHe] = true;
         }
     }
 

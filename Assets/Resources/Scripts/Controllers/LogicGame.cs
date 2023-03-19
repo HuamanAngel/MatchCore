@@ -27,6 +27,7 @@ public class LogicGame : MonoBehaviour
     public int QuantityMatchTotal { get => _quantityMatchTotal; }
     public int Turn { get => turn; }
     public GameObject objectTextFloating;
+    public GameObject objectNumberFloating;
     public GameObject objBoxSkillFloating;
     public GameObject objBoxSkillEmptyFloating;
     private List<GameObject> _clonesBoxSkill;
@@ -46,12 +47,14 @@ public class LogicGame : MonoBehaviour
     private Skill skillSelected;
     private GameObject buttonSkillSelected;
     private GameObject buttonCharacterSelectedToAttack;
+    public GameObject objVictory;
+    public GameObject objLoss;
     public bool IsCurrentSelectedSkill { get => isCurrentSelectedSkill; set => isCurrentSelectedSkill = value; }
     public bool IsCurrentSelectedCharacterToAttack { get => isCurrentSelectedCharacterToAttack; set => isCurrentSelectedCharacterToAttack = value; }
     public Skill SkillSelected { get => skillSelected; set => skillSelected = value; }
     public GameObject ButtonSkillSelected { get => buttonSkillSelected; set => buttonSkillSelected = value; }
     public GameObject ButtonCharacterSelectedToAttack { get => buttonCharacterSelectedToAttack; set => buttonCharacterSelectedToAttack = value; }
-
+    public Material materialToLineRenderer;
 
     public static LogicGame GetInstance()
     {
@@ -77,6 +80,10 @@ public class LogicGame : MonoBehaviour
         else
         {
             whatTurn = 1;
+        }
+        if (turn % 9 == 0)
+        {
+            BoardManager.instance.ResetBoard();
         }
         _movementDone = 0;
         SetPlayer();
@@ -172,7 +179,7 @@ public class LogicGame : MonoBehaviour
 
     }
     // Only for match
-    public void GiveSpheres(int quantityMatch, Spheres.TypeOfSpheres theSphereType)
+    public void GiveSpheres(int quantityMatch, Spheres.TypeOfSpheres theSphereType, out int totalAdd, out Color32 colorSphere)
     {
         PlayerBase theUserPlayer;
         int quantityAdd = 0;
@@ -185,20 +192,25 @@ public class LogicGame : MonoBehaviour
             theUserPlayer = EnemyPlayerController.GetInstance();
         }
         quantityAdd = quantityMatch - 1;
+        totalAdd = quantityAdd;
         _quantityMatchTotal++;
         switch (theSphereType)
         {
             case Spheres.TypeOfSpheres.SPHERE_RED:
                 theUserPlayer.RedSphereG = theUserPlayer.RedSphereG + quantityAdd;
+                colorSphere = new Color32(0xC3, 0x6B, 0x68, 0xFF);
                 break;
             case Spheres.TypeOfSpheres.SPHERE_BLUE:
                 theUserPlayer.BlueSphereG = theUserPlayer.BlueSphereG + quantityAdd;
+                colorSphere = new Color32(0x7A, 0x9F, 0xAD, 0xFF);
                 break;
             case Spheres.TypeOfSpheres.SPHERE_YELLOW:
                 theUserPlayer.YellowSphereG = theUserPlayer.YellowSphereG + quantityAdd;
+                colorSphere = new Color32(0xBB, 0x9E, 0x61, 0xFF);
                 break;
             default:
                 theUserPlayer.RedSphereG = theUserPlayer.RedSphereG + quantityAdd;
+                colorSphere = new Color32(0x7B, 0x42, 0x40, 0xFF);
                 break;
         }
         theUserPlayer.SetQuantitySpheres();
@@ -207,33 +219,13 @@ public class LogicGame : MonoBehaviour
     {
         return _thePlayer.QuantityMovementBoard <= _movementDone;
     }
+    public void StartCoroutineNumberFloating(Vector3 positionToFloating, string text, Color32 startColorA, Color32 endColorA)
+    {
+        StartCoroutine(EffectText.FloatingTextFadeOut(objectNumberFloating, positionToFloating, text, startColorA, endColorA));
+    }
     public void StartCoroutineTextFloating(Vector3 positionToFloating, string text, Color32 startColorA, Color32 endColorA)
     {
-        StartCoroutine(FloatingText(objectTextFloating, positionToFloating, text, startColorA, endColorA));
-    }
-
-    public IEnumerator FloatingText(GameObject objectToFloating, Vector3 positionToFloating, string text, Color32 startColorA, Color32 endColorA)
-    {
-        // adwa
-        Color32 startColor = startColorA;
-        Color32 endColor = endColorA;
-
-        GameObject go = Instantiate(objectToFloating, positionToFloating, Quaternion.identity);
-        // go.transform.Rotate(Camera.main.transform.localRotation.eulerAngles.x, go.transform.localRotation.eulerAngles.y, go.transform.localRotation.eulerAngles.z);
-        go.GetComponent<TMP_Text>().text = text;
-        go.GetComponent<TMP_Text>().color = startColor;
-        float speed = 1.0f;
-        float step = speed * Time.deltaTime;
-        float t = 0;
-        Vector3 vectorTarget = go.transform.position + new Vector3(0, 1, 1);
-        while (t < 1)
-        {
-            go.GetComponent<TMP_Text>().color = Color32.Lerp(startColor, endColor, t);
-            go.transform.position = Vector3.MoveTowards(go.transform.position, vectorTarget, step);
-            t += Time.deltaTime / 2f;
-            yield return null;
-        }
-        Destroy(go);
+        StartCoroutine(EffectText.FloatingTextFadeOut(objectTextFloating, positionToFloating, text, startColorA, endColorA));
     }
 
     public void CreateSkillsButtonsInGame(Vector3 positionFloating, Character c1)
@@ -333,6 +325,20 @@ public class LogicGame : MonoBehaviour
                 targetAttack.GetComponent<HeroController>().ReceivedDamage(Random.Range(damageMin, damageMax));
                 buttonSkillSelected.GetComponent<ButtonSkill>().DeselectedSkill(1);
                 SoundManager.instance.PlaySFX(SoundManager.ClipItem.Attack);
+                // bool isAlive = targetAttack.GetComponent<HeroController>().ThePlayer.EvaluateIfAliveCharacter(targetAttack);
+                // if(targetAttack.GetComponent<HeroController>().life)
+                bool isAlive = targetAttack.GetComponent<HeroController>().CharacterIsAlive();
+                if (!isAlive)
+                {
+                    targetAttack.GetComponent<HeroController>().ThePlayer.ChangeStateAliveCharacter(targetAttack, false);
+                    bool stillSomethingAlive = targetAttack.GetComponent<HeroController>().ThePlayer.EvaluateIfExistStillAliveCharacter();
+                    if (!stillSomethingAlive)
+                    {
+                        GameManager.instance.GameOver = true;
+                        ShowVictory();                        
+                        Debug.Log("Perdiste.Se acabo el juego, se murieron todos tus heroes");
+                    }
+                }
             }
         }
         else if (targetAttack.GetComponent<EnemyController>() != null)
@@ -344,6 +350,19 @@ public class LogicGame : MonoBehaviour
                 targetAttack.GetComponent<EnemyController>().ReceivedDamage(Random.Range(damageMin, damageMax));
                 buttonSkillSelected.GetComponent<ButtonSkill>().DeselectedSkill(1);
                 SoundManager.instance.PlaySFX(SoundManager.ClipItem.Attack);
+                bool isAlive = targetAttack.GetComponent<EnemyController>().CharacterIsAlive();
+                if (!isAlive)
+                {
+                    targetAttack.GetComponent<EnemyController>().ThePlayer.ChangeStateAliveCharacter(targetAttack, false);
+                    bool stillSomethingAlive = targetAttack.GetComponent<EnemyController>().ThePlayer.EvaluateIfExistStillAliveCharacter();
+                    if (!stillSomethingAlive)
+                    {
+                        GameManager.instance.GameOver = true;
+                        ShowLoss();                        
+                        Debug.Log("Ganaster.Se acabo el juego, se murieron todos tus heroes");
+                    }
+                }
+
             }
         }
         else
@@ -357,6 +376,16 @@ public class LogicGame : MonoBehaviour
     {
         _movementDone += increment;
         _thePlayer.QuantityMovementBoardCurrent = _thePlayer.QuantityMovementBoardCurrent - 1;
+    }
+
+    private void ShowVictory()
+    {
+        objVictory.SetActive(true);
+    }
+
+    private void ShowLoss()
+    {
+        objLoss.SetActive(true);
     }
 
 }

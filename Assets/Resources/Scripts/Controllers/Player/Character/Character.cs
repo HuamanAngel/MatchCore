@@ -25,13 +25,17 @@ public abstract class Character : MonoBehaviour
     public AttackGrid.TypeOfAttack attackType = AttackGrid.TypeOfAttack.GRID_CROSS;
     protected Dictionary<string, int> _dataGrid = new Dictionary<string, int>();
     protected Animator _animator;
+    public int life = 200;
     public Skill FirstSkill { get => firstSkill; }
     public Skill SecondtSkill { get => secondtSkill; }
     public Skill ThreeSkill { get => threeSkill; }
     public Skill FourSkill { get => fourSkill; }
+    
     protected LogicGame _logicGame;
     protected PlayerBase _thePlayer;
     public PlayerBase ThePlayer { get => _thePlayer; set => _thePlayer = value; }
+    // Coroutines
+    protected Coroutine countingCoroutine;
     public void SetDataGrid(string key, int value)
     {
         if (_dataGrid.ContainsKey(key))
@@ -46,7 +50,7 @@ public abstract class Character : MonoBehaviour
     }
     public abstract void ReceivedDamage(int damageH);
     public abstract void Attack();
-    public abstract int CalculateDmg();
+    // public abstract int CalculateDmg();
 
     public abstract void UpdateAllStats();
     public abstract void StartBattle();
@@ -95,11 +99,6 @@ public abstract class Character : MonoBehaviour
         return false;
     }
 
-    // public void TextFloatingAnimation()
-    // {
-    //     StartCoroutine(_logicGame.FloatingText(new Vector3(1, 1, 1), "+" + 1, new Color32(23, 22, 222, 255), new Color32(23, 22, 222, 0)));
-    // }
-
     public Skill GetSkillSelected(Character _character)
     {
         if (_character.GetDataGrid("FirstSkillSelected") == 1)
@@ -143,9 +142,8 @@ public abstract class Character : MonoBehaviour
         _animator.SetBool("IsAttack", false);
     }
 
-    // public float ReturnTimeAnimation()
-    // {
-    //     AnimatorStateInfo animStateInfo = _animator.GetCurrentAnimatorStateInfo(0);
-    //     return animStateInfo.normalizedTime;
-    // }
+    public bool CharacterIsAlive()
+    {
+        return life > 0;
+    }
 }

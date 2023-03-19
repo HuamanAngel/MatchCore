@@ -95,24 +95,6 @@ public class EnemyController : Character
         BlueSphereG = BlueSphereG - firstSkill.blue;
         SetQuantitySpheres();
     }
-
-    public override int CalculateDmg()
-    {
-        RandomHelper random = new RandomHelper();
-        int randomDmg = random.RandomInt(damageMin, damageMax + 1);
-        if (firstSkill.id == 1)
-        {
-
-        }
-        if (firstSkill.id == 2)
-        {
-            int toLife = (int)(randomDmg * (firstSkill.value1 / 100));
-            Debug.Log("Like life : " + toLife);
-            life = life + toLife;
-            UpdateAllStats();
-        }
-        return randomDmg;
-    }
     public override void UpdateAllStats()
     {
         objLife.GetComponent<TMP_Text>().text = "" + life;
@@ -122,11 +104,34 @@ public class EnemyController : Character
         objectQuantitySpheresYellow.GetComponent<TMP_Text>().text = "x" + _thePlayer.YellowSphereG;
     }
 
+    public static Rect GetWorldRect(RectTransform rectTransform)
+    {
+        Vector3[] corners = new Vector3[4];
+        rectTransform.GetWorldCorners(corners);
+        // Get the bottom left corner.
+        Vector3 position = corners[0];
+
+        Vector2 size = new Vector2(
+            rectTransform.lossyScale.x * rectTransform.rect.size.x,
+            rectTransform.lossyScale.y * rectTransform.rect.size.y);
+
+        return new Rect(position, size);
+    }
 
     public override void ReceivedDamage(int damageH)
     {
-        life = life - ((damageH - defense) * (100 - perAbsortion) / 100);
-        UpdateAllStats();
+        int lifeBefore = life;
+        int totalDamage = ((damageH - defense) * (100 - perAbsortion) / 100);
+        // Vector3 originPosition = new Vector3(transform.position.x, transform.position.y, -1);
+        Vector3 originPosition = new Vector3(transform.position.x, transform.position.y, -1);
+        // GetWorldRect()
+        life = life - totalDamage;
+        if (countingCoroutine != null)
+        {
+            StopCoroutine(countingCoroutine);
+        }
+        countingCoroutine = StartCoroutine(EffectText.CountNumber(((result) => objLife.GetComponent<TMP_Text>().text = result), lifeBefore, life));
+        LogicGame.GetInstance().StartCoroutineTextFloating(originPosition, "" + totalDamage, new Color32(0xFF, 0x00, 0x00, 0xFF), new Color32(0xFF, 0x00, 0x00, 0x00));
     }
     public override void StartBattle()
     {

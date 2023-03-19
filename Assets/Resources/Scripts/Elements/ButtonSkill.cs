@@ -21,7 +21,7 @@ public class ButtonSkill : MonoBehaviour
     private Color32 colorDisabled = new Color32(0x6F, 0x6F, 0x6F, 0xFF);
     private Color32 colorEnabled = new Color32(0xFF, 0xFF, 0xFF, 0xFF);
     private Color32 colorInsufficient = new Color32(0xFF, 0x23, 0x23, 0xFF);
-    private int lengthOfLineRenderer = 2;
+    private int lengthOfLineRenderer = 30;
     private GameObject myLine;
     private LineRenderer lr;
     private int turnActivateSkill;
@@ -80,19 +80,28 @@ public class ButtonSkill : MonoBehaviour
     void Update()
     {
 
-        // for(int i = 0; i < lengthOfLineRenderer; i++) {
-        //     lr.SetPosition(i, new Vector3(i * 0.5f, Mathf.Sin(i + t), 0.0f));
-        // }                            
-        // lr.SetPosition(0, start);
-        // lr.SetPosition(1, end);        
         if (_isPressed)
         {
             // Vector3 start = new Vector3(transform.position.x, transform.position.y, -1);
             Vector3 cursorPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             Vector3 end = new Vector3(cursorPosition.x, cursorPosition.y, -1);
-            // var t = Time.time;
-            // lr.SetPosition(0, start);
-            lr.SetPosition(1, end);
+            Vector3 start = new Vector3(transform.position.x, transform.position.y, -1);
+            var t = Time.time;
+
+            float distanceBetweenPointsLineX = end.x - start.x;
+            float distanceBetweenPointsLineY = end.y - start.y;
+            float stepPointX = distanceBetweenPointsLineX / lengthOfLineRenderer;
+            float stepPointY = distanceBetweenPointsLineY / lengthOfLineRenderer;
+            for (int i = 1; i < lengthOfLineRenderer - 1; i++)
+            {
+                float axisX = start.x + stepPointX * i;
+                float axisY = start.y + (stepPointY * i) + (100 * (i / (lengthOfLineRenderer - 1)));
+                // float axisY = start.y + (stepPointY * i)  + i/10;
+                // Debug.Log(t);
+                // float axisY =  Mathf.Sin(i + t) + end.y;
+                lr.SetPosition(i, new Vector3(axisX, axisY, end.z));
+            }
+            lr.SetPosition(lengthOfLineRenderer - 1, end);
             // Vector3 start = new Vector3(transform.position.x, transform.position.y, -1);
             // Vector3 end = new Vector3(20, 20, 20);
             // myLine.transform.position = start;
@@ -154,19 +163,23 @@ public class ButtonSkill : MonoBehaviour
     }
     public void UseSkill()
     {
-        if (LogicGame.GetInstance().WhatTurn == 1)
+        if (!GameManager.instance.GameOver)
         {
-            if (_characterBelong.GetComponent<HeroController>() != null)
-            {
-                LogicLineAttack();
-            }
 
-        }
-        else if (LogicGame.GetInstance().WhatTurn == 2)
-        {
-            if (_characterBelong.GetComponent<EnemyController>() != null)
+            if (LogicGame.GetInstance().WhatTurn == 1)
             {
-                LogicLineAttack();
+                if (_characterBelong.GetComponent<HeroController>() != null)
+                {
+                    LogicLineAttack();
+                }
+
+            }
+            else if (LogicGame.GetInstance().WhatTurn == 2)
+            {
+                if (_characterBelong.GetComponent<EnemyController>() != null)
+                {
+                    LogicLineAttack();
+                }
             }
         }
     }
@@ -182,11 +195,15 @@ public class ButtonSkill : MonoBehaviour
                     myLine = new GameObject();
                     myLine.AddComponent<LineRenderer>();
                     lr = myLine.GetComponent<LineRenderer>();
+                    // lr.transform.position = transform.position + new Vector3(4,0,0);
                     lr.positionCount = lengthOfLineRenderer;
-                    lr.SetWidth(0.1f, 0.1f);
-                    Vector3 end = new Vector3(transform.position.x, transform.position.y, -1);
+                    lr.startWidth = 0.5f;
+                    lr.endWidth = 0.5f;
+                    lr.textureMode = LineTextureMode.Tile;
+                    lr.material = LogicGame.GetInstance().materialToLineRenderer;
+                    Vector3 start = new Vector3(transform.position.x, transform.position.y, -1);
                     // myLine.transform.position = new Vector3(transform.position.x, transform.position.y, -1);
-                    lr.SetPosition(0, end);
+                    lr.SetPosition(0, start);
 
                     LogicGame.GetInstance().IsCurrentSelectedSkill = true;
                     LogicGame.GetInstance().SkillSelected = theSkill;

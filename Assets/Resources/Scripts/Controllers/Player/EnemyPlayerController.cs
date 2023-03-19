@@ -89,6 +89,8 @@ public class EnemyPlayerController : PlayerBase
                 skillsCanvas[j].GetComponent<Button>().enabled = true;
             }
             _allHeroInPlay.Add(goHe);
+            _allCharactersAlive[goHe] = true;
+
             // goHe.AddComponent<EnemyInteligence>();
             // goHe.AddComponent<EnemyInteligence>().NumberOrden = i;
         }

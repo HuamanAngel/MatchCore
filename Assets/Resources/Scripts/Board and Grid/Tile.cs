@@ -44,50 +44,53 @@ public class Tile : MonoBehaviour
 
     void OnMouseDown()
     {
-        if (render.sprite == null || BoardManager.instance.IsShifting)
+        if (!GameManager.instance.GameOver)
         {
-            return;
-        }
-        if (LogicGame.GetInstance().CheckIfDoneMovementAvaible())
-        {
-            Vector3 originPosition = new Vector3(transform.position.x,transform.position.y,-1);
-            LogicGame.GetInstance().StartCoroutineTextFloating(originPosition,"No tienes mas movimientos",new Color32(0xFF,0x00,0x00,0xFF),new Color32(0xFF,0x00,0x00,0x00));
-        }
-        if (!LogicGame.GetInstance().IsCurrentSelectedSkill && !LogicGame.GetInstance().CheckIfDoneMovementAvaible())
-        {
-            if (isSelected)
-            { // Is it already selected?
-                Deselect();
-            }
-            else
+
+            if (render.sprite == null || BoardManager.instance.IsShifting)
             {
-                if (previousSelected == null)
-                {
-                    // Is it the first tile selected?
-                    Select();
+                return;
+            }
+            if (LogicGame.GetInstance().CheckIfDoneMovementAvaible())
+            {
+                Vector3 originPosition = new Vector3(transform.position.x, transform.position.y, -1);
+                LogicGame.GetInstance().StartCoroutineTextFloating(originPosition, "No tienes mas movimientos", new Color32(0xFF, 0x00, 0x00, 0xFF), new Color32(0xFF, 0x00, 0x00, 0x00));
+            }
+            if (!LogicGame.GetInstance().IsCurrentSelectedSkill && !LogicGame.GetInstance().CheckIfDoneMovementAvaible())
+            {
+                if (isSelected)
+                { // Is it already selected?
+                    Deselect();
                 }
                 else
                 {
-                    if (GetAllAdjacentTiles().Contains(previousSelected.gameObject))
+                    if (previousSelected == null)
                     {
-                        LogicGame.GetInstance().IncrementMovement();
-                        // Is it an adjacent tile?
-                        SwapSprite(previousSelected.render);
-                        prevTypeSphere = previousSelected.MyTypeSphere;
-                        previousSelected.ClearAllMatches(MyTypeSphere);
-                        previousSelected.Deselect();
-                        ClearAllMatches(prevTypeSphere);
-                        // prevTypeSphere = null;
+                        // Is it the first tile selected?
+                        Select();
                     }
                     else
                     {
-                        previousSelected.GetComponent<Tile>().Deselect();
-                        Select();
+                        if (GetAllAdjacentTiles().Contains(previousSelected.gameObject))
+                        {
+                            LogicGame.GetInstance().IncrementMovement();
+                            // Is it an adjacent tile?
+                            SwapSprite(previousSelected.render);
+                            prevTypeSphere = previousSelected.MyTypeSphere;
+                            previousSelected.ClearAllMatches(MyTypeSphere);
+                            previousSelected.Deselect();
+                            ClearAllMatches(prevTypeSphere);
+                            // prevTypeSphere = null;
+                        }
+                        else
+                        {
+                            previousSelected.GetComponent<Tile>().Deselect();
+                            Select();
+                        }
                     }
                 }
             }
         }
-
     }
 
     public void SwapSprite(SpriteRenderer render2)
@@ -103,7 +106,6 @@ public class Tile : MonoBehaviour
         myTypeSphere = InsertTypeSphereByNameSprite(render2.sprite.name);
         previousSelected.MyTypeSphere = InsertTypeSphereByNameSprite(render.sprite.name);
         SoundManager.instance.PlaySFX(SoundManager.ClipItem.Swap);
-        GUIManager.instance.MoveCounter--; // Add this line here
     }
     public Spheres.TypeOfSpheres InsertTypeSphereByNameSprite(string nameSprite)
     {
@@ -202,7 +204,15 @@ public class Tile : MonoBehaviour
         // Debug.Log("name previes : " + prevTypeSphere);
         if (quantityMatch != 0)
         {
-            _logicGame.GiveSpheres(quantityMatch, theSphere);
+            Color32 theColor;
+            Color32 endColorSphere;
+            int textAdd;
+            LogicGame.GetInstance().GiveSpheres(quantityMatch, theSphere, out textAdd, out theColor);
+            endColorSphere = theColor;
+            endColorSphere.a = 0;
+            Vector3 originPosition = new Vector3(transform.position.x, transform.position.y, -1);
+            LogicGame.GetInstance().StartCoroutineNumberFloating(originPosition, "+" + textAdd, theColor, endColorSphere);
+
         }
         // Debug.Log("Quantity total match : " + quantityMatch);
         quantityMatch = 0;
