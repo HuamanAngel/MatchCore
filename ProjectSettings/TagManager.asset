@@ -10,6 +10,8 @@ TagManager:
   - Armor
   - SkillCanvas
   - LogicGame
+  - Point
+  - Brigde
   layers:
   - Default
   - TransparentFX
