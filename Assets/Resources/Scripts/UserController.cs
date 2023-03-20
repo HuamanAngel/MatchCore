@@ -14,7 +14,14 @@ public class UserController : MonoBehaviour
 
     private void Awake()
     {
-        DontDestroyOnLoad(this.gameObject);        
+        if (_instance == null)
+        {
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
         user = new User();
         userEnemy = new User();
         _instance = this;
