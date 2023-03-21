@@ -38,6 +38,14 @@ public class SceneController : MonoBehaviour
         SceneManager.LoadScene(4,LoadSceneMode.Single);
     }
 
+    // public void ToBattle()
+    // {
+    //     SceneManager.LoadScene(5,LoadSceneMode.Single);
+    // }
+    public static void ToBattle()
+    {
+        SceneManager.LoadScene(5,LoadSceneMode.Single);
+    }    
     public void QuitApllication()
     {
         Application.Quit();

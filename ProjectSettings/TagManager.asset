@@ -12,6 +12,7 @@ TagManager:
   - LogicGame
   - Point
   - Brigde
+  - Enemy
   layers:
   - Default
   - TransparentFX

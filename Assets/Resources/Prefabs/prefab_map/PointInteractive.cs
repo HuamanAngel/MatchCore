@@ -12,11 +12,37 @@ public class PointInteractive : MonoBehaviour
     public List<DirectionMove.OptionMovements> DirectionAvaibleMovement { get => _directionAvaibleMovement; }
     void Start()
     {
+        Vector3 rayCastVector;
         CheckMapAndSetValuesInArray();
-        CheckBrigdeAdjacent();
         _directionAvaibleMovement = new List<DirectionMove.OptionMovements>();
-        _directionAvaibleMovement.Add(DirectionMove.OptionMovements.UP);
-        _directionAvaibleMovement.Add(DirectionMove.OptionMovements.RIGHT);
+
+        rayCastVector = Vector3.forward * 4 - new Vector3(0, +1.0f, 0);
+        if (CheckBrigdeAdjacent(rayCastVector))
+        {
+            _directionAvaibleMovement.Add(DirectionMove.OptionMovements.UP);
+        }
+
+        rayCastVector = Vector3.back * 4 - new Vector3(0, +1.0f, 0);
+        if (CheckBrigdeAdjacent(rayCastVector))
+        {
+            _directionAvaibleMovement.Add(DirectionMove.OptionMovements.BOTTOM);
+        }
+
+        rayCastVector = Vector3.right * 4 - new Vector3(0, +1.0f, 0);
+        if (CheckBrigdeAdjacent(rayCastVector))
+        {
+            _directionAvaibleMovement.Add(DirectionMove.OptionMovements.RIGHT);
+        }
+
+        rayCastVector = Vector3.left * 4 - new Vector3(0, +1.0f, 0);
+        if (CheckBrigdeAdjacent(rayCastVector))
+        {
+            _directionAvaibleMovement.Add(DirectionMove.OptionMovements.LEFT);
+        }
+
+        // CheckBrigdeAdjacent(rayCastVector);
+        // _directionAvaibleMovement.Add(DirectionMove.OptionMovements.UP);
+        // _directionAvaibleMovement.Add(DirectionMove.OptionMovements.RIGHT);
     }
 
     // Update is called once per frame
@@ -40,16 +66,18 @@ public class PointInteractive : MonoBehaviour
         posY = SelectionBattleManager.GetInstance().GridTileMap.GetLength(1) - 1 - (int)Mathf.Floor(rangeInPosY);
     }
 
-    public void CheckBrigdeAdjacent()
+    public bool CheckBrigdeAdjacent(Vector3 rayCastDirection)
     {
         RaycastHit objectHit;
         // Debug.DrawRay(transform.position, Vector3.forward * 4 - new Vector3(0, + 1.0f, 0), Color.red, 30, false);
-        if (Physics.Raycast(transform.position, Vector3.forward * 4 - new Vector3(0, + 1.0f, 0), out objectHit))
+        if (Physics.Raycast(transform.position, rayCastDirection, out objectHit))
         {
             if (objectHit.collider.transform.gameObject.tag == "Brigde")
             {
-                Debug.Log(objectHit.collider.transform.gameObject.tag);
+                return true;
+                // Debug.Log(objectHit.collider.transform.gameObject.tag);
             }
         }
+        return false;
     }
 }
