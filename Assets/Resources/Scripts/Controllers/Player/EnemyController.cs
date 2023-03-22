@@ -7,10 +7,6 @@ using UnityEditor;
 public class EnemyController : Character
 {
     public Texture textureIcon;
-
-    public int life = 120;
-    public int damageMax = 15;
-    public int damageMin = 12;
     public int defense = 2;
     // public int armor =60;
     public int perAbsortion = 10;

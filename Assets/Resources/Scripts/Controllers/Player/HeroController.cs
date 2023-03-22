@@ -8,9 +8,6 @@ public class HeroController : Character
 {
     // Start is called before the first frame update
     // public int damage = 20;
-
-    public int damageMax = 20;
-    public int damageMin = 16;
     public int defense = 4;
     // public int armor = 100;
     public int perAbsortion = 10;

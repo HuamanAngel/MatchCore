@@ -29,11 +29,12 @@ public class EnemyPlayerController : PlayerBase
 
     void Start()
     {
-        GameObject[] goCh = GameObject.FindGameObjectsWithTag("DataUser");
-        _dataUserGameObject = goCh[0].GetComponent<UserController>();
+        _dataUserGameObject = UserController.GetInstance();
         RandomSphere(4, 8);
         SetQuantitySpheres();
         User theUser = _dataUserGameObject.userEnemy;
+        Debug.Log("En la batalla : " + _dataUserGameObject.userEnemy.CharInCombat.Count);
+        
         for (int i = 0; i < theUser.CharInCombat.Count; i++)
         {
             GameObject goHe = player1Tiers[i];

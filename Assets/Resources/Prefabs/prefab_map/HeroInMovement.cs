@@ -19,6 +19,7 @@ public class HeroInMovement : MonoBehaviour
     private int _quantityMovementsInScene = 4;
     public GameObject screenGameOver;
     public DirectionMove.OptionMovements DirectionMovement { get => _directionMovement; set => _directionMovement = value; }
+    public bool IsMovement { get => _isMovement; }
     public PostProcessVolume transitionEffectGameObject;
     public static HeroInMovement GetInstance()
     {
@@ -28,11 +29,15 @@ public class HeroInMovement : MonoBehaviour
     {
         _instance = this;
         _rb = GetComponent<Rigidbody>();
+        _allArrows = new List<GameObject>();
     }
 
     void Start()
     {
-        _allArrows = new List<GameObject>();
+        if (UserController.GetInstance().StateInBattle.CurrentPosition != Vector3.zero)
+        {
+            transform.position = UserController.GetInstance().StateInBattle.CurrentPosition;
+        }
         CreateArrowDirection();
         SetQuantityMovements();
         // StartCoroutine(TransitionToBattle());
@@ -54,9 +59,8 @@ public class HeroInMovement : MonoBehaviour
         {
             if (objectHit.collider.transform.gameObject.tag == "Point")
             {
-                List<DirectionMove.OptionMovements> movementsAvaibles = objectHit.collider.transform.gameObject.GetComponent<PointInteractive>().DirectionAvaibleMovement;
-
-
+                List<DirectionMove.OptionMovements> movementsAvaibles;
+                movementsAvaibles = objectHit.collider.transform.gameObject.GetComponent<PointInteractive>().DirectionAvaibleMovement;
                 foreach (DirectionMove.OptionMovements theMovement in movementsAvaibles)
                 {
                     switch (theMovement)
@@ -134,6 +138,7 @@ public class HeroInMovement : MonoBehaviour
     }
     public IEnumerator DoMoving(Vector3 target)
     {
+        _isMovement = true;
         while (Vector3.Distance(target, transform.position) > 0.001f)
         {
             transform.position = Vector3.MoveTowards(transform.position, target, _speedMove * Time.deltaTime);
@@ -153,18 +158,19 @@ public class HeroInMovement : MonoBehaviour
             }
         }
         transform.position = aditionalMovement;
-
+        _isMovement = false;
         Vector3[] directionRayCast = new Vector3[] { Vector3.forward * 3, Vector3.back * 3, Vector3.right * 3, Vector3.left * 3 };
-        if (!CheckIfEnemieExistInDirection(directionRayCast))
+        List<Charac> allCharactersEnemiesCollision = new List<Charac>();
+        if (!CheckIfEnemieExistInDirection(directionRayCast, out allCharactersEnemiesCollision))
         {
             CreateArrowDirection();
             CheckIfGameOver();
         }
         else
         {
-            Debug.Log("cargando");
+            // Debug.Log("cargando");
             // TransitionToBattle();
-            StartCoroutine(TransitionToBattle());
+            StartCoroutine(TransitionToBattle(allCharactersEnemiesCollision));
 
         }
     }
@@ -185,10 +191,11 @@ public class HeroInMovement : MonoBehaviour
             screenGameOver.SetActive(true);
         }
     }
-    public bool CheckIfEnemieExistInDirection(Vector3[] directionRaycast)
+    public bool CheckIfEnemieExistInDirection(Vector3[] directionRaycast, out List<Charac> _enemiesCollision)
     {
         RaycastHit objectHit;
         // Vector3 positionToArrow = Vector3.zero;
+        _enemiesCollision = new List<Charac>();
         for (int i = 0; i < directionRaycast.Length; i++)
         {
             Debug.DrawRay(transform.position, directionRaycast[i], Color.green, 30, false);
@@ -196,7 +203,7 @@ public class HeroInMovement : MonoBehaviour
             {
                 if (objectHit.collider.transform.gameObject.tag == "Enemy")
                 {
-                    // Debug.Log("Collision with enemy");
+                    _enemiesCollision = objectHit.collider.transform.gameObject.GetComponent<EnemyInMovement>().theCharacters;
                     return true;
                 }
             }
@@ -219,15 +226,8 @@ public class HeroInMovement : MonoBehaviour
         return Vector3.zero;
     }
 
-    public IEnumerator TransitionToBattle()
+    public IEnumerator TransitionToBattle(List<Charac> allCharactersEnemiesCollision)
     {
-        // PostProcessVolume theEffects = transitionEffectGameObject.GetComponent<PostProcessVolume>();
-        // Bloom b;
-        // theEffects.profile.TryGetSettings(out b);
-        // b.intensity.value = 50.0f;
-
-
-
         DepthOfField dof;
         Bloom b;
         AutoExposure ae;
@@ -249,21 +249,30 @@ public class HeroInMovement : MonoBehaviour
         float initTransitionBloom = endValueFocalLength - endBloomIntensity;
         float initTransitionAutoExposure = endValueFocalLength - endValueMinEv;
 
-        while(dof.focalLength.value < endValueFocalLength)
+        while (dof.focalLength.value < endValueFocalLength)
         {
             dof.focalLength.value = initialValueFocalLength;
-            if(initTransitionBloom <= initialValueFocalLength)
+            if (initTransitionBloom <= initialValueFocalLength)
             {
                 b.intensity.value += 3;
             }
-            if(initTransitionAutoExposure <= initialValueFocalLength)
-            {   
+            if (initTransitionAutoExposure <= initialValueFocalLength)
+            {
                 ae.minLuminance.value += 3;
             }
 
-            initialValueFocalLength +=3 ;
+            initialValueFocalLength += 3;
             yield return new WaitForSeconds(0.0001f);
         }
+        // Set data for scene battle
+        UserController.GetInstance().StateInBattle.CurrentPosition = transform.position;
+        UserController.GetInstance().StateInBattle.AllEnemiesForBattleCurrent = allCharactersEnemiesCollision;
+        UserController.GetInstance().userEnemy.CharInCombat = allCharactersEnemiesCollision;
+
+        // UserController.GetInstance().StateInBattle.AllEnemiesInMapMovement
+        UserController.GetInstance().StateInBattle.QuantityMovementAvaible = _quantityMovementsInScene;
+        // UserController.GetInstance().user.CharInCombat = 
+
         SceneController.ToBattle();
     }
 }

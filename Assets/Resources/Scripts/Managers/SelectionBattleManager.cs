@@ -33,6 +33,7 @@ public class SelectionBattleManager : MonoBehaviour
         _instance = this;
         _terrainWidth = (int)getTerrain.terrainData.size.x;
         _terrainLength = (int)getTerrain.terrainData.size.z;
+        // sizeForTile = 12;
         // _gridTileMap = new int[(int)_terrainWidth / sizeForTile, (int)_terrainLength / sizeForTile];
         // _gridTileMap = new int[,]{
         //     {1,1,0,0},

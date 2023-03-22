@@ -5,8 +5,10 @@ using UnityEngine.UI;
 public class UserController : MonoBehaviour
 {
     private static UserController _instance;
+    private StatesInBattle _stateInBattle;
     public User user;
     public User userEnemy;
+    public StatesInBattle StateInBattle { get => _stateInBattle; set => _stateInBattle = value; }
     public static UserController GetInstance()
     {
         return _instance;
@@ -14,32 +16,23 @@ public class UserController : MonoBehaviour
 
     private void Awake()
     {
-        if (_instance == null)
+        if (UserController.GetInstance() != null)
         {
-            DontDestroyOnLoad(gameObject);
+            Destroy(this.gameObject);
         }
         else
         {
-            Destroy(gameObject);
+            _instance = this;
+            DontDestroyOnLoad(gameObject);
         }
         user = new User();
         userEnemy = new User();
-        _instance = this;
+        _stateInBattle = new StatesInBattle();
 
-
-        Charac oneCharacter = JsonReaderA.SearchCharacterById(1);
-        // Charac secondCharacter = JsonReaderA.SearchCharacterById(3);
-
-        oneCharacter.lvl = 1;
-        oneCharacter.InitialValuesDerived();
-        // secondCharacter.lvl = 4;
-        // secondCharacter.InitialValuesDerived();
-        // RecalculateValuesDerived
+        Charac oneCharacter = CreateNewCharacterInScene(1, 1); ;
         // Add to user data
         user.CharInCombat.Add(oneCharacter);
-        // user.CharInCombat.Add(secondCharacter);
         user.CharAll.Add(oneCharacter);
-        // user.CharAll.Add(secondCharacter);
 
         user.LvlGeneral = 1;
         user.Name = "Oxipusio";
@@ -49,26 +42,18 @@ public class UserController : MonoBehaviour
         // Enemies
 
 
+        Charac oneCharacterE = CreateNewCharacterInScene(1, 1);
+        // Charac secondCharacterE = CreateNewCharacterInScene(3,4);
+        // Charac thirdCharacterE = CreateNewCharacterInScene(1,10);
 
-
-        Charac oneCharacterE = JsonReaderA.SearchCharacterById(1);
-        Charac secondCharacterE = JsonReaderA.SearchCharacterById(3);
-        Charac thirdCharacterE = JsonReaderA.SearchCharacterById(1);
-
-        oneCharacterE.lvl = 1;
-        oneCharacterE.InitialValuesDerived();
-        secondCharacterE.lvl = 4;
-        secondCharacterE.InitialValuesDerived();
-        secondCharacterE.lvl = 10;
-        thirdCharacterE.InitialValuesDerived();
         // RecalculateValuesDerived
         // Add to user data
         userEnemy.CharInCombat.Add(oneCharacterE);
-        userEnemy.CharInCombat.Add(secondCharacterE);
-        userEnemy.CharInCombat.Add(thirdCharacterE);
+        // userEnemy.CharInCombat.Add(secondCharacterE);
+        // userEnemy.CharInCombat.Add(thirdCharacterE);
         userEnemy.CharAll.Add(oneCharacterE);
-        userEnemy.CharAll.Add(secondCharacterE);
-        userEnemy.CharAll.Add(thirdCharacterE);
+        // userEnemy.CharAll.Add(secondCharacterE);
+        // userEnemy.CharAll.Add(thirdCharacterE);
 
         userEnemy.LvlGeneral = 1;
         userEnemy.Name = "The enemies";
@@ -76,17 +61,30 @@ public class UserController : MonoBehaviour
 
 
     }
-    // Start is called before the first frame update
-    void Start()
+
+    public Charac CreateNewCharacterInScene(int idCharacter, int lvl)
     {
-
-
-        // Debug.Log("aca el armor total + " + user.CharInCombat[0].armorTotal);
+        Charac theNewCharacter = JsonReaderA.SearchCharacterById(idCharacter);
+        theNewCharacter.lvl = lvl;
+        theNewCharacter.InitialValuesDerived();
+        return theNewCharacter;
     }
+    // Start is called before the first frame update
 
-    // Update is called once per frame
-    void Update()
+    // public void UpdateValuesStateInBattleMovement(int quantityMovementAvaible= -1, Vector3 currentPosition = Vector3.zero)
+    // {
+    //     if(quantityMovementAvaible != -1)
+    //     {
+    //         _stateInBattle.QuantityMovementAvaible = quantityMovementAvaible;
+    //     }
+
+    //     if(currentPosition != Vector3.zero)
+    //     {
+    //         _stateInBattle.CurrentPosition = currentPosition;
+    //     }
+    // }
+    public void ResetValuesStateInBattleMovement()
     {
-
+        _stateInBattle.ResetStateInitial();
     }
 }

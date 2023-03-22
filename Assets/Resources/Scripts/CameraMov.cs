@@ -10,30 +10,34 @@ public class CameraMov : MonoBehaviour
     public int modeCamera = 1;
     private Vector3 distanceFromHero;
     public GameObject objectToFollow;
-
+    private HeroInMovement hm;
+    private UserController userController;
     void Start()
     {
-        if(modeCamera == 2)
+        hm = HeroInMovement.GetInstance();
+        userController = UserController.GetInstance();
+        if (userController.StateInBattle.CurrentPosition != Vector3.zero)
         {
-            distanceFromHero = transform.position - objectToFollow.transform.position;
+
+            transform.position = new Vector3(userController.StateInBattle.CurrentPosition.x, transform.position.y, userController.StateInBattle.CurrentPosition.z);
+            // transform.position = UserController.GetInstance().StateInBattle.CurrentPosition;
         }
-        
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(modeCamera == 1)
+        if (!hm.IsMovement)
         {
             var translation = GetInputTranslationDirectionA() * Time.deltaTime;
-
             translation *= 10.0f;
             this.transform.position += translation;
-        }else if(modeCamera == 2)
-        {
-            transform.position = objectToFollow.transform.position + distanceFromHero;        
         }
-        
+        else
+        {
+            transform.position = new Vector3(hm.gameObject.transform.position.x, transform.position.y, hm.gameObject.transform.position.z);
+        }
+
     }
 
 

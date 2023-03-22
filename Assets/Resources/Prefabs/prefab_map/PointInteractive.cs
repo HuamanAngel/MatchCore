@@ -10,6 +10,12 @@ public class PointInteractive : MonoBehaviour
     public int PostY { get => posY; set => posY = value; }
     private List<DirectionMove.OptionMovements> _directionAvaibleMovement;
     public List<DirectionMove.OptionMovements> DirectionAvaibleMovement { get => _directionAvaibleMovement; }
+    private void Awake() {
+        
+    }
+    private void OnEnable() {
+        // Debug.Log("vacaciones");
+    }
     void Start()
     {
         Vector3 rayCastVector;
@@ -39,10 +45,7 @@ public class PointInteractive : MonoBehaviour
         {
             _directionAvaibleMovement.Add(DirectionMove.OptionMovements.LEFT);
         }
-
-        // CheckBrigdeAdjacent(rayCastVector);
-        // _directionAvaibleMovement.Add(DirectionMove.OptionMovements.UP);
-        // _directionAvaibleMovement.Add(DirectionMove.OptionMovements.RIGHT);
+        // Debug.Log("aca direction : " + _directionAvaibleMovement);
     }
 
     // Update is called once per frame

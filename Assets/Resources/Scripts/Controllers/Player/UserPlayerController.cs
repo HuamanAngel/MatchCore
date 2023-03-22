@@ -20,8 +20,7 @@ public class UserPlayerController : PlayerBase
 
     void Start()
     {
-        GameObject[] goCh = GameObject.FindGameObjectsWithTag("DataUser");
-        _dataUserGameObject = goCh[0].GetComponent<UserController>();
+        _dataUserGameObject = UserController.GetInstance();
         RandomSphere(4, 8);
         SetQuantitySpheres();
         User theUser = _dataUserGameObject.user;

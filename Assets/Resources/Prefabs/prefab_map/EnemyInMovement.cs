@@ -4,14 +4,22 @@ using UnityEngine;
 
 public class EnemyInMovement : MonoBehaviour
 {
-    private int[] idCharacter;
+    public List<Charac> theCharacters;
     void Start()
     {
-        idCharacter = new int[3];
-        idCharacter[0] = 1;
-        idCharacter[1] = 2;
-        idCharacter[2] = 3;
+        theCharacters = new List<Charac>();
 
+        Charac theNewCharacter = JsonReaderA.SearchCharacterById(1);
+        theNewCharacter.lvl = 1;
+        theNewCharacter.InitialValuesDerived();
+
+
+        // Charac theNewCharacter2 = JsonReaderA.SearchCharacterById(1);
+        // theNewCharacter2.lvl = 1;
+        // theNewCharacter2.InitialValuesDerived();
+
+        theCharacters.Add(theNewCharacter);
+        // theCharacters.Add(theNewCharacter2);
     }
     // Update is called once per frame
     void Update()

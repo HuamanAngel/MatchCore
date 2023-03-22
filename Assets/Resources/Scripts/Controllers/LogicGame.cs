@@ -335,8 +335,7 @@ public class LogicGame : MonoBehaviour
                     if (!stillSomethingAlive)
                     {
                         GameManager.instance.GameOver = true;
-                        ShowVictory();                        
-                        Debug.Log("Perdiste.Se acabo el juego, se murieron todos tus heroes");
+                        ShowLoss();               
                     }
                 }
             }
@@ -351,6 +350,7 @@ public class LogicGame : MonoBehaviour
                 buttonSkillSelected.GetComponent<ButtonSkill>().DeselectedSkill(1);
                 SoundManager.instance.PlaySFX(SoundManager.ClipItem.Attack);
                 bool isAlive = targetAttack.GetComponent<EnemyController>().CharacterIsAlive();
+                Debug.Log("is alive : " + isAlive);
                 if (!isAlive)
                 {
                     targetAttack.GetComponent<EnemyController>().ThePlayer.ChangeStateAliveCharacter(targetAttack, false);
@@ -358,8 +358,7 @@ public class LogicGame : MonoBehaviour
                     if (!stillSomethingAlive)
                     {
                         GameManager.instance.GameOver = true;
-                        ShowLoss();                        
-                        Debug.Log("Ganaster.Se acabo el juego, se murieron todos tus heroes");
+                        ShowVictory();                        
                     }
                 }
 
