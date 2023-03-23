@@ -335,7 +335,7 @@ public class LogicGame : MonoBehaviour
                     if (!stillSomethingAlive)
                     {
                         GameManager.instance.GameOver = true;
-                        ShowLoss();               
+                        ShowLoss();
                     }
                 }
             }
@@ -358,7 +358,8 @@ public class LogicGame : MonoBehaviour
                     if (!stillSomethingAlive)
                     {
                         GameManager.instance.GameOver = true;
-                        ShowVictory();                        
+                        UserController.GetInstance().StateInBattle.IsDeadCharacter = true;
+                        ShowVictory();
                     }
                 }
 

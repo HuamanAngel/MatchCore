@@ -18,6 +18,7 @@ public class HeroInMovement : MonoBehaviour
     private bool _isMovement = false;
     private int _quantityMovementsInScene = 4;
     public GameObject screenGameOver;
+    public GameObject screenVictory;
     public DirectionMove.OptionMovements DirectionMovement { get => _directionMovement; set => _directionMovement = value; }
     public bool IsMovement { get => _isMovement; }
     public PostProcessVolume transitionEffectGameObject;
@@ -38,11 +39,57 @@ public class HeroInMovement : MonoBehaviour
         {
             transform.position = UserController.GetInstance().StateInBattle.CurrentPosition;
         }
-        CreateArrowDirection();
         SetQuantityMovements();
-        // StartCoroutine(TransitionToBattle());
+        // UserController.GetInstance().StateInBattle.IsDeadCharacter = true;
+        if (UserController.GetInstance().StateInBattle.IsDeadCharacter)
+        {
+            List<GameObject> goEnemiesCollision = new List<GameObject>();
+            // List<Charac> allCharactersEnemiesCollision = new List<Charac>();
+            Vector3[] directionRayCast = new Vector3[1];
+            switch (UserController.GetInstance().StateInBattle.DirectionEnemyTakeIt)
+            {
+                case DirectionMove.OptionMovements.UP:
+                    directionRayCast[0] = Vector3.forward * 3;
+                    break;
+                case DirectionMove.OptionMovements.BOTTOM:
+                    directionRayCast[0] = Vector3.back * 3;
+                    break;
+                case DirectionMove.OptionMovements.RIGHT:
+                    directionRayCast[0] = Vector3.right * 3;
+                    break;
+                case DirectionMove.OptionMovements.LEFT:
+                    directionRayCast[0] = Vector3.left * 3;
+                    break;
+            }
+            if (CheckIfEnemieExistInDirection(directionRayCast, out goEnemiesCollision))
+            {
+                goEnemiesCollision[0].GetComponent<EnemyInMovement>().DieThisEnemy();
+                goEnemiesCollision[0].GetComponent<EnemyInMovement>().IsALive = false;
+                Debug.Log("Es el final : " + goEnemiesCollision[0].GetComponent<EnemyInMovement>().IsEnemyFinalOfMap);
+                StartCoroutine(WaitForFinishAnimationDeadEnemy(goEnemiesCollision[0].GetComponent<EnemyInMovement>().IsEnemyFinalOfMap));
+            }
+        }
+        else
+        {
+            CreateArrowDirection();
+        }
     }
 
+    IEnumerator WaitForFinishAnimationDeadEnemy(bool isEnemyFinal)
+    {
+        while (UserController.GetInstance().StateInBattle.IsDeadCharacter)
+        {
+            yield return null;
+        }
+        if (isEnemyFinal)
+        {
+            screenVictory.SetActive(true);
+        }
+        else
+        {
+            CreateArrowDirection();
+        }
+    }
     // Update is called once per frame
     void Update()
     {
@@ -160,14 +207,16 @@ public class HeroInMovement : MonoBehaviour
         transform.position = aditionalMovement;
         _isMovement = false;
         Vector3[] directionRayCast = new Vector3[] { Vector3.forward * 3, Vector3.back * 3, Vector3.right * 3, Vector3.left * 3 };
-        List<Charac> allCharactersEnemiesCollision = new List<Charac>();
-        if (!CheckIfEnemieExistInDirection(directionRayCast, out allCharactersEnemiesCollision))
+        List<GameObject> goEnemiesCollision = new List<GameObject>();
+        if (!CheckIfEnemieExistInDirection(directionRayCast, out goEnemiesCollision))
         {
             CreateArrowDirection();
             CheckIfGameOver();
         }
         else
         {
+            List<Charac> allCharactersEnemiesCollision = new List<Charac>();
+            allCharactersEnemiesCollision = goEnemiesCollision[0].GetComponent<EnemyInMovement>().TheCharacters;
             // Debug.Log("cargando");
             // TransitionToBattle();
             StartCoroutine(TransitionToBattle(allCharactersEnemiesCollision));
@@ -191,11 +240,10 @@ public class HeroInMovement : MonoBehaviour
             screenGameOver.SetActive(true);
         }
     }
-    public bool CheckIfEnemieExistInDirection(Vector3[] directionRaycast, out List<Charac> _enemiesCollision)
+    public bool CheckIfEnemieExistInDirection(Vector3[] directionRaycast, out List<GameObject> _enemiesCollision)
     {
         RaycastHit objectHit;
-        // Vector3 positionToArrow = Vector3.zero;
-        _enemiesCollision = new List<Charac>();
+        _enemiesCollision = new List<GameObject>();
         for (int i = 0; i < directionRaycast.Length; i++)
         {
             Debug.DrawRay(transform.position, directionRaycast[i], Color.green, 30, false);
@@ -203,7 +251,24 @@ public class HeroInMovement : MonoBehaviour
             {
                 if (objectHit.collider.transform.gameObject.tag == "Enemy")
                 {
-                    _enemiesCollision = objectHit.collider.transform.gameObject.GetComponent<EnemyInMovement>().theCharacters;
+                    if (i == 0)
+                    {
+                        UserController.GetInstance().StateInBattle.DirectionEnemyTakeIt = DirectionMove.OptionMovements.UP;
+                    }
+                    else if (i == 1)
+                    {
+                        UserController.GetInstance().StateInBattle.DirectionEnemyTakeIt = DirectionMove.OptionMovements.BOTTOM;
+                    }
+                    else if (i == 2)
+                    {
+                        UserController.GetInstance().StateInBattle.DirectionEnemyTakeIt = DirectionMove.OptionMovements.RIGHT;
+                    }
+                    else if (i == 3)
+                    {
+                        UserController.GetInstance().StateInBattle.DirectionEnemyTakeIt = DirectionMove.OptionMovements.LEFT;
+                    }
+                    // DirectionEnemyTakeIt
+                    _enemiesCollision.Add(objectHit.collider.transform.gameObject);
                     return true;
                 }
             }

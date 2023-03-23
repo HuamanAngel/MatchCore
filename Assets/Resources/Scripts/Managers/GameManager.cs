@@ -23,16 +23,16 @@ public class GameManager : MonoBehaviour
         // SceneManager.sceneLoaded += OnLevelFinishedLoading;
 
         // Only 1 Game Manager can exist at a time
-        // if (instance == null)
-        // {
-        //     // DontDestroyOnLoad(gameObject);
-        //     instance = GetComponent<GameManager>();
-        //     SceneManager.sceneLoaded += OnLevelFinishedLoading;
-        // }
-        // else
-        // {
-        //     Destroy(gameObject);
-        // }
+        if (instance == null)
+        {
+            DontDestroyOnLoad(gameObject);
+            instance = GetComponent<GameManager>();
+            // SceneManager.sceneLoaded += OnLevelFinishedLoading;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
     void Update()

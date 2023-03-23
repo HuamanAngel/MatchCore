@@ -8,6 +8,7 @@ public class Charac
 {
     public int id;
     public string name;
+    public string type;
     public int yellow;
     public int blue;
     public int red;

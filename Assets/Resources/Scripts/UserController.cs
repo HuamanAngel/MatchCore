@@ -64,25 +64,12 @@ public class UserController : MonoBehaviour
 
     public Charac CreateNewCharacterInScene(int idCharacter, int lvl)
     {
-        Charac theNewCharacter = JsonReaderA.SearchCharacterById(idCharacter);
+        Charac theNewCharacter = GameData.GetInstance().allCharacters.SearchCharacterById(idCharacter);
         theNewCharacter.lvl = lvl;
         theNewCharacter.InitialValuesDerived();
         return theNewCharacter;
     }
-    // Start is called before the first frame update
 
-    // public void UpdateValuesStateInBattleMovement(int quantityMovementAvaible= -1, Vector3 currentPosition = Vector3.zero)
-    // {
-    //     if(quantityMovementAvaible != -1)
-    //     {
-    //         _stateInBattle.QuantityMovementAvaible = quantityMovementAvaible;
-    //     }
-
-    //     if(currentPosition != Vector3.zero)
-    //     {
-    //         _stateInBattle.CurrentPosition = currentPosition;
-    //     }
-    // }
     public void ResetValuesStateInBattleMovement()
     {
         _stateInBattle.ResetStateInitial();
