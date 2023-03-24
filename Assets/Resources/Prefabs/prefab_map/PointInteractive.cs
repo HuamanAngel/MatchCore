@@ -4,53 +4,143 @@ using UnityEngine;
 
 public class PointInteractive : MonoBehaviour
 {
+    public string idElement;
     private int posX;
     private int posY;
-    public int PostX { get => posX; set => posX = value; }
-    public int PostY { get => posY; set => posY = value; }
+    private Dictionary<DirectionMove.OptionMovements, GameObject> _enemiesAround;
+    private Dictionary<DirectionMove.OptionMovements, GameObject> _treasuresAround;
+    private bool _heroIsHere = false;
+    public int PosX { get => posX; set => posX = value; }
+    public int PosY { get => posY; set => posY = value; }
     private List<DirectionMove.OptionMovements> _directionAvaibleMovement;
+    private List<DirectionMove.OptionMovements> _sideAvaibles;
     public List<DirectionMove.OptionMovements> DirectionAvaibleMovement { get => _directionAvaibleMovement; }
-    private void Awake() {
-        
-    }
-    private void OnEnable() {
-        // Debug.Log("vacaciones");
-    }
-    void Start()
+    private void Awake()
     {
         Vector3 rayCastVector;
-        CheckMapAndSetValuesInArray();
+        _enemiesAround = new Dictionary<DirectionMove.OptionMovements, GameObject>();
+        _treasuresAround = new Dictionary<DirectionMove.OptionMovements, GameObject>();
         _directionAvaibleMovement = new List<DirectionMove.OptionMovements>();
+        _sideAvaibles = new List<DirectionMove.OptionMovements>();
+        _sideAvaibles = new List<DirectionMove.OptionMovements>() { DirectionMove.OptionMovements.BOTTOM, DirectionMove.OptionMovements.UP, DirectionMove.OptionMovements.RIGHT, DirectionMove.OptionMovements.LEFT };
 
-        rayCastVector = Vector3.forward * 4 - new Vector3(0, +1.0f, 0);
-        if (CheckBrigdeAdjacent(rayCastVector))
+        CheckMapAndSetValuesInArray();
+        Debug.Log("My id : " + idElement);
+        if (!UserController.GetInstance().StateInBattle.EnemiesInMap.ContainsKey(idElement))
         {
-            _directionAvaibleMovement.Add(DirectionMove.OptionMovements.UP);
+            UserController.GetInstance().StateInBattle.EnemiesInMap[idElement] = new PointInteractiveStructure();
+
+            rayCastVector = Vector3.forward * 4 - new Vector3(0, +1.0f, 0);
+            if (CheckBrigdeAdjacent(rayCastVector))
+            {
+                _directionAvaibleMovement.Add(DirectionMove.OptionMovements.UP);
+            }
+
+            rayCastVector = Vector3.back * 4 - new Vector3(0, +1.0f, 0);
+            if (CheckBrigdeAdjacent(rayCastVector))
+            {
+                _directionAvaibleMovement.Add(DirectionMove.OptionMovements.BOTTOM);
+            }
+
+            rayCastVector = Vector3.right * 4 - new Vector3(0, +1.0f, 0);
+            if (CheckBrigdeAdjacent(rayCastVector))
+            {
+                _directionAvaibleMovement.Add(DirectionMove.OptionMovements.RIGHT);
+            }
+
+            rayCastVector = Vector3.left * 4 - new Vector3(0, +1.0f, 0);
+            if (CheckBrigdeAdjacent(rayCastVector))
+            {
+                _directionAvaibleMovement.Add(DirectionMove.OptionMovements.LEFT);
+            }
+            // _sideAvaibles.AddRange(_directionAvaibleMovement);
+            _heroIsHere = CheckIfHereIsHere();
+            if (!_heroIsHere)
+            {
+                CreateEnemyAround();
+                CreateTreasureAround();
+            }
+        }
+        else
+        {
+            PointInteractiveStructure goPointInteractive = UserController.GetInstance().StateInBattle.EnemiesInMap[idElement];
+            _directionAvaibleMovement = goPointInteractive.DirectionAvaibleMovement;
+            _sideAvaibles = goPointInteractive.SideAvaibles;
+
+
+            DirectionMove.OptionMovements directionSelectedToCreate = DirectionMove.OptionMovements.LEFT;
+            foreach (var enemiesPosition in goPointInteractive.PositionEnemies)
+            {
+                GameObject enemyObject = Instantiate(SelectionBattleManager.GetInstance().prefabEnemies[0]);
+                enemyObject.transform.parent = transform;
+                directionSelectedToCreate = enemiesPosition.Key;
+                enemyObject.transform.localPosition = PositionAroundThisPoint(directionSelectedToCreate);
+                _enemiesAround[directionSelectedToCreate] = enemyObject;
+            }
+
+            // DirectionMove.OptionMovements directionSelectedToCreate = DirectionMove.OptionMovements.LEFT;
+            foreach (var treasurePosition in goPointInteractive.PositionTreasures)
+            {
+                GameObject treasureObject = Instantiate(SelectionBattleManager.GetInstance().prefabTreasures[0]);
+                treasureObject.transform.parent = transform;
+                directionSelectedToCreate = treasurePosition.Key;
+                treasureObject.transform.localPosition = PositionAroundThisPoint(directionSelectedToCreate);
+                _treasuresAround[directionSelectedToCreate] = treasureObject;
+            }
+
+        }
+        UserController.GetInstance().StateInBattle.EnemiesInMap[idElement].PositionEnemies.Clear();
+        UserController.GetInstance().StateInBattle.EnemiesInMap[idElement].DirectionAvaibleMovement = _directionAvaibleMovement;
+        UserController.GetInstance().StateInBattle.EnemiesInMap[idElement].SideAvaibles = _sideAvaibles;
+        foreach (var enemyDirection in _enemiesAround)
+        {
+            UserController.GetInstance().StateInBattle.EnemiesInMap[idElement].PositionEnemies[enemyDirection.Key] = enemyDirection.Value.transform.position;
         }
 
-        rayCastVector = Vector3.back * 4 - new Vector3(0, +1.0f, 0);
-        if (CheckBrigdeAdjacent(rayCastVector))
+        foreach (var treasureDirection in _treasuresAround)
         {
-            _directionAvaibleMovement.Add(DirectionMove.OptionMovements.BOTTOM);
-        }
-
-        rayCastVector = Vector3.right * 4 - new Vector3(0, +1.0f, 0);
-        if (CheckBrigdeAdjacent(rayCastVector))
-        {
-            _directionAvaibleMovement.Add(DirectionMove.OptionMovements.RIGHT);
-        }
-
-        rayCastVector = Vector3.left * 4 - new Vector3(0, +1.0f, 0);
-        if (CheckBrigdeAdjacent(rayCastVector))
-        {
-            _directionAvaibleMovement.Add(DirectionMove.OptionMovements.LEFT);
-        }
-        // Debug.Log("aca direction : " + _directionAvaibleMovement);
+            UserController.GetInstance().StateInBattle.EnemiesInMap[idElement].PositionTreasures[treasureDirection.Key] = treasureDirection.Value.transform.position;
+        }        
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Start()
     {
+
+    }
+
+    public bool CheckIfHereIsHere()
+    {
+        RaycastHit objectHit;
+        Debug.DrawRay(transform.position, Vector3.up, Color.red, 30, false);
+        if (Physics.Raycast(transform.position, Vector3.up, out objectHit))
+        {
+            if (objectHit.collider.transform.gameObject.tag == "Player")
+            {
+                // Debug.Log("Exist hero over here");
+                return true;
+            }
+        }
+        return false;
+    }
+    public void CreateEnemyAround()
+    {
+        if (_directionAvaibleMovement.Count != 0)
+        {
+            int createEnemy = Random.Range(1, 4);
+            if (createEnemy > 1)
+            {
+                if (_sideAvaibles.Count > 0)
+                {
+                    DirectionMove.OptionMovements directionSelectedToCreate = DirectionMove.OptionMovements.LEFT;
+                    GameObject enemyObject = Instantiate(SelectionBattleManager.GetInstance().prefabEnemies[0]);
+                    enemyObject.transform.parent = transform;
+                    directionSelectedToCreate = _sideAvaibles[Random.Range(0, _sideAvaibles.Count)];
+                    _sideAvaibles.Remove(directionSelectedToCreate);
+                    enemyObject.transform.localPosition = PositionAroundThisPoint(directionSelectedToCreate);
+                    _enemiesAround[directionSelectedToCreate] = enemyObject;
+                }
+            }
+        }
 
     }
     public void CheckMapAndSetValuesInArray()
@@ -60,13 +150,40 @@ public class PointInteractive : MonoBehaviour
         // 6,6 / 12  = 0.5  =>   0 < 0.5 < 1 (0,0)
         // 6,18 / 12 = 0.5,1.5 =>   0 < 0.5 < 1 , 1 < 1.5 < 2  (0,1)
         // 18,18 / 12 = 1.5 =>   1 < 1.5 < 2  (1,1)
-        // posX = (int)Mathf.Floor(rangeInPosX);
-        // posY = (int)Mathf.Floor(rangeInPosY);
 
         // Reverse Id
         posX = (int)Mathf.Floor(rangeInPosX);
-        // posX = SelectionBattleManager.GetInstance().GridTileMap.GetLength(0) - 1 - (int)Mathf.Floor(rangeInPosX);
-        posY = SelectionBattleManager.GetInstance().GridTileMap.GetLength(1) - 1 - (int)Mathf.Floor(rangeInPosY);
+
+        // posY = SelectionBattleManager.GetInstance().GridTileMap.GetLength(1) - 1 - (int)Mathf.Floor(rangeInPosY);
+        // SelectionBattleManager.GetInstance().GridTileMap[posX, posY] = SelectionBattleManager.OptionCreationMap.POSITION_ACTIVE_TILE;
+        // (SelectionBattleManager.GetInstance().GridTileMap.GetLength(1)+1)/2
+        posY = (SelectionBattleManager.GetInstance().GridTileMap.GetLength(1) + 1) / 2 - 1 - (int)Mathf.Floor(rangeInPosY);
+        // Send information to ManagerSelection
+        SelectionBattleManager.GetInstance().GridTileMap[posX * 2, posY * 2] = SelectionBattleManager.OptionCreationMap.POSITION_ACTIVE_TILE;
+        for (int i = 0; i < _directionAvaibleMovement.Count; i++)
+        {
+            switch (_directionAvaibleMovement[i])
+            {
+                case DirectionMove.OptionMovements.UP:
+                    SelectionBattleManager.GetInstance().GridTileMap[posX * 2, posY * 2 - 1] = SelectionBattleManager.OptionCreationMap.POSITION_BRIGDE;
+                    break;
+                case DirectionMove.OptionMovements.BOTTOM:
+                    SelectionBattleManager.GetInstance().GridTileMap[posX * 2, posY * 2 + 1] = SelectionBattleManager.OptionCreationMap.POSITION_BRIGDE;
+                    break;
+                case DirectionMove.OptionMovements.RIGHT:
+                    SelectionBattleManager.GetInstance().GridTileMap[posX * 2 + 1, posY * 2] = SelectionBattleManager.OptionCreationMap.POSITION_BRIGDE;
+                    break;
+                case DirectionMove.OptionMovements.LEFT:
+                    SelectionBattleManager.GetInstance().GridTileMap[posX * 2 - 1, posY * 2] = SelectionBattleManager.OptionCreationMap.POSITION_BRIGDE;
+                    break;
+
+            }
+        }
+        if (_directionAvaibleMovement.Count == 0)
+        {
+            SelectionBattleManager.GetInstance().GridTileMap[posX * 2, posY * 2] = SelectionBattleManager.OptionCreationMap.POSITION_NOTHING;
+        }
+        idElement = "" + posX + posY;
     }
 
     public bool CheckBrigdeAdjacent(Vector3 rayCastDirection)
@@ -82,5 +199,48 @@ public class PointInteractive : MonoBehaviour
             }
         }
         return false;
+    }
+
+    public void CreateTreasureAround()
+    {
+        if (_directionAvaibleMovement.Count != 0)
+        {
+            int createEnemy = Random.Range(1, 6);
+            if (createEnemy == 1)
+            {
+                if (_sideAvaibles.Count > 0)
+                {
+                    DirectionMove.OptionMovements directionSelectedToCreate = DirectionMove.OptionMovements.LEFT;
+                    GameObject enemyObject = Instantiate(SelectionBattleManager.GetInstance().prefabTreasures[0]);
+                    enemyObject.transform.parent = transform;
+                    directionSelectedToCreate = _sideAvaibles[Random.Range(0, _sideAvaibles.Count)];
+                    _sideAvaibles.Remove(directionSelectedToCreate);
+                    enemyObject.transform.localPosition = PositionAroundThisPoint(directionSelectedToCreate);
+                    _treasuresAround[directionSelectedToCreate] = enemyObject;                    
+                }
+            }
+        }
+    }
+
+    public Vector3 PositionAroundThisPoint(DirectionMove.OptionMovements directionSelectedToCreate)
+    {
+        Vector3 thePosition = Vector3.zero;
+        switch (directionSelectedToCreate)
+        {
+            case DirectionMove.OptionMovements.UP:
+                thePosition = Vector3.zero + new Vector3(0.0f, 10.0f, 0.65f);
+                break;
+            case DirectionMove.OptionMovements.BOTTOM:
+                thePosition = Vector3.zero + new Vector3(0.0f, 10.0f, -0.65f);
+                break;
+            case DirectionMove.OptionMovements.RIGHT:
+                thePosition = Vector3.zero + new Vector3(0.6f, 10.0f, 0.0f);
+                break;
+            case DirectionMove.OptionMovements.LEFT:
+                thePosition = Vector3.zero + new Vector3(-0.6f, 10.0f, 0.0f);
+                break;
+
+        }
+        return thePosition;
     }
 }

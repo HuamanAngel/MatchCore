@@ -246,11 +246,15 @@ public class HeroInMovement : MonoBehaviour
         _enemiesCollision = new List<GameObject>();
         for (int i = 0; i < directionRaycast.Length; i++)
         {
-            Debug.DrawRay(transform.position, directionRaycast[i], Color.green, 30, false);
-            if (Physics.Raycast(transform.position, directionRaycast[i], out objectHit))
+            // Debug.DrawRay(transform.position, directionRaycast[i], Color.green, 30, false);
+            if (Physics.Raycast(transform.position, directionRaycast[i], out objectHit, 2.0f))
             {
                 if (objectHit.collider.transform.gameObject.tag == "Enemy")
                 {
+                    Debug.Log("Detect enemy in front : " + objectHit.collider.transform.gameObject.name);
+                    Debug.Log("Tranformation : " + objectHit.collider.transform.gameObject.transform.position);
+                    //  Debug.DrawLine(transform.position, directionRaycast[i], Color.green, 2.5f);
+                    // Debug.DrawRay(transform.position, directionRaycast[i], Color.green, 30, false);
                     if (i == 0)
                     {
                         UserController.GetInstance().StateInBattle.DirectionEnemyTakeIt = DirectionMove.OptionMovements.UP;
@@ -328,16 +332,24 @@ public class HeroInMovement : MonoBehaviour
 
             initialValueFocalLength += 3;
             yield return new WaitForSeconds(0.0001f);
+            // SetDataToSceneBattle();
+
+            // Set data for scene battle
+            UserController.GetInstance().StateInBattle.CurrentPosition = transform.position;
+            UserController.GetInstance().StateInBattle.AllEnemiesForBattleCurrent = allCharactersEnemiesCollision;
+            UserController.GetInstance().userEnemy.CharInCombat = allCharactersEnemiesCollision;
+
+            // UserController.GetInstance().StateInBattle.AllEnemiesInMapMovement
+            UserController.GetInstance().StateInBattle.QuantityMovementAvaible = _quantityMovementsInScene;
+            // UserController.GetInstance().user.CharInCombat = 
+            // UserController.GetInstance().
+            SceneController.ToBattle();
         }
-        // Set data for scene battle
-        UserController.GetInstance().StateInBattle.CurrentPosition = transform.position;
-        UserController.GetInstance().StateInBattle.AllEnemiesForBattleCurrent = allCharactersEnemiesCollision;
-        UserController.GetInstance().userEnemy.CharInCombat = allCharactersEnemiesCollision;
+    }
 
-        // UserController.GetInstance().StateInBattle.AllEnemiesInMapMovement
-        UserController.GetInstance().StateInBattle.QuantityMovementAvaible = _quantityMovementsInScene;
-        // UserController.GetInstance().user.CharInCombat = 
+    public void SetDataToSceneBattle()
+    {
 
-        SceneController.ToBattle();
+
     }
 }
