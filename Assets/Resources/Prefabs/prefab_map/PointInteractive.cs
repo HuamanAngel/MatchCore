@@ -25,7 +25,6 @@ public class PointInteractive : MonoBehaviour
         _sideAvaibles = new List<DirectionMove.OptionMovements>() { DirectionMove.OptionMovements.BOTTOM, DirectionMove.OptionMovements.UP, DirectionMove.OptionMovements.RIGHT, DirectionMove.OptionMovements.LEFT };
 
         CheckMapAndSetValuesInArray();
-        Debug.Log("My id : " + idElement);
         if (!UserController.GetInstance().StateInBattle.EnemiesInMap.ContainsKey(idElement))
         {
             UserController.GetInstance().StateInBattle.EnemiesInMap[idElement] = new PointInteractiveStructure();
@@ -76,9 +75,14 @@ public class PointInteractive : MonoBehaviour
                 directionSelectedToCreate = enemiesPosition.Key;
                 enemyObject.transform.localPosition = PositionAroundThisPoint(directionSelectedToCreate);
                 _enemiesAround[directionSelectedToCreate] = enemyObject;
+
+                GameObject theEnemyBody = UtilitiesClass.FindAllChildWithTag(enemyObject, "Enemy")[0];
+                theEnemyBody.GetComponent<EnemyInMovement>().IdElement = idElement + "" + directionSelectedToCreate;
+                theEnemyBody.GetComponent<EnemyInMovement>().IdElementPointInteractive = idElement;
+                theEnemyBody.GetComponent<EnemyInMovement>().DirectionBelongToPoint = directionSelectedToCreate;
+                UserController.GetInstance().StateInBattle.CounterQuantityElements ++;
             }
 
-            // DirectionMove.OptionMovements directionSelectedToCreate = DirectionMove.OptionMovements.LEFT;
             foreach (var treasurePosition in goPointInteractive.PositionTreasures)
             {
                 GameObject treasureObject = Instantiate(SelectionBattleManager.GetInstance().prefabTreasures[0]);
@@ -86,6 +90,7 @@ public class PointInteractive : MonoBehaviour
                 directionSelectedToCreate = treasurePosition.Key;
                 treasureObject.transform.localPosition = PositionAroundThisPoint(directionSelectedToCreate);
                 _treasuresAround[directionSelectedToCreate] = treasureObject;
+                UserController.GetInstance().StateInBattle.CounterQuantityElements ++;
             }
 
         }
@@ -100,7 +105,7 @@ public class PointInteractive : MonoBehaviour
         foreach (var treasureDirection in _treasuresAround)
         {
             UserController.GetInstance().StateInBattle.EnemiesInMap[idElement].PositionTreasures[treasureDirection.Key] = treasureDirection.Value.transform.position;
-        }        
+        }
     }
 
     private void Start()
@@ -138,6 +143,13 @@ public class PointInteractive : MonoBehaviour
                     _sideAvaibles.Remove(directionSelectedToCreate);
                     enemyObject.transform.localPosition = PositionAroundThisPoint(directionSelectedToCreate);
                     _enemiesAround[directionSelectedToCreate] = enemyObject;
+
+                    GameObject theEnemyBody = UtilitiesClass.FindAllChildWithTag(enemyObject, "Enemy")[0];
+                    theEnemyBody.GetComponent<EnemyInMovement>().IdElement = idElement + "" + directionSelectedToCreate;
+                    theEnemyBody.GetComponent<EnemyInMovement>().IdElementPointInteractive = idElement;
+                    theEnemyBody.GetComponent<EnemyInMovement>().DirectionBelongToPoint = directionSelectedToCreate;
+
+                    UserController.GetInstance().StateInBattle.TotalElementsInMap++;
                 }
             }
         }
@@ -216,7 +228,9 @@ public class PointInteractive : MonoBehaviour
                     directionSelectedToCreate = _sideAvaibles[Random.Range(0, _sideAvaibles.Count)];
                     _sideAvaibles.Remove(directionSelectedToCreate);
                     enemyObject.transform.localPosition = PositionAroundThisPoint(directionSelectedToCreate);
-                    _treasuresAround[directionSelectedToCreate] = enemyObject;                    
+                    _treasuresAround[directionSelectedToCreate] = enemyObject;
+
+                    UserController.GetInstance().StateInBattle.TotalElementsInMap++;
                 }
             }
         }

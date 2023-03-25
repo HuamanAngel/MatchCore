@@ -19,9 +19,11 @@ public class HeroInMovement : MonoBehaviour
     private int _quantityMovementsInScene = 4;
     public GameObject screenGameOver;
     public GameObject screenVictory;
+    public Coroutine coroutineMovement;
     public DirectionMove.OptionMovements DirectionMovement { get => _directionMovement; set => _directionMovement = value; }
     public bool IsMovement { get => _isMovement; }
     public PostProcessVolume transitionEffectGameObject;
+    private bool _avaibleNextMovement = false;
     public static HeroInMovement GetInstance()
     {
         return _instance;
@@ -43,40 +45,60 @@ public class HeroInMovement : MonoBehaviour
         // UserController.GetInstance().StateInBattle.IsDeadCharacter = true;
         if (UserController.GetInstance().StateInBattle.IsDeadCharacter)
         {
-            List<GameObject> goEnemiesCollision = new List<GameObject>();
-            // List<Charac> allCharactersEnemiesCollision = new List<Charac>();
-            Vector3[] directionRayCast = new Vector3[1];
-            switch (UserController.GetInstance().StateInBattle.DirectionEnemyTakeIt)
-            {
-                case DirectionMove.OptionMovements.UP:
-                    directionRayCast[0] = Vector3.forward * 3;
-                    break;
-                case DirectionMove.OptionMovements.BOTTOM:
-                    directionRayCast[0] = Vector3.back * 3;
-                    break;
-                case DirectionMove.OptionMovements.RIGHT:
-                    directionRayCast[0] = Vector3.right * 3;
-                    break;
-                case DirectionMove.OptionMovements.LEFT:
-                    directionRayCast[0] = Vector3.left * 3;
-                    break;
-            }
-            if (CheckIfEnemieExistInDirection(directionRayCast, out goEnemiesCollision))
-            {
-                goEnemiesCollision[0].GetComponent<EnemyInMovement>().DieThisEnemy();
-                goEnemiesCollision[0].GetComponent<EnemyInMovement>().IsALive = false;
-                Debug.Log("Es el final : " + goEnemiesCollision[0].GetComponent<EnemyInMovement>().IsEnemyFinalOfMap);
-                StartCoroutine(WaitForFinishAnimationDeadEnemy(goEnemiesCollision[0].GetComponent<EnemyInMovement>().IsEnemyFinalOfMap));
-            }
+            _avaibleNextMovement = true;
         }
         else
         {
             CreateArrowDirection();
         }
     }
+    IEnumerator SendGraveryEnemyAndCreateArrowDirection()
+    {
+        List<GameObject> goEnemiesCollision = new List<GameObject>();
+        // List<Charac> allCharactersEnemiesCollision = new List<Charac>();
+        Vector3[] directionRayCast = new Vector3[1];
+        // Debug.Log("Direction of enemy : "+ UserController.GetInstance().StateInBattle.DirectionEnemyTakeIt);
+        switch (UserController.GetInstance().StateInBattle.DirectionEnemyTakeIt)
+        {
+            case DirectionMove.OptionMovements.UP:
+                directionRayCast[0] = Vector3.forward * 3;
+                break;
+            case DirectionMove.OptionMovements.BOTTOM:
+                directionRayCast[0] = Vector3.back * 3;
+                break;
+            case DirectionMove.OptionMovements.RIGHT:
+                directionRayCast[0] = Vector3.right * 3;
+                break;
+            case DirectionMove.OptionMovements.LEFT:
+                directionRayCast[0] = Vector3.left * 3;
+                break;
+        }
+        // Debug.Log("Ya termino de construir todo : " + UserController.GetInstance().StateInBattle.EndCreatedEnemiesAndTreasures());
+        // Debug.Log("Valor contador : " + UserController.GetInstance().StateInBattle.CounterQuantityElements);
+        // Debug.Log("Valor total : " + UserController.GetInstance().StateInBattle.TotalElementsInMap);
+        // Debug.Log("aca de inmeidati");
 
+        yield return new WaitUntil(() => UserController.GetInstance().StateInBattle.EndCreatedEnemiesAndTreasures());
+        // yield return new WaitForSeconds(4.0f);
+
+        // Debug.Log("Valor contador despues : " + UserController.GetInstance().StateInBattle.CounterQuantityElements);
+        // Debug.Log("aca de inmeidati");
+        if (CheckIfEnemieExistInDirection(directionRayCast, out goEnemiesCollision))
+        {
+            // Debug.Log("La condificion es true");
+            goEnemiesCollision[0].GetComponent<EnemyInMovement>().DieThisEnemy();
+            goEnemiesCollision[0].GetComponent<EnemyInMovement>().IsALive = false;
+            // Debug.Log("Es el final : " + goEnemiesCollision[0].GetComponent<EnemyInMovement>().IsEnemyFinalOfMap);
+            StartCoroutine(WaitForFinishAnimationDeadEnemy(goEnemiesCollision[0].GetComponent<EnemyInMovement>().IsEnemyFinalOfMap));
+        }
+        else
+        {
+            // Debug.Log("La condicion es false : ");
+        }
+    }
     IEnumerator WaitForFinishAnimationDeadEnemy(bool isEnemyFinal)
     {
+        Debug.Log("Waiting for dead enemy");
         while (UserController.GetInstance().StateInBattle.IsDeadCharacter)
         {
             yield return null;
@@ -87,15 +109,34 @@ public class HeroInMovement : MonoBehaviour
         }
         else
         {
+            if (UserController.GetInstance().StateInBattle.InterrupteMovement)
+            {
+                Debug.Log("Retomo el movimiento");
+                StartCoroutine(DoMoving(UserController.GetInstance().StateInBattle.TargetPositionInterrupted));
+            }
+            else
+            {
+                UserController.GetInstance().StateInBattle.InterrupteMovement = false;
+            }
+
+            yield return new WaitUntil(() => UserController.GetInstance().StateInBattle.InterrupteMovement == false);
+            Debug.Log("Ok, already finish the movmenet retake");
             CreateArrowDirection();
+            Debug.Log(" Ok, i was create arrow directions");
         }
     }
     // Update is called once per frame
-    void Update()
+    private void FixedUpdate()
     {
+        if (_avaibleNextMovement)
+        {
+            StartCoroutine(SendGraveryEnemyAndCreateArrowDirection());
+            _avaibleNextMovement = false;
+        }
+
     }
 
-    private void CreateArrowDirection()
+    public void CreateArrowDirection()
     {
         float pivotTransformArrow = 2f;
 
@@ -181,7 +222,8 @@ public class HeroInMovement : MonoBehaviour
         }
         DecrementQuantityMovement();
         SetQuantityMovements();
-        StartCoroutine(DoMoving(targetPosition));
+        UserController.GetInstance().StateInBattle.TargetPositionInterrupted = targetPosition;
+        coroutineMovement = StartCoroutine(DoMoving(targetPosition));
     }
     public IEnumerator DoMoving(Vector3 target)
     {
@@ -205,6 +247,13 @@ public class HeroInMovement : MonoBehaviour
             }
         }
         transform.position = aditionalMovement;
+        UserController.GetInstance().StateInBattle.InterrupteMovement = false;
+        // StartBattle
+        CheckIfCanInitBattle();
+    }
+
+    public void CheckIfCanInitBattle()
+    {
         _isMovement = false;
         Vector3[] directionRayCast = new Vector3[] { Vector3.forward * 3, Vector3.back * 3, Vector3.right * 3, Vector3.left * 3 };
         List<GameObject> goEnemiesCollision = new List<GameObject>();
@@ -246,13 +295,17 @@ public class HeroInMovement : MonoBehaviour
         _enemiesCollision = new List<GameObject>();
         for (int i = 0; i < directionRaycast.Length; i++)
         {
-            // Debug.DrawRay(transform.position, directionRaycast[i], Color.green, 30, false);
-            if (Physics.Raycast(transform.position, directionRaycast[i], out objectHit, 2.0f))
+            Debug.DrawRay(transform.position, directionRaycast[i], Color.green, 5, false);
+            Debug.Log("Aca antes de checkar la collision :::::::::::::::::::::::::: ");
+            // Debug.Log("aca la direccion : "+ directionRaycast[i]);
+            Debug.Log("Reusltado de raycast : " + Physics.Raycast(transform.position, directionRaycast[i], out objectHit, 5.0f));
+            if (Physics.Raycast(transform.position, directionRaycast[i], out objectHit, 5.0f))
             {
+                Debug.Log("Collision with : " + objectHit.collider.transform.gameObject.tag);
                 if (objectHit.collider.transform.gameObject.tag == "Enemy")
                 {
-                    Debug.Log("Detect enemy in front : " + objectHit.collider.transform.gameObject.name);
-                    Debug.Log("Tranformation : " + objectHit.collider.transform.gameObject.transform.position);
+                    // Debug.Log("Detect enemy in front : " + objectHit.collider.transform.gameObject.name);
+                    // Debug.Log("Tranformation : " + objectHit.collider.transform.gameObject.transform.position);
                     //  Debug.DrawLine(transform.position, directionRaycast[i], Color.green, 2.5f);
                     // Debug.DrawRay(transform.position, directionRaycast[i], Color.green, 30, false);
                     if (i == 0)
@@ -343,6 +396,7 @@ public class HeroInMovement : MonoBehaviour
             UserController.GetInstance().StateInBattle.QuantityMovementAvaible = _quantityMovementsInScene;
             // UserController.GetInstance().user.CharInCombat = 
             // UserController.GetInstance().
+            UserController.GetInstance().StateInBattle.CounterQuantityElements = 0;
             SceneController.ToBattle();
         }
     }
@@ -351,5 +405,20 @@ public class HeroInMovement : MonoBehaviour
     {
 
 
+    }
+
+    private void OnCollisionEnter(Collision other)
+    {
+        // Debug.Log("exist collision");
+        if (other.collider.transform.gameObject.tag == "Enemy")
+        {
+            // Debug.Log("Collision with enemy");
+            if (coroutineMovement != null)
+            {
+                StopCoroutine(coroutineMovement);
+                UserController.GetInstance().StateInBattle.InterrupteMovement = true;
+                CheckIfCanInitBattle();
+            }
+        }
     }
 }
