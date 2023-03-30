@@ -20,10 +20,13 @@ public class HeroInMovement : MonoBehaviour
     public GameObject screenGameOver;
     public GameObject screenVictory;
     public Coroutine coroutineMovement;
-    public DirectionMove.OptionMovements DirectionMovement { get => _directionMovement; set => _directionMovement = value; }
-    public bool IsMovement { get => _isMovement; }
     public PostProcessVolume transitionEffectGameObject;
     private bool _avaibleNextMovement = false;
+    public GameObject prefabToBattle;
+    private float pivotTransformArrow = 2f;
+
+    public DirectionMove.OptionMovements DirectionMovement { get => _directionMovement; set => _directionMovement = value; }
+    public bool IsMovement { get => _isMovement; }
     public static HeroInMovement GetInstance()
     {
         return _instance;
@@ -138,7 +141,6 @@ public class HeroInMovement : MonoBehaviour
 
     public void CreateArrowDirection()
     {
-        float pivotTransformArrow = 2f;
 
         RaycastHit objectHit;
         Vector3 positionToArrow = Vector3.zero;
@@ -264,10 +266,33 @@ public class HeroInMovement : MonoBehaviour
         }
         else
         {
+            GameObject twoSword = Instantiate(prefabToBattle);
             List<Charac> allCharactersEnemiesCollision = new List<Charac>();
+            Vector3 positionToArrow = Vector3.zero;
             allCharactersEnemiesCollision = goEnemiesCollision[0].GetComponent<EnemyInMovement>().TheCharacters;
-            // Debug.Log("cargando");
-            // TransitionToBattle();
+            switch (goEnemiesCollision[0].GetComponent<EnemyInMovement>().DirectionBelongToPoint)
+            {
+                case DirectionMove.OptionMovements.UP:
+                    positionToArrow = new Vector3(transform.position.x, transform.position.y, transform.position.z + pivotTransformArrow/2);
+                    twoSword.transform.position = positionToArrow;
+                    transform.Rotate(0, 0, 0);
+                    break;
+                case DirectionMove.OptionMovements.BOTTOM:
+                    positionToArrow = new Vector3(transform.position.x, transform.position.y, transform.position.z - pivotTransformArrow/2);
+                    twoSword.transform.position = positionToArrow;
+                    transform.Rotate(0, 0, -180);
+                    break;
+                case DirectionMove.OptionMovements.RIGHT:
+                    positionToArrow = new Vector3(transform.position.x + pivotTransformArrow/2, transform.position.y, transform.position.z);
+                    twoSword.transform.position = positionToArrow;
+                    transform.Rotate(0, 0, 90);
+                    break;
+                case DirectionMove.OptionMovements.LEFT:
+                    positionToArrow = new Vector3(transform.position.x - pivotTransformArrow/2, transform.position.y, transform.position.z);
+                    twoSword.transform.position = positionToArrow;
+                    transform.Rotate(0, 0, -90);
+                    break;
+            }
             StartCoroutine(TransitionToBattle(allCharactersEnemiesCollision));
 
         }
@@ -385,20 +410,21 @@ public class HeroInMovement : MonoBehaviour
 
             initialValueFocalLength += 3;
             yield return new WaitForSeconds(0.0001f);
-            // SetDataToSceneBattle();
-
-            // Set data for scene battle
-            UserController.GetInstance().StateInBattle.CurrentPosition = transform.position;
-            UserController.GetInstance().StateInBattle.AllEnemiesForBattleCurrent = allCharactersEnemiesCollision;
-            UserController.GetInstance().userEnemy.CharInCombat = allCharactersEnemiesCollision;
-
-            // UserController.GetInstance().StateInBattle.AllEnemiesInMapMovement
-            UserController.GetInstance().StateInBattle.QuantityMovementAvaible = _quantityMovementsInScene;
-            // UserController.GetInstance().user.CharInCombat = 
-            // UserController.GetInstance().
-            UserController.GetInstance().StateInBattle.CounterQuantityElements = 0;
-            SceneController.ToBattle();
         }
+        // SetDataToSceneBattle();
+
+        // Set data for scene battle
+        UserController.GetInstance().StateInBattle.CurrentPosition = transform.position;
+        UserController.GetInstance().StateInBattle.AllEnemiesForBattleCurrent = allCharactersEnemiesCollision;
+        UserController.GetInstance().userEnemy.CharInCombat = allCharactersEnemiesCollision;
+
+        // UserController.GetInstance().StateInBattle.AllEnemiesInMapMovement
+        UserController.GetInstance().StateInBattle.QuantityMovementAvaible = _quantityMovementsInScene;
+        // UserController.GetInstance().user.CharInCombat = 
+        // UserController.GetInstance().
+        UserController.GetInstance().StateInBattle.CounterQuantityElements = 0;
+        SceneController.ToBattle();
+
     }
 
     public void SetDataToSceneBattle()
@@ -421,4 +447,13 @@ public class HeroInMovement : MonoBehaviour
             }
         }
     }
+
+    // private void CreatePrefabToBatte()
+    // {
+    //     GameObject twoSword = Instantiate(prefabToBattle);
+    //     twoSword.transform.position = positionObject;
+    //     twoSword.GetComponent<DirectionMove>().TypeArrow = directionMovement;
+    //     twoSword.GetComponent<DirectionMove>().RotateByTypeArrow();
+
+    // }
 }

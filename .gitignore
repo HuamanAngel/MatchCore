@@ -55,9 +55,6 @@ sysinfo.txt
 *.apk
 *.unitypackage
 
+Recordings/
 # Crashlytics generated file
 crashlytics-build.properties
-<<<<<<< HEAD
-=======
-
->>>>>>> 090623440fbd9b280ab18556f419cbf6998fbb7d

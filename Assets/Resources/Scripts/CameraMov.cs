@@ -12,30 +12,44 @@ public class CameraMov : MonoBehaviour
     public GameObject objectToFollow;
     private HeroInMovement hm;
     private UserController userController;
+    public bool cameraFree = false;
     void Start()
     {
-        hm = HeroInMovement.GetInstance();
-        userController = UserController.GetInstance();
-        if (userController.StateInBattle.CurrentPosition != Vector3.zero)
+        if (!cameraFree)
         {
+            hm = HeroInMovement.GetInstance();
+            userController = UserController.GetInstance();
+            if (userController.StateInBattle.CurrentPosition != Vector3.zero)
+            {
 
-            transform.position = new Vector3(userController.StateInBattle.CurrentPosition.x, transform.position.y, userController.StateInBattle.CurrentPosition.z);
-            // transform.position = UserController.GetInstance().StateInBattle.CurrentPosition;
+                transform.position = new Vector3(userController.StateInBattle.CurrentPosition.x, transform.position.y, userController.StateInBattle.CurrentPosition.z);
+                // transform.position = UserController.GetInstance().StateInBattle.CurrentPosition;
+            }
+
         }
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (!hm.IsMovement)
+        if (!cameraFree)
         {
-            var translation = GetInputTranslationDirectionA() * Time.deltaTime;
-            translation *= 10.0f;
-            this.transform.position += translation;
+            if (!hm.IsMovement)
+            {
+                var translation = GetInputTranslationDirectionA() * Time.deltaTime;
+                translation *= 10.0f;
+                this.transform.position += translation;
+            }
+            else
+            {
+                transform.position = new Vector3(hm.gameObject.transform.position.x, transform.position.y, hm.gameObject.transform.position.z);
+            }
         }
         else
         {
-            transform.position = new Vector3(hm.gameObject.transform.position.x, transform.position.y, hm.gameObject.transform.position.z);
+            var translation = GetInputTranslationDirectionFree() * Time.deltaTime;
+            translation *= 10.0f;
+            this.transform.position += translation;
         }
 
     }
@@ -101,4 +115,28 @@ public class CameraMov : MonoBehaviour
         // }
         return direction;
     }
+    Vector3 GetInputTranslationDirectionFree()
+    {
+        Vector3 direction = new Vector3();
+        if (Input.GetKey(KeyCode.W))
+        {
+            direction += Vector3.forward;
+        }
+        if (Input.GetKey(KeyCode.S))
+        {
+            direction += Vector3.back;
+
+        }
+        if (Input.GetKey(KeyCode.A))
+        {
+            direction += Vector3.left;
+
+        }
+        if (Input.GetKey(KeyCode.D))
+        {
+            direction += Vector3.right;
+        }
+        return direction;
+    }
+
 }
