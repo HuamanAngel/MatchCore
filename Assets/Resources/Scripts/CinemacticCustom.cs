@@ -9,6 +9,7 @@ public class CinemacticCustom : MonoBehaviour
     private CinemachineTrackedDolly cmtd;
     private float theValue = 0.0f;
     public float increment = 0.1f;
+    public bool stopCamera = false;
     void Start()
     {
         cmv = GetComponent<CinemachineVirtualCamera>();
@@ -18,7 +19,10 @@ public class CinemacticCustom : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        cmtd.m_PathPosition = theValue;
-        theValue += increment;
+        if(stopCamera)
+        {
+            cmtd.m_PathPosition = theValue;
+            theValue += increment;
+        }
     }
 }
