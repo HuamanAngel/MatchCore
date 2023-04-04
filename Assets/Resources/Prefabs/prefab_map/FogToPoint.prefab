@@ -11,9 +11,10 @@ GameObject:
   - component: {fileID: 6065579641207472546}
   - component: {fileID: 6065579641207472556}
   - component: {fileID: 6065579641207472557}
+  - component: {fileID: 37092600}
   m_Layer: 0
   m_Name: FogToPoint
-  m_TagString: Untagged
+  m_TagString: ObstacleDestroy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -25,7 +26,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6065579641207472547}
-  m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
+  m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: -0.14, y: -9.499999, z: -0.021}
   m_LocalScale: {x: 2.3668282, y: 2.3668282, z: 1.7271454}
   m_ConstrainProportionsScale: 0
@@ -3789,7 +3790,7 @@ ParticleSystem:
     maxCollisionShapes: 256
     quality: 0
     voxelSize: 0.5
-    collisionMessages: 0
+    collisionMessages: 1
     collidesWithDynamic: 1
     interiorCollisions: 0
   TriggerModule:
@@ -4812,3 +4813,16 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!65 &37092600
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6065579641207472547}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 39.39071}
+  m_Center: {x: 0, y: -0.0000016464569, z: 19.195318}

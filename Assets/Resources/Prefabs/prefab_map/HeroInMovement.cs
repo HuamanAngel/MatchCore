@@ -273,22 +273,22 @@ public class HeroInMovement : MonoBehaviour
             switch (goEnemiesCollision[0].GetComponent<EnemyInMovement>().DirectionBelongToPoint)
             {
                 case DirectionMove.OptionMovements.UP:
-                    positionToArrow = new Vector3(transform.position.x, transform.position.y, transform.position.z + pivotTransformArrow/2);
+                    positionToArrow = new Vector3(transform.position.x, transform.position.y, transform.position.z + pivotTransformArrow / 2);
                     twoSword.transform.position = positionToArrow;
                     transform.Rotate(0, 0, 0);
                     break;
                 case DirectionMove.OptionMovements.BOTTOM:
-                    positionToArrow = new Vector3(transform.position.x, transform.position.y, transform.position.z - pivotTransformArrow/2);
+                    positionToArrow = new Vector3(transform.position.x, transform.position.y, transform.position.z - pivotTransformArrow / 2);
                     twoSword.transform.position = positionToArrow;
                     transform.Rotate(0, 0, -180);
                     break;
                 case DirectionMove.OptionMovements.RIGHT:
-                    positionToArrow = new Vector3(transform.position.x + pivotTransformArrow/2, transform.position.y, transform.position.z);
+                    positionToArrow = new Vector3(transform.position.x + pivotTransformArrow / 2, transform.position.y, transform.position.z);
                     twoSword.transform.position = positionToArrow;
                     transform.Rotate(0, 0, 90);
                     break;
                 case DirectionMove.OptionMovements.LEFT:
-                    positionToArrow = new Vector3(transform.position.x - pivotTransformArrow/2, transform.position.y, transform.position.z);
+                    positionToArrow = new Vector3(transform.position.x - pivotTransformArrow / 2, transform.position.y, transform.position.z);
                     twoSword.transform.position = positionToArrow;
                     transform.Rotate(0, 0, -90);
                     break;
@@ -446,6 +446,12 @@ public class HeroInMovement : MonoBehaviour
                 CheckIfCanInitBattle();
             }
         }
+        if (other.collider.transform.gameObject.tag == "ObstacleDestroy")
+        {
+            Debug.Log("Collision with sphere conave");
+            Destroy(other.collider.transform.gameObject);
+        }
+
     }
 
     // private void CreatePrefabToBatte()

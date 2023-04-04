@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c509dbaa7b6f416409e3195321a2187e, type: 3}
+  m_Name: LvlDesign2
+  m_EditorClassIdentifier: 
+  PaletteLayers:
+  - {fileID: 8574412962073106934, guid: 0916803001c41ce47b40d35e08d81263, type: 2}
+  - {fileID: 8574412962073106934, guid: e944aef7fa6dada429f1bf7ad9add407, type: 2}
+  - {fileID: 8574412962073106934, guid: cb09fa647c986894e9e609dca934891a, type: 2}
+  - {fileID: 8574412962073106934, guid: 4457792b1b51ca54c8c9fb063aae0891, type: 2}
+  - {fileID: 8574412962073106934, guid: e8fd25e402fefab42bb61e45fb74a650, type: 2}
+  - {fileID: 8574412962073106934, guid: 410549b0eac43914d94b622362097d3d, type: 2}
+  - {fileID: 8574412962073106934, guid: eddde4d14406c2f49bbe17b10701840e, type: 2}
+  - {fileID: 8574412962073106934, guid: 6923ea6e16db8ce4598379cef8aa162a, type: 2}
+  - {fileID: 8574412962073106934, guid: a0183ea0f44132d42a73fba99ea4e10e, type: 2}

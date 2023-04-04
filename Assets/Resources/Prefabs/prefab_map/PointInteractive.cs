@@ -5,6 +5,8 @@ using UnityEngine;
 public class PointInteractive : MonoBehaviour
 {
     public string idElement;
+    [Header("Select directions no interactuables")]
+    public List<DirectionMove.OptionMovements> directionsNotInteractuable;
     private int posX;
     private int posY;
     private Dictionary<DirectionMove.OptionMovements, GameObject> _enemiesAround;
@@ -21,7 +23,7 @@ public class PointInteractive : MonoBehaviour
         _enemiesAround = new Dictionary<DirectionMove.OptionMovements, GameObject>();
         _treasuresAround = new Dictionary<DirectionMove.OptionMovements, GameObject>();
         _directionAvaibleMovement = new List<DirectionMove.OptionMovements>();
-        _sideAvaibles = new List<DirectionMove.OptionMovements>();
+        // _sideAvaibles = new List<DirectionMove.OptionMovements>();
         _sideAvaibles = new List<DirectionMove.OptionMovements>() { DirectionMove.OptionMovements.BOTTOM, DirectionMove.OptionMovements.UP, DirectionMove.OptionMovements.RIGHT, DirectionMove.OptionMovements.LEFT };
 
         CheckMapAndSetValuesInArray();
@@ -53,6 +55,26 @@ public class PointInteractive : MonoBehaviour
                 _directionAvaibleMovement.Add(DirectionMove.OptionMovements.LEFT);
             }
             // _sideAvaibles.AddRange(_directionAvaibleMovement);
+            foreach (DirectionMove.OptionMovements theDirection in directionsNotInteractuable)
+            {
+                switch (theDirection)
+                {
+                    case DirectionMove.OptionMovements.UP:
+                        _sideAvaibles.Remove(DirectionMove.OptionMovements.UP);
+                        // _sideAvaibles.Find(DirectionMove.OptionMovements.UP);
+                        break;
+                    case DirectionMove.OptionMovements.BOTTOM:
+                        _sideAvaibles.Remove(DirectionMove.OptionMovements.BOTTOM);
+                        break;
+                    case DirectionMove.OptionMovements.RIGHT:
+                        _sideAvaibles.Remove(DirectionMove.OptionMovements.RIGHT);
+                        break;
+                    case DirectionMove.OptionMovements.LEFT:
+                        _sideAvaibles.Remove(DirectionMove.OptionMovements.LEFT);
+                        break;
+
+                }
+            }
             _heroIsHere = CheckIfHereIsHere();
             if (!_heroIsHere)
             {
@@ -80,7 +102,7 @@ public class PointInteractive : MonoBehaviour
                 theEnemyBody.GetComponent<EnemyInMovement>().IdElement = idElement + "" + directionSelectedToCreate;
                 theEnemyBody.GetComponent<EnemyInMovement>().IdElementPointInteractive = idElement;
                 theEnemyBody.GetComponent<EnemyInMovement>().DirectionBelongToPoint = directionSelectedToCreate;
-                UserController.GetInstance().StateInBattle.CounterQuantityElements ++;
+                UserController.GetInstance().StateInBattle.CounterQuantityElements++;
             }
 
             foreach (var treasurePosition in goPointInteractive.PositionTreasures)
@@ -90,7 +112,7 @@ public class PointInteractive : MonoBehaviour
                 directionSelectedToCreate = treasurePosition.Key;
                 treasureObject.transform.localPosition = PositionAroundThisPoint(directionSelectedToCreate);
                 _treasuresAround[directionSelectedToCreate] = treasureObject;
-                UserController.GetInstance().StateInBattle.CounterQuantityElements ++;
+                UserController.GetInstance().StateInBattle.CounterQuantityElements++;
             }
 
         }
@@ -256,5 +278,10 @@ public class PointInteractive : MonoBehaviour
 
         }
         return thePosition;
+    }
+
+    public void SetSideNotAvaibles()
+    {
+
     }
 }

@@ -13,6 +13,7 @@ TagManager:
   - Point
   - Brigde
   - Enemy
+  - ObstacleDestroy
   layers:
   - Default
   - TransparentFX

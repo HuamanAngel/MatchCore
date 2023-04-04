@@ -11,9 +11,10 @@ GameObject:
   - component: {fileID: 5489650690615343810}
   - component: {fileID: 8899380745040426343}
   - component: {fileID: 6657451556910465453}
+  - component: {fileID: 7784105506988773346}
   m_Layer: 0
   m_Name: Capsule
-  m_TagString: Untagged
+  m_TagString: ObstacleDestroy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -25,14 +26,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5144510019532398712}
-  m_LocalRotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071067}
+  m_LocalRotation: {x: -0.7069834, y: 0, z: 0, w: 0.7072302}
   m_LocalPosition: {x: -0.00000048779, y: 156.81, z: 8.185e-12}
-  m_LocalScale: {x: 2370.9773, y: 2370.9773, z: 190524.38}
+  m_LocalScale: {x: 2370.9775, y: 2370.9773, z: 190524.34}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -89.98, y: 0, z: 0}
 --- !u!33 &8899380745040426343
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -48,7 +49,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5144510019532398712}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -83,3 +84,16 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &7784105506988773346
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5144510019532398712}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.0011884407, y: 0.0011884408, z: 0.0005916004}
+  m_Center: {x: -1.4551915e-10, y: 2.9103067e-11, z: -0.00082405284}
