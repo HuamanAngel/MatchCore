@@ -17,6 +17,7 @@ public class PointInteractive : MonoBehaviour
     private List<DirectionMove.OptionMovements> _directionAvaibleMovement;
     private List<DirectionMove.OptionMovements> _sideAvaibles;
     public List<DirectionMove.OptionMovements> DirectionAvaibleMovement { get => _directionAvaibleMovement; }
+    public bool HeroIsHere { get => _heroIsHere; set => _heroIsHere = value; }
     private void Awake()
     {
         _enemiesAround = new Dictionary<DirectionMove.OptionMovements, GameObject>();
@@ -206,6 +207,7 @@ public class PointInteractive : MonoBehaviour
             if (objectHit.collider.transform.gameObject.tag == "Brigde")
             {
                 // Check if brigde exist some fence over him
+                // return false;
                 if (objectHit.collider.transform.gameObject.GetComponent<BrigdeLogic>().TheHeroCanMovementOverHere())
                 {
                     return true;

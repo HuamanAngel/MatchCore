@@ -4,14 +4,7 @@ using UnityEngine;
 
 public class BrigdeLogic : MonoBehaviour
 {
-    public enum optionEmiesObstacle
-    {
-        NOTHING,
-        FENCE_BASIC,
-        FENCE_MEDIUM,
-        FENCE_BIG
-    }
-    public optionEmiesObstacle typeObstacleOverHere;
+    public GameObject gameObjectOverHere;
     void Start()
     {
 
@@ -24,11 +17,11 @@ public class BrigdeLogic : MonoBehaviour
 
     public bool TheHeroCanMovementOverHere()
     {
-        return typeObstacleOverHere == optionEmiesObstacle.NOTHING;
-    }
-
-    public void SetNothingOverHere()
-    {
-        typeObstacleOverHere = optionEmiesObstacle.NOTHING;
+        if(gameObjectOverHere != null)
+        {
+            return gameObjectOverHere.GetComponent<ObstacleInMovement>().typeObstacleOverHere == ElementsInteractuable.OptionObstacle.NOTHING;
+        }else{
+            return true;
+        }
     }
 }

@@ -6,13 +6,17 @@ using TMPro;
 using System;
 public class EffectText : MonoBehaviour
 {
-    public static IEnumerator FloatingTextFadeOut(GameObject objectToFloating, Vector3 positionToFloating, string text, Color32 startColorA, Color32 endColorA)
+    public static IEnumerator FloatingTextFadeOut(GameObject objectToFloating, Vector3 positionToFloating, string text, Color32 startColorA, Color32 endColorA, Vector3 angleRotation = default(Vector3))
     {
         Color32 startColor = startColorA;
         Color32 endColor = endColorA;
-
         GameObject go = Instantiate(objectToFloating, positionToFloating, Quaternion.identity);
-        // go.transform.Rotate(Camera.main.transform.localRotation.eulerAngles.x, go.transform.localRotation.eulerAngles.y, go.transform.localRotation.eulerAngles.z);
+        if (angleRotation != Vector3.zero)
+        {
+            // go.transform.Rotate(Camera.main.transform.localRotation.eulerAngles.x, go.transform.localRotation.eulerAngles.y, go.transform.localRotation.eulerAngles.z);
+            go.transform.Rotate(angleRotation);
+            Debug.Log("Acabo de rotar");
+        }        
         go.GetComponent<TMP_Text>().text = text;
         go.GetComponent<TMP_Text>().color = startColor;
         float speed = 1.0f;

@@ -230,6 +230,7 @@ public class HeroInMovement : MonoBehaviour
     public IEnumerator DoMoving(Vector3 target)
     {
         _isMovement = true;
+        SetDataInPointInteractive();        
         while (Vector3.Distance(target, transform.position) > 0.001f)
         {
             transform.position = Vector3.MoveTowards(transform.position, target, _speedMove * Time.deltaTime);
@@ -367,6 +368,7 @@ public class HeroInMovement : MonoBehaviour
         {
             if (objectHit.collider.transform.gameObject.tag == "Point")
             {
+                objectHit.collider.transform.gameObject.GetComponent<PointInteractive>().HeroIsHere = true;
                 return new Vector3(objectHit.collider.transform.position.x, 0, objectHit.collider.transform.position.z);
             }
 
@@ -427,11 +429,16 @@ public class HeroInMovement : MonoBehaviour
         SceneController.ToBattle();
 
     }
-
-    public void SetDataToSceneBattle()
+    public void SetDataInPointInteractive()
     {
-
-
+        RaycastHit objectHit;
+        if (Physics.Raycast(transform.position, Vector3.down, out objectHit))
+        {
+            if (objectHit.collider.transform.gameObject.tag == "Point")
+            {
+                objectHit.collider.transform.gameObject.GetComponent<PointInteractive>().HeroIsHere = false;
+            }
+        }
     }
 
     private void OnCollisionEnter(Collision other)
@@ -449,17 +456,17 @@ public class HeroInMovement : MonoBehaviour
         }
         if (other.collider.transform.gameObject.tag == "ObstacleDestroy")
         {
-            Debug.Log("Collision with sphere conave");
+            // Debug.Log("Collision with sphere conave");
             Destroy(other.collider.transform.gameObject);
         }
 
     }
 
-    public bool ConsumeKey(int quantityToConsumed, BrigdeLogic.optionEmiesObstacle typeObstacle)
+    public bool ConsumeKey(int quantityToConsumed, ElementsInteractuable.OptionObstacle typeObstacle)
     {
         switch (typeObstacle)
         {
-            case BrigdeLogic.optionEmiesObstacle.FENCE_BASIC:
+            case ElementsInteractuable.OptionObstacle.FENCE_BASIC:
                 if (_quantityKeyBasic >= quantityToConsumed)
                 {
                     _quantityKeyBasic -= quantityToConsumed;
@@ -472,7 +479,7 @@ public class HeroInMovement : MonoBehaviour
                     return false;
                 }
                 break;
-            case BrigdeLogic.optionEmiesObstacle.FENCE_MEDIUM:
+            case ElementsInteractuable.OptionObstacle.FENCE_MEDIUM:
                 if (_quantityKeyMedium >= quantityToConsumed)
                 {
                     _quantityKeyMedium -= quantityToConsumed;
@@ -486,7 +493,7 @@ public class HeroInMovement : MonoBehaviour
                 }
                 break;
 
-            case BrigdeLogic.optionEmiesObstacle.FENCE_BIG:
+            case ElementsInteractuable.OptionObstacle.FENCE_BIG:
                 if (_quantityKeyBig >= quantityToConsumed)
                 {
                     _quantityKeyBig -= quantityToConsumed;
