@@ -19,7 +19,6 @@ public class PointInteractive : MonoBehaviour
     public List<DirectionMove.OptionMovements> DirectionAvaibleMovement { get => _directionAvaibleMovement; }
     private void Awake()
     {
-        Vector3 rayCastVector;
         _enemiesAround = new Dictionary<DirectionMove.OptionMovements, GameObject>();
         _treasuresAround = new Dictionary<DirectionMove.OptionMovements, GameObject>();
         _directionAvaibleMovement = new List<DirectionMove.OptionMovements>();
@@ -30,30 +29,8 @@ public class PointInteractive : MonoBehaviour
         if (!UserController.GetInstance().StateInBattle.EnemiesInMap.ContainsKey(idElement))
         {
             UserController.GetInstance().StateInBattle.EnemiesInMap[idElement] = new PointInteractiveStructure();
+            CheckBrigdeAllDirections();
 
-            rayCastVector = Vector3.forward * 4 - new Vector3(0, +1.0f, 0);
-            if (CheckBrigdeAdjacent(rayCastVector))
-            {
-                _directionAvaibleMovement.Add(DirectionMove.OptionMovements.UP);
-            }
-
-            rayCastVector = Vector3.back * 4 - new Vector3(0, +1.0f, 0);
-            if (CheckBrigdeAdjacent(rayCastVector))
-            {
-                _directionAvaibleMovement.Add(DirectionMove.OptionMovements.BOTTOM);
-            }
-
-            rayCastVector = Vector3.right * 4 - new Vector3(0, +1.0f, 0);
-            if (CheckBrigdeAdjacent(rayCastVector))
-            {
-                _directionAvaibleMovement.Add(DirectionMove.OptionMovements.RIGHT);
-            }
-
-            rayCastVector = Vector3.left * 4 - new Vector3(0, +1.0f, 0);
-            if (CheckBrigdeAdjacent(rayCastVector))
-            {
-                _directionAvaibleMovement.Add(DirectionMove.OptionMovements.LEFT);
-            }
             // _sideAvaibles.AddRange(_directionAvaibleMovement);
             foreach (DirectionMove.OptionMovements theDirection in directionsNotInteractuable)
             {
@@ -228,7 +205,15 @@ public class PointInteractive : MonoBehaviour
         {
             if (objectHit.collider.transform.gameObject.tag == "Brigde")
             {
-                return true;
+                // Check if brigde exist some fence over him
+                if (objectHit.collider.transform.gameObject.GetComponent<BrigdeLogic>().TheHeroCanMovementOverHere())
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
                 // Debug.Log(objectHit.collider.transform.gameObject.tag);
             }
         }
@@ -279,9 +264,32 @@ public class PointInteractive : MonoBehaviour
         }
         return thePosition;
     }
-
-    public void SetSideNotAvaibles()
+    public void CheckBrigdeAllDirections()
     {
+        Vector3 rayCastVector;
+        rayCastVector = Vector3.forward * 4 - new Vector3(0, +1.0f, 0);
+        _directionAvaibleMovement.Clear();
+        if (CheckBrigdeAdjacent(rayCastVector))
+        {
+            _directionAvaibleMovement.Add(DirectionMove.OptionMovements.UP);
+        }
 
+        rayCastVector = Vector3.back * 4 - new Vector3(0, +1.0f, 0);
+        if (CheckBrigdeAdjacent(rayCastVector))
+        {
+            _directionAvaibleMovement.Add(DirectionMove.OptionMovements.BOTTOM);
+        }
+
+        rayCastVector = Vector3.right * 4 - new Vector3(0, +1.0f, 0);
+        if (CheckBrigdeAdjacent(rayCastVector))
+        {
+            _directionAvaibleMovement.Add(DirectionMove.OptionMovements.RIGHT);
+        }
+
+        rayCastVector = Vector3.left * 4 - new Vector3(0, +1.0f, 0);
+        if (CheckBrigdeAdjacent(rayCastVector))
+        {
+            _directionAvaibleMovement.Add(DirectionMove.OptionMovements.LEFT);
+        }
     }
 }

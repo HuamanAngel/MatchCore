@@ -13,6 +13,9 @@ public class HeroInMovement : MonoBehaviour
     private List<GameObject> _allArrows;
     private DirectionMove.OptionMovements _directionMovement;
     private float _speedMove = 3.0f;
+    private int _quantityKeyBasic = 2;
+    private int _quantityKeyMedium = 3;
+    private int _quantityKeyBig = 4;
     private Rigidbody _rb;
     public TMP_Text textQuantityMoves;
     private bool _isMovement = false;
@@ -27,6 +30,9 @@ public class HeroInMovement : MonoBehaviour
 
     public DirectionMove.OptionMovements DirectionMovement { get => _directionMovement; set => _directionMovement = value; }
     public bool IsMovement { get => _isMovement; }
+    public TMP_Text tmpKeyBasic;
+    public TMP_Text tmpKeyMedium;
+    public TMP_Text tmpKeyBig;
     public static HeroInMovement GetInstance()
     {
         return _instance;
@@ -40,6 +46,7 @@ public class HeroInMovement : MonoBehaviour
 
     void Start()
     {
+        SetInformationInCanvas();
         if (UserController.GetInstance().StateInBattle.CurrentPosition != Vector3.zero)
         {
             transform.position = UserController.GetInstance().StateInBattle.CurrentPosition;
@@ -76,22 +83,14 @@ public class HeroInMovement : MonoBehaviour
                 directionRayCast[0] = Vector3.left * 3;
                 break;
         }
-        // Debug.Log("Ya termino de construir todo : " + UserController.GetInstance().StateInBattle.EndCreatedEnemiesAndTreasures());
-        // Debug.Log("Valor contador : " + UserController.GetInstance().StateInBattle.CounterQuantityElements);
-        // Debug.Log("Valor total : " + UserController.GetInstance().StateInBattle.TotalElementsInMap);
-        // Debug.Log("aca de inmeidati");
 
         yield return new WaitUntil(() => UserController.GetInstance().StateInBattle.EndCreatedEnemiesAndTreasures());
-        // yield return new WaitForSeconds(4.0f);
 
-        // Debug.Log("Valor contador despues : " + UserController.GetInstance().StateInBattle.CounterQuantityElements);
-        // Debug.Log("aca de inmeidati");
         if (CheckIfEnemieExistInDirection(directionRayCast, out goEnemiesCollision))
         {
             // Debug.Log("La condificion es true");
             goEnemiesCollision[0].GetComponent<EnemyInMovement>().DieThisEnemy();
             goEnemiesCollision[0].GetComponent<EnemyInMovement>().IsALive = false;
-            // Debug.Log("Es el final : " + goEnemiesCollision[0].GetComponent<EnemyInMovement>().IsEnemyFinalOfMap);
             StartCoroutine(WaitForFinishAnimationDeadEnemy(goEnemiesCollision[0].GetComponent<EnemyInMovement>().IsEnemyFinalOfMap));
         }
         else
@@ -101,7 +100,7 @@ public class HeroInMovement : MonoBehaviour
     }
     IEnumerator WaitForFinishAnimationDeadEnemy(bool isEnemyFinal)
     {
-        Debug.Log("Waiting for dead enemy");
+        // Debug.Log("Waiting for dead enemy");
         while (UserController.GetInstance().StateInBattle.IsDeadCharacter)
         {
             yield return null;
@@ -114,7 +113,7 @@ public class HeroInMovement : MonoBehaviour
         {
             if (UserController.GetInstance().StateInBattle.InterrupteMovement)
             {
-                Debug.Log("Retomo el movimiento");
+                // Debug.Log("Retomo el movimiento");
                 StartCoroutine(DoMoving(UserController.GetInstance().StateInBattle.TargetPositionInterrupted));
             }
             else
@@ -123,9 +122,9 @@ public class HeroInMovement : MonoBehaviour
             }
 
             yield return new WaitUntil(() => UserController.GetInstance().StateInBattle.InterrupteMovement == false);
-            Debug.Log("Ok, already finish the movmenet retake");
+            // Debug.Log("Ok, already finish the movmenet retake");
             CreateArrowDirection();
-            Debug.Log(" Ok, i was create arrow directions");
+            // Debug.Log(" Ok, i was create arrow directions");
         }
     }
     // Update is called once per frame
@@ -150,6 +149,7 @@ public class HeroInMovement : MonoBehaviour
             if (objectHit.collider.transform.gameObject.tag == "Point")
             {
                 List<DirectionMove.OptionMovements> movementsAvaibles;
+                objectHit.collider.transform.gameObject.GetComponent<PointInteractive>().CheckBrigdeAllDirections();
                 movementsAvaibles = objectHit.collider.transform.gameObject.GetComponent<PointInteractive>().DirectionAvaibleMovement;
                 foreach (DirectionMove.OptionMovements theMovement in movementsAvaibles)
                 {
@@ -300,7 +300,8 @@ public class HeroInMovement : MonoBehaviour
 
     public void SetQuantityMovements()
     {
-        textQuantityMoves.text = "" + _quantityMovementsInScene;
+        // textQuantityMoves.text = "" + _quantityMovementsInScene;
+        SetInformationInCanvas();
     }
 
     public void DecrementQuantityMovement()
@@ -321,12 +322,12 @@ public class HeroInMovement : MonoBehaviour
         for (int i = 0; i < directionRaycast.Length; i++)
         {
             Debug.DrawRay(transform.position, directionRaycast[i], Color.green, 5, false);
-            Debug.Log("Aca antes de checkar la collision :::::::::::::::::::::::::: ");
+            // Debug.Log("Aca antes de checkar la collision :::::::::::::::::::::::::: ");
             // Debug.Log("aca la direccion : "+ directionRaycast[i]);
-            Debug.Log("Reusltado de raycast : " + Physics.Raycast(transform.position, directionRaycast[i], out objectHit, 5.0f));
+            // Debug.Log("Reusltado de raycast : " + Physics.Raycast(transform.position, directionRaycast[i], out objectHit, 5.0f));
             if (Physics.Raycast(transform.position, directionRaycast[i], out objectHit, 5.0f))
             {
-                Debug.Log("Collision with : " + objectHit.collider.transform.gameObject.tag);
+                // Debug.Log("Collision with : " + objectHit.collider.transform.gameObject.tag);
                 if (objectHit.collider.transform.gameObject.tag == "Enemy")
                 {
                     // Debug.Log("Detect enemy in front : " + objectHit.collider.transform.gameObject.name);
@@ -454,12 +455,71 @@ public class HeroInMovement : MonoBehaviour
 
     }
 
-    // private void CreatePrefabToBatte()
-    // {
-    //     GameObject twoSword = Instantiate(prefabToBattle);
-    //     twoSword.transform.position = positionObject;
-    //     twoSword.GetComponent<DirectionMove>().TypeArrow = directionMovement;
-    //     twoSword.GetComponent<DirectionMove>().RotateByTypeArrow();
+    public bool ConsumeKey(int quantityToConsumed, BrigdeLogic.optionEmiesObstacle typeObstacle)
+    {
+        switch (typeObstacle)
+        {
+            case BrigdeLogic.optionEmiesObstacle.FENCE_BASIC:
+                if (_quantityKeyBasic >= quantityToConsumed)
+                {
+                    _quantityKeyBasic -= quantityToConsumed;
+                    SetInformationInCanvas();
+                    return true;
+                }
+                else
+                {
+                    // Debug.Log("No hay suficiente llaves");
+                    return false;
+                }
+                break;
+            case BrigdeLogic.optionEmiesObstacle.FENCE_MEDIUM:
+                if (_quantityKeyMedium >= quantityToConsumed)
+                {
+                    _quantityKeyMedium -= quantityToConsumed;
+                    SetInformationInCanvas();
+                    return true;
+                }
+                else
+                {
+                    // Debug.Log("No hay suficiente llaves");
+                    return false;
+                }
+                break;
 
-    // }
+            case BrigdeLogic.optionEmiesObstacle.FENCE_BIG:
+                if (_quantityKeyBig >= quantityToConsumed)
+                {
+                    _quantityKeyBig -= quantityToConsumed;
+                    SetInformationInCanvas();
+                    return true;
+                }
+                else
+                {
+                    // Debug.Log("No hay suficiente llaves");
+                    return false;
+                }
+                break;
+            default:
+                Debug.Log("Tipo de obstaculo no identificado");
+                return false;
+                break;
+        }
+
+    }
+    public void SetInformationInCanvas()
+    {
+        tmpKeyBasic.text = "x" + _quantityKeyBasic;
+        tmpKeyMedium.text = "x" + _quantityKeyMedium;
+        tmpKeyBig.text = "x" + _quantityKeyBig;
+        textQuantityMoves.text = "" + _quantityMovementsInScene;
+    }
+
+    public void TryCreationArrowDirection()
+    {
+        // CheckBrigdeAllDirections
+        ClearAllArrows();
+        Debug.Log("Termine de limpiar");        
+        CreateArrowDirection();
+        Debug.Log("Termine de revisar los brigde");
+    }
 }
