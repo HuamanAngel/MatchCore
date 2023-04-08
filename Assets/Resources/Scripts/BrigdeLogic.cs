@@ -5,6 +5,11 @@ using UnityEngine;
 public class BrigdeLogic : MonoBehaviour
 {
     public GameObject gameObjectOverHere;
+    // public List<GameObject> pointWhatConnect;
+    public List<GameObject> pointsInteractuableInCaseExistObstacle;
+    // private void Awake() {
+    //     pointWhatConnect = new List<GameObject>();
+    // }
     void Start()
     {
 

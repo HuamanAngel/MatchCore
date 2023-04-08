@@ -16,6 +16,7 @@ public class HeroInMovement : MonoBehaviour
     private int _quantityKeyBasic = 2;
     private int _quantityKeyMedium = 3;
     private int _quantityKeyBig = 4;
+    private int _quantityNextLvl = 0;
     private Rigidbody _rb;
     public TMP_Text textQuantityMoves;
     private bool _isMovement = false;
@@ -33,6 +34,7 @@ public class HeroInMovement : MonoBehaviour
     public TMP_Text tmpKeyBasic;
     public TMP_Text tmpKeyMedium;
     public TMP_Text tmpKeyBig;
+    public TMP_Text tmpKeyNextLvl;
     public static HeroInMovement GetInstance()
     {
         return _instance;
@@ -230,7 +232,7 @@ public class HeroInMovement : MonoBehaviour
     public IEnumerator DoMoving(Vector3 target)
     {
         _isMovement = true;
-        SetDataInPointInteractive();        
+        SetDataInPointInteractive();
         while (Vector3.Distance(target, transform.position) > 0.001f)
         {
             transform.position = Vector3.MoveTowards(transform.position, target, _speedMove * Time.deltaTime);
@@ -506,6 +508,20 @@ public class HeroInMovement : MonoBehaviour
                     return false;
                 }
                 break;
+            case ElementsInteractuable.OptionObstacle.FENCE_GRAND_TRANSITION:
+                if (_quantityNextLvl >= quantityToConsumed)
+                {
+                    _quantityNextLvl -= quantityToConsumed;
+                    SetInformationInCanvas();
+                    return true;
+                }
+                else
+                {
+                    // Debug.Log("No hay suficiente llaves");
+                    return false;
+                }
+                break;
+                
             default:
                 Debug.Log("Tipo de obstaculo no identificado");
                 return false;
@@ -518,6 +534,7 @@ public class HeroInMovement : MonoBehaviour
         tmpKeyBasic.text = "x" + _quantityKeyBasic;
         tmpKeyMedium.text = "x" + _quantityKeyMedium;
         tmpKeyBig.text = "x" + _quantityKeyBig;
+        tmpKeyNextLvl.text = "x" + _quantityNextLvl;
         textQuantityMoves.text = "" + _quantityMovementsInScene;
     }
 
@@ -525,7 +542,7 @@ public class HeroInMovement : MonoBehaviour
     {
         // CheckBrigdeAllDirections
         ClearAllArrows();
-        Debug.Log("Termine de limpiar");        
+        Debug.Log("Termine de limpiar");
         CreateArrowDirection();
         Debug.Log("Termine de revisar los brigde");
     }

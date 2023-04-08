@@ -208,6 +208,7 @@ public class PointInteractive : MonoBehaviour
             {
                 // Check if brigde exist some fence over him
                 // return false;
+                // objectHit.collider.transform.gameObject.GetComponent<BrigdeLogic>().pointWhatConnect.Add(this.gameObject);                
                 if (objectHit.collider.transform.gameObject.GetComponent<BrigdeLogic>().TheHeroCanMovementOverHere())
                 {
                     return true;

@@ -18,7 +18,7 @@ public class EnemyInMovement : MonoBehaviour
     public DirectionMove.OptionMovements DirectionBelongToPoint { get => _directionBelongToPoint; set => _directionBelongToPoint = value; }
     private void Awake()
     {
-        Debug.Log("Recine me lenvate");
+        // Debug.Log("Recine me lenvate");
         _theCharacters = new List<Charac>();
         _isALive = true;
         _theCharacters = GameData.GetInstance().GetRandomEnemyByMap(numberMap: 1, type: "Golem", quality: "Muy Comun", 1);

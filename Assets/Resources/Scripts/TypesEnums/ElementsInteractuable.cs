@@ -10,7 +10,8 @@ public class ElementsInteractuable
         NOTHING,
         FENCE_BASIC,
         FENCE_MEDIUM,
-        FENCE_BIG
+        FENCE_BIG,
+        FENCE_GRAND_TRANSITION
     }
     public enum OptionReward
     {

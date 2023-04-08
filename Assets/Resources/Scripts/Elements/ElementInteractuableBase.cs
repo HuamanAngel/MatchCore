@@ -24,7 +24,16 @@ public class ElementInteractuableBase : MonoBehaviour
             MeshRenderer meshRenderer = go.GetComponent<MeshRenderer>();
             for (int i = 0; i < meshRenderer.materials.Length; i++)
             {
-                allColorsFromMesh.Add(meshRenderer.materials[i].color);
+                if (meshRenderer.materials[i].HasProperty("_Color"))
+                {
+                    allColorsFromMesh.Add(meshRenderer.materials[i].color);
+                }
+                if (meshRenderer.materials[i].HasProperty("_ColorTint"))
+                {
+                    allColorsFromMesh.Add(meshRenderer.materials[i].GetColor("_ColorTint"));
+                }
+
+                // Debug.Log(MaterialEditor.GetMaterialProperties(meshRenderer.materials[i]));
             }
             _oldColors.Add(allColorsFromMesh);
         }
@@ -42,7 +51,14 @@ public class ElementInteractuableBase : MonoBehaviour
                 MeshRenderer meshRenderer = go.GetComponent<MeshRenderer>();
                 for (int i = 0; i < meshRenderer.materials.Length; i++)
                 {
-                    meshRenderer.materials[i].color = _colorShine;
+                    if (meshRenderer.materials[i].HasProperty("_Color"))
+                    {
+                        meshRenderer.materials[i].color = _colorShine;
+                    }
+                    if (meshRenderer.materials[i].HasProperty("_ColorTint"))
+                    {
+                        meshRenderer.materials[i].SetColor("_ColorTint", _colorShine);
+                    }
                 }
             }
 
@@ -58,7 +74,14 @@ public class ElementInteractuableBase : MonoBehaviour
             for (int j = 0; j < meshRenderer.materials.Length; j++)
             {
                 allColorsFromMesh = _oldColors[i];
-                meshRenderer.materials[j].color = allColorsFromMesh[j];
+                if (meshRenderer.materials[j].HasProperty("_Color"))
+                {
+                    meshRenderer.materials[j].SetColor("_Color", allColorsFromMesh[j]);
+                }
+                if (meshRenderer.materials[j].HasProperty("_ColorTint"))
+                {
+                    meshRenderer.materials[j].SetColor("_ColorTint", allColorsFromMesh[j]);
+                }
             }
         }
     }
