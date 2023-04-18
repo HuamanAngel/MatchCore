@@ -131,7 +131,7 @@ public class PointInteractive : MonoBehaviour
     {
         if (_directionAvaibleMovement.Count != 0)
         {
-            int createEnemy = Random.Range(1, 4);
+            int createEnemy = Random.Range(1, 10);
             if (createEnemy > 1)
             {
                 if (_sideAvaibles.Count > 0)
@@ -228,7 +228,7 @@ public class PointInteractive : MonoBehaviour
         if (_directionAvaibleMovement.Count != 0)
         {
             int createEnemy = Random.Range(1, 6);
-            if (createEnemy == 1)
+            if (createEnemy == 1 || createEnemy == 2)
             {
                 if (_sideAvaibles.Count > 0)
                 {

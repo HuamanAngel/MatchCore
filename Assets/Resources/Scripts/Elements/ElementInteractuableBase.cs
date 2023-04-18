@@ -28,9 +28,13 @@ public class ElementInteractuableBase : MonoBehaviour
                 {
                     allColorsFromMesh.Add(meshRenderer.materials[i].color);
                 }
-                if (meshRenderer.materials[i].HasProperty("_ColorTint"))
+                else if (meshRenderer.materials[i].HasProperty("_ColorTint"))
                 {
                     allColorsFromMesh.Add(meshRenderer.materials[i].GetColor("_ColorTint"));
+                }
+                else if (meshRenderer.materials[i].HasProperty("_DeepWaterColor"))
+                {
+                    allColorsFromMesh.Add(meshRenderer.materials[i].GetColor("_DeepWaterColor"));
                 }
 
                 // Debug.Log(MaterialEditor.GetMaterialProperties(meshRenderer.materials[i]));
@@ -55,9 +59,13 @@ public class ElementInteractuableBase : MonoBehaviour
                     {
                         meshRenderer.materials[i].color = _colorShine;
                     }
-                    if (meshRenderer.materials[i].HasProperty("_ColorTint"))
+                    else if (meshRenderer.materials[i].HasProperty("_ColorTint"))
                     {
                         meshRenderer.materials[i].SetColor("_ColorTint", _colorShine);
+                    }
+                    else if (meshRenderer.materials[i].HasProperty("_DeepWaterColor"))
+                    {
+                        meshRenderer.materials[i].SetColor("_DeepWaterColor", _colorShine);
                     }
                 }
             }
@@ -78,9 +86,13 @@ public class ElementInteractuableBase : MonoBehaviour
                 {
                     meshRenderer.materials[j].SetColor("_Color", allColorsFromMesh[j]);
                 }
-                if (meshRenderer.materials[j].HasProperty("_ColorTint"))
+                else if (meshRenderer.materials[j].HasProperty("_ColorTint"))
                 {
                     meshRenderer.materials[j].SetColor("_ColorTint", allColorsFromMesh[j]);
+                }
+                else if (meshRenderer.materials[j].HasProperty("_DeepWaterColor"))
+                {
+                    meshRenderer.materials[j].SetColor("_DeepWaterColor", allColorsFromMesh[j]);
                 }
             }
         }

@@ -18,6 +18,38 @@ public class ElementsInteractuable
         NOTHING,
         CHEST_BASIC,
         CHEST_MEDIUM,
-        CHEST_BIG
+        CHEST_BIG,
+        KEY_NEXT_LEVEL
     }
+    public enum OptionTale
+    {
+        NOTHING,
+        TALE_NEWSPAPER
+    }
+
+    public static Texture GetTextureByElementInteractuable(ElementsInteractuable.OptionReward typeElementInteractuable)
+    {
+        Texture textt;
+        switch (typeElementInteractuable)
+        {
+            case ElementsInteractuable.OptionReward.CHEST_BASIC :
+                textt = Resources.Load<Texture>("Images/RewardIcons/i_key_basic");
+                break;
+            case ElementsInteractuable.OptionReward.CHEST_MEDIUM:
+                textt = Resources.Load<Texture>("Images/RewardIcons/i_key_medium");
+                break;
+            case ElementsInteractuable.OptionReward.CHEST_BIG:
+                textt = Resources.Load<Texture>("Images/RewardIcons/i_key_big");
+                break;
+            case ElementsInteractuable.OptionReward.KEY_NEXT_LEVEL:
+                textt = Resources.Load<Texture>("Images/RewardIcons/i_key_nextlevel");
+                break;
+            default:
+                textt = Resources.Load<Texture>("Images/RewardIcons/i_key_basic");
+                break;
+        }
+        return textt;
+
+    }
+
 }

@@ -35,6 +35,11 @@ public class HeroInMovement : MonoBehaviour
     public TMP_Text tmpKeyMedium;
     public TMP_Text tmpKeyBig;
     public TMP_Text tmpKeyNextLvl;
+    public int QuantityKeyBasic { get => _quantityKeyBasic; set => _quantityKeyBasic = value; }
+    public int QuantityKeyMedium { get => _quantityKeyMedium; set => _quantityKeyMedium = value; }
+    public int QuantityKeyBig { get => _quantityKeyBig; set => _quantityKeyBig = value; }
+    public int QuantityKeyNextLvl { get => _quantityNextLvl; set => _quantityNextLvl = value; }
+
     public static HeroInMovement GetInstance()
     {
         return _instance;
@@ -521,7 +526,7 @@ public class HeroInMovement : MonoBehaviour
                     return false;
                 }
                 break;
-                
+
             default:
                 Debug.Log("Tipo de obstaculo no identificado");
                 return false;
@@ -542,8 +547,17 @@ public class HeroInMovement : MonoBehaviour
     {
         // CheckBrigdeAllDirections
         ClearAllArrows();
-        Debug.Log("Termine de limpiar");
+        // Debug.Log("Termine de limpiar");
         CreateArrowDirection();
-        Debug.Log("Termine de revisar los brigde");
+        // Debug.Log("Termine de revisar los brigde");
+    }
+    public void ModifyValuesFromHero(int addKeyBasic = 0, int addKeyMedium = 0, int addKeyBig = 0, int addKeyNextLvl = 0, int addMovement = 0)
+    {
+        _quantityKeyBasic += addKeyBasic;
+        _quantityKeyMedium += addKeyMedium;
+        _quantityKeyBig += addKeyBig;
+        _quantityNextLvl += addKeyNextLvl;
+        _quantityMovementsInScene += addMovement;
+        SetInformationInCanvas();
     }
 }
