@@ -25,7 +25,7 @@ public class Charac
     public string pathPrefab;
     public string pathPrefabInBattle;
     // Derivated values generates from the preview values
-    // public AttackGrid.TypeOfAttack movementType;
+    public AttackGrid.TypeOfAttack movementType;
     public List<Skill> theSkills = new List<Skill>();
     public Texture iconChar;
     public GameObject prefabChar;
@@ -38,7 +38,7 @@ public class Charac
     {
         CalculateArmor();
         CalculateLife();
-        // LoadMovementType();
+        LoadMovementType();
         SetSkillToCharacter();
         LoadMyResources();
     }
@@ -64,10 +64,10 @@ public class Charac
         CalculateArmor();
     }
 
-    // public void LoadMovementType()
-    // {
-    //     movementType = (AttackGrid.TypeOfAttack)System.Enum.Parse(typeof(AttackGrid.TypeOfAttack), movementTypeGridString);
-    // }
+    public void LoadMovementType()
+    {
+        movementType = (AttackGrid.TypeOfAttack)System.Enum.Parse(typeof(AttackGrid.TypeOfAttack), movementTypeGridString);
+    }
 
 
     public void SetSkillToCharacter()

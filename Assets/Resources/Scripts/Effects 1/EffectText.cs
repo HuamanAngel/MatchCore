@@ -15,7 +15,6 @@ public class EffectText : MonoBehaviour
         {
             // go.transform.Rotate(Camera.main.transform.localRotation.eulerAngles.x, go.transform.localRotation.eulerAngles.y, go.transform.localRotation.eulerAngles.z);
             go.transform.Rotate(angleRotation);
-            Debug.Log("Acabo de rotar");
         }        
         go.GetComponent<TMP_Text>().text = text;
         go.GetComponent<TMP_Text>().color = startColor;

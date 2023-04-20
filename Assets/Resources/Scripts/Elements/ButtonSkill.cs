@@ -43,37 +43,6 @@ public class ButtonSkill : MonoBehaviour
         _prevRed = _characterBelong.GetComponent<Character>().ThePlayer.RedSphereG;
         _prevBlue = _characterBelong.GetComponent<Character>().ThePlayer.BlueSphereG;
         _prevYellow = _characterBelong.GetComponent<Character>().ThePlayer.YellowSphereG;
-        //     Rend = GetComponent<Renderer>();
-        //     lineRenderer.numPositions = lengthOfLineRenderer;
-        //     //Set your GameObject position from where you want draw a line
-        //     PositionOfGameObject = new Vector3(0f, 0f, 0f);
-        // lr.material = new Material(Shader.Find("Particles/Alpha Blended Premultiply"));
-        // lr.SetColors(color, color);
-        // lr.SetWidth(0.1f, 0.1f);
-        // lr.SetPosition(0, start);
-        // lr.SetPosition(1, end);
-        // GameObject.Destroy(myLine, 3.0f);
-
-        // Vector3 start = new Vector3(0, 0, 0);
-        // Vector3 end = new Vector3(20, 20, 20);
-        // GameObject myLine = new GameObject();
-        // myLine.transform.position = start;
-        // myLine.AddComponent<LineRenderer>();
-        // LineRenderer lr = myLine.GetComponent<LineRenderer>();
-        // // lr.material = new Material(Shader.Find("Particles/Alpha Blended Premultiply"));
-        // // lr.SetColors(color, color);
-        // lr.SetWidth(0.1f, 0.1f);
-        // lr.SetPosition(0, start);
-        // lr.SetPosition(1, end);
-        // GameObject.Destroy(myLine, 3.0f);
-        // Vector3 start = new Vector3(transform.position.x, transform.position.y, -1);
-        // Vector3 end = new Vector3(20, 20, 20);
-        // myLine.transform.position = start;
-        // lr.material = new Material(Shader.Find("Particles/Alpha Blended Premultiply"));
-        // lr.SetColors(color, color);
-        // lr.SetPosition(0, start);
-        // lr.SetPosition(1, end);
-
     }
 
     // Update is called once per frame
@@ -131,11 +100,11 @@ public class ButtonSkill : MonoBehaviour
                 objIconSkill.GetComponent<RawImage>().color = colorEnabled;
             }
         }
-        if (_characterBelong.GetComponent<Character>().ThePlayer.YellowSphereG != _prevYellow || _characterBelong.GetComponent<Character>().ThePlayer.RedSphereG != _prevRed || _characterBelong.GetComponent<Character>().ThePlayer.BlueSphereG != _prevBlue)
-        {
-            EvaluateSkillAvaible();
-            // Debug.Log("Exist match");
-        }
+        // if (_characterBelong.GetComponent<Character>().ThePlayer.YellowSphereG != _prevYellow || _characterBelong.GetComponent<Character>().ThePlayer.RedSphereG != _prevRed || _characterBelong.GetComponent<Character>().ThePlayer.BlueSphereG != _prevBlue)
+        // {
+        //     EvaluateSkillAvaible();
+        //     // Debug.Log("Exist match");
+        // }
     }
     public void EvaluateSkillAvaible()
     {

@@ -29,8 +29,9 @@ public class UserController : MonoBehaviour
         userEnemy = new User();
         _stateInBattle = new StatesInBattle();
 
-        Charac oneCharacter = CreateNewCharacterInScene(1, 1); ;
+        Charac oneCharacter = CreateNewCharacterInScene(1, 1);
         // Add to user data
+        // Debug.Log("IN HERO : " + oneCharacter );
         user.CharInCombat.Add(oneCharacter);
         user.CharAll.Add(oneCharacter);
 

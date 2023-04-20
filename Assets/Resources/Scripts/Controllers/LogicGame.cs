@@ -55,6 +55,7 @@ public class LogicGame : MonoBehaviour
     public GameObject ButtonSkillSelected { get => buttonSkillSelected; set => buttonSkillSelected = value; }
     public GameObject ButtonCharacterSelectedToAttack { get => buttonCharacterSelectedToAttack; set => buttonCharacterSelectedToAttack = value; }
     public Material materialToLineRenderer;
+    // public GameObject prefabTextFloating;
 
     public static LogicGame GetInstance()
     {
@@ -136,14 +137,14 @@ public class LogicGame : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (isCurrentSelectedSkill)
-        {
-            if (Input.GetKeyUp(KeyCode.Mouse1))
-            {
-                buttonSkillSelected.GetComponent<ButtonSkill>().DeselectedSkill();
-            }
+        // if (isCurrentSelectedSkill)
+        // {
+        //     if (Input.GetKeyUp(KeyCode.Mouse1))
+        //     {
+        //         buttonSkillSelected.GetComponent<ButtonSkill>().DeselectedSkill();
+        //     }
 
-        }
+        // }
     }
 
     public void SetPlayer()
@@ -230,7 +231,7 @@ public class LogicGame : MonoBehaviour
 
     public void CreateSkillsButtonsInGame(Vector3 positionFloating, Character c1)
     {
-
+        Debug.Log("cantidad de skiles : " + c1.allSKill.Count);
         Vector3 thePosition = new Vector3(0, 0, 0);
         for (int i = 0; i < 4; i++)
         {
@@ -274,15 +275,15 @@ public class LogicGame : MonoBehaviour
             GameObject toIcon = UtilitiesClass.FindChildByName(go, "ImageSkill");
 
             toIcon.GetComponent<SpriteRenderer>().sprite = c1.allSKill[numberSkill].iconSkillSprite;
-            // go.GetComponent<ButtonSkill>().NumberSkill = numberSkill;
-            // go.GetComponent<ButtonSkill>().TheSkillSelected = c1.allSKill[numberSkill];
-            // go.GetComponent<ButtonSkill>().CharacterGetSet = c1;            
+            go.GetComponent<ButtonSkillInBattle>().NumberSkill = numberSkill;
+            go.GetComponent<ButtonSkillInBattle>().TheSkillSelected = c1.allSKill[numberSkill];
+            go.GetComponent<ButtonSkillInBattle>().CharacterGetSet = c1;            
         }
         else
         {
             Debug.Log("Dice que nooo exsite el skill : " + numberSkill);
             go = Instantiate(objBoxSkillEmptyFloating, positionFloating, Quaternion.identity);
-            // go.GetComponent<ButtonSkill>().NumberSkill = numberSkill;
+            go.GetComponent<ButtonSkillInBattle>().NumberSkill = numberSkill;
         }
         _clonesBoxSkill.Add(go);
         go.transform.Rotate(Camera.main.transform.localRotation.eulerAngles.x, go.transform.localRotation.eulerAngles.y, go.transform.localRotation.eulerAngles.z);
@@ -300,7 +301,7 @@ public class LogicGame : MonoBehaviour
 
     public void ProcessAttackSelected(GameObject targetAttack)
     {
-        GameObject originAttack = buttonSkillSelected.GetComponent<ButtonSkill>().CharacterBelong;
+        GameObject originAttack = buttonSkillSelected.GetComponent<ButtonSkillInBattle>().CharacterBelong;
         Character characterTmp;
         if (originAttack.GetComponent<HeroController>() != null)
         {
@@ -318,12 +319,12 @@ public class LogicGame : MonoBehaviour
 
         if (targetAttack.GetComponent<HeroController>() != null)
         {
-            if (characterTmp.CheckifCanAttackSpheres(buttonSkillSelected.GetComponent<ButtonSkill>().TheSkill))
+            if (characterTmp.CheckifCanAttackSpheres(buttonSkillSelected.GetComponent<ButtonSkillInBattle>().TheSkill))
             {
-                int damageMin = (int)buttonSkillSelected.GetComponent<ButtonSkill>().TheSkill.damage_min;
-                int damageMax = (int)buttonSkillSelected.GetComponent<ButtonSkill>().TheSkill.damage_max;
+                int damageMin = (int)buttonSkillSelected.GetComponent<ButtonSkillInBattle>().TheSkill.damage_min;
+                int damageMax = (int)buttonSkillSelected.GetComponent<ButtonSkillInBattle>().TheSkill.damage_max;
                 targetAttack.GetComponent<HeroController>().ReceivedDamage(Random.Range(damageMin, damageMax));
-                buttonSkillSelected.GetComponent<ButtonSkill>().DeselectedSkill(1);
+                buttonSkillSelected.GetComponent<ButtonSkillInBattle>().DeselectedSkill(1);
                 SoundManager.instance.PlaySFX(SoundManager.ClipItem.Attack);
                 // bool isAlive = targetAttack.GetComponent<HeroController>().ThePlayer.EvaluateIfAliveCharacter(targetAttack);
                 // if(targetAttack.GetComponent<HeroController>().life)
@@ -342,12 +343,12 @@ public class LogicGame : MonoBehaviour
         }
         else if (targetAttack.GetComponent<EnemyController>() != null)
         {
-            if (characterTmp.CheckifCanAttackSpheres(buttonSkillSelected.GetComponent<ButtonSkill>().TheSkill))
+            if (characterTmp.CheckifCanAttackSpheres(buttonSkillSelected.GetComponent<ButtonSkillInBattle>().TheSkill))
             {
-                int damageMin = (int)buttonSkillSelected.GetComponent<ButtonSkill>().TheSkill.damage_min;
-                int damageMax = (int)buttonSkillSelected.GetComponent<ButtonSkill>().TheSkill.damage_max;
+                int damageMin = (int)buttonSkillSelected.GetComponent<ButtonSkillInBattle>().TheSkill.damage_min;
+                int damageMax = (int)buttonSkillSelected.GetComponent<ButtonSkillInBattle>().TheSkill.damage_max;
                 targetAttack.GetComponent<EnemyController>().ReceivedDamage(Random.Range(damageMin, damageMax));
-                buttonSkillSelected.GetComponent<ButtonSkill>().DeselectedSkill(1);
+                buttonSkillSelected.GetComponent<ButtonSkillInBattle>().DeselectedSkill(1);
                 SoundManager.instance.PlaySFX(SoundManager.ClipItem.Attack);
                 bool isAlive = targetAttack.GetComponent<EnemyController>().CharacterIsAlive();
                 Debug.Log("is alive : " + isAlive);

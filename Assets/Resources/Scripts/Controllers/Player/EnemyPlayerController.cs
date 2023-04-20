@@ -76,9 +76,9 @@ public class EnemyPlayerController : PlayerBase
                 dInformation["red"] = objRed;
                 dInformation["blue"] = objBlue;
 
-                skillsCanvas[j].GetComponent<ButtonSkill>().CharacterBelong = goHe; 
-                skillsCanvas[j].GetComponent<ButtonSkill>().TheSkill = theUser.CharInCombat[i].theSkills[j]; 
-                skillsCanvas[j].GetComponent<ButtonSkill>().ElementsInformation = dInformation; 
+                skillsCanvas[j].GetComponent<ButtonSkillInBattle>().CharacterBelong = goHe; 
+                skillsCanvas[j].GetComponent<ButtonSkillInBattle>().TheSkill = theUser.CharInCombat[i].theSkills[j]; 
+                skillsCanvas[j].GetComponent<ButtonSkillInBattle>().ElementsInformation = dInformation; 
 
                 objSkill.GetComponent<RawImage>().texture = theUser.CharInCombat[i].theSkills[j].iconSkill;
                 objYellow.GetComponent<TMP_Text>().text = "x" + theUser.CharInCombat[i].theSkills[j].yellow;
@@ -86,7 +86,7 @@ public class EnemyPlayerController : PlayerBase
                 objBlue.GetComponent<TMP_Text>().text = "x" + theUser.CharInCombat[i].theSkills[j].blue;
 
                 goHe.GetComponent<EnemyController>().allSKill.Add(theUser.CharInCombat[i].theSkills[j]);
-                skillsCanvas[j].GetComponent<ButtonSkill>().enabled = true;
+                skillsCanvas[j].GetComponent<ButtonSkillInBattle>().enabled = true;
                 skillsCanvas[j].GetComponent<Button>().enabled = true;
             }
             _allHeroInPlay.Add(goHe);

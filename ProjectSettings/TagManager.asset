@@ -15,6 +15,9 @@ TagManager:
   - Enemy
   - ObstacleDestroy
   - GridController
+  - MovementObject
+  - AttackObject
+  - FloorGrid
   layers:
   - Default
   - TransparentFX
@@ -23,7 +26,7 @@ TagManager:
   - Water
   - UI
   - Effects
-  - NotAffectLight
+  - Floor
   - 
   - 
   - 

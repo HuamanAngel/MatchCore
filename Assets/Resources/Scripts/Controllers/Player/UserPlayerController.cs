@@ -24,11 +24,20 @@ public class UserPlayerController : PlayerBase
         RandomSphere(4, 8);
         SetQuantitySpheres();
         User theUser = _dataUserGameObject.user;
-        for (int i = 0; i < _dataUserGameObject.user.CharInCombat.Count; i++)
+
+        for (int i = 0; i < theUser.CharInCombat.Count; i++)
         {
-            GameObject goHe = player1Tiers[i];
-            // goHe.tag = "Player";
+            // Creation prefab in map
+            GameObject goHe = Instantiate(theUser.CharInCombat[i].prefabCharInBattle);
+            goHe.tag = "Player";
             goHe.AddComponent<HeroController>();
+
+            goHe.transform.SetParent(GridControlRe.GetInstance().gameObject.transform);
+            goHe.transform.localPosition =  new Vector3(0.0f,0.0f,-2.0f) +  new Vector3(0.5f - i, 0.0f, 0.5f);
+            
+            // Creation Icon in Canvas
+            // GameObject goHe = player1Tiers[i];
+
             goHe.GetComponent<HeroController>().player1Tiers = player1Tiers[i];
             player1Tiers[i].SetActive(true);
             goHe.GetComponent<HeroController>().inBattle = true;
@@ -40,7 +49,7 @@ public class UserPlayerController : PlayerBase
             goHe.GetComponent<HeroController>().textureIcon = theUser.CharInCombat[i].iconChar;
             goHe.GetComponent<HeroController>().costForMovement = theUser.CharInCombat[i].blue;
             // goHe.GetComponent<HeroController>().firstSkill = _dataUserGameObject.user.CharInCombat[i].theSkills[0];
-            // goHe.GetComponent<HeroController>().moveType = _dataUserGameObject.user.CharInCombat[i].movementType;
+            goHe.GetComponent<HeroController>().moveType = theUser.CharInCombat[i].movementType;
             goHe.GetComponent<HeroController>().allSKill = new List<Skill>();
             GameObject toIcon = UtilitiesClass.FindChildByName(player1Tiers[i], "PanelSkills");
             List<GameObject> skillsCanvas = UtilitiesClass.FindAllChildWithTag(toIcon, "SkillCanvas");
@@ -55,6 +64,8 @@ public class UserPlayerController : PlayerBase
                 quantity = _dataUserGameObject.user.CharInCombat[i].theSkills.Count;
             }
             // for (int j = 0; j < _dataUserGameObject.user.CharInCombat[i].theSkills.Count; j++)
+            // Debug.Log("Cantidad skiles  : " + _dataUserGameObject.user.CharInCombat[i].theSkills.Count);
+            // Debug.Log("skillsCanvas.Count : " + quantity);
             for (int j = 0; j < quantity; j++)
             {
                 Dictionary<string, GameObject> dInformation = new Dictionary<string, GameObject>(); 
@@ -67,7 +78,7 @@ public class UserPlayerController : PlayerBase
                 dInformation["yellow"] = objYellow;
                 dInformation["red"] = objRed;
                 dInformation["blue"] = objBlue;
-
+                // Change
                 skillsCanvas[j].GetComponent<ButtonSkill>().CharacterBelong = goHe; 
                 skillsCanvas[j].GetComponent<ButtonSkill>().TheSkill = theUser.CharInCombat[i].theSkills[j]; 
                 skillsCanvas[j].GetComponent<ButtonSkill>().ElementsInformation = dInformation; 

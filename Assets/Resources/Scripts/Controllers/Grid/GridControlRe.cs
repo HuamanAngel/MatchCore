@@ -35,9 +35,15 @@ public class GridControlRe : MonoBehaviour
     public bool PressSelected { get => _pressSelected; set => _pressSelected = value; }
 
     public bool EnabledAttackPath { get => _enabledAttackPath; set => _enabledAttackPath = value; }
+    public static GridControlRe _instance;
+    public static GridControlRe GetInstance()
+    {
+        return _instance;
+    }
 
     private void Awake()
     {
+        _instance = this;
         grid = gameObject.GetComponent<Grid>();
         _attackGrid = new AttackGrid();
     }
@@ -45,14 +51,15 @@ public class GridControlRe : MonoBehaviour
     void Start()
     {
         // _character = HeroController.GetInstance();
-        GameObject[] go = GameObject.FindGameObjectsWithTag("LogicGame");
-        _logicGame = go[0].GetComponent<LogicGame>();
+        _logicGame = LogicGame.GetInstance();
     }
 
     // Update is called once per frame
     void Update()
     {
         mousePos = GetMousePosition(Input.mousePosition);
+        // Debug.Log("natural diredciton : " + Input.mousePosition);
+        // Debug.Log("int direction : " + mousePos);
         HoverCursor(mousePos);
         // Path attack cell
         if (PressSelected)
@@ -69,7 +76,7 @@ public class GridControlRe : MonoBehaviour
         }
         if (_character != null && _character.GetDataGrid("IsAttacking") == 1)
         {
-            AttackProcess(_character, positionTarget, effectMap, _character.SkillSelectedCurrent.id);
+            // AttackProcess(_character, positionTarget, effectMap, _character.SkillSelectedCurrent.id);
             return;
         }
 
@@ -98,7 +105,7 @@ public class GridControlRe : MonoBehaviour
                         else
                         {
                             Vector3 positioToFloating = hit.collider.gameObject.transform.position + new Vector3(0, 0, -2);
-                            StartCoroutine(_logicGame.FloatingText(positioToFloating, "No hay suficientes esferas rojas , amarillas o azules", new Color32(222, 41, 22, 255), new Color32(222, 41, 22, 0)));
+                            StartCoroutine(EffectText.FloatingTextFadeOut(_logicGame.objectTextFloating,positioToFloating, "No hay suficientes esferas rojas , amarillas o azules", new Color32(222, 41, 22, 255), new Color32(222, 41, 22, 0)));
                         }
                     }
                     if (hit.collider.tag == "Player")
@@ -158,7 +165,7 @@ public class GridControlRe : MonoBehaviour
                         else
                         {
                             Vector3 positioToFloating = hit.collider.gameObject.transform.position + new Vector3(0, 0, -2);
-                            StartCoroutine(_logicGame.FloatingText(positioToFloating, "No hay suficientes esferas rojas , amarillas o azules", new Color32(222, 41, 22, 255), new Color32(222, 41, 22, 0)));
+                            StartCoroutine(EffectText.FloatingTextFadeOut(_logicGame.objectTextFloating,positioToFloating, "No hay suficientes esferas rojas , amarillas o azules", new Color32(222, 41, 22, 255), new Color32(222, 41, 22, 0)));
                         }
                     }
                     if (hit.collider.tag == "MovementObject")
@@ -167,13 +174,14 @@ public class GridControlRe : MonoBehaviour
                         {
                             positionTarget = InitMovement(hit.collider.gameObject, _character);
                             StartCoroutine(MovementProcessEnumerator(_character, positionTarget));
-                            // Set movement ("IsMoving")
                         }
                         else
                         {
 
-                            Vector3 positioToFloating = hit.collider.gameObject.transform.position + new Vector3(0, 0, -2);
-                            StartCoroutine(_logicGame.FloatingText(positioToFloating, "No hay suficientes esferas azules", new Color32(222, 41, 22, 255), new Color32(222, 41, 22, 0)));
+                            // Vector3 positioToFloating = hit.collider.gameObject.transform.position + new Vector3(0, 0, -2);
+                            Vector3 positioToFloating = hit.point + new Vector3(0, 0, -2);
+                            Vector3 theRotation = new Vector3(Camera.main.transform.localRotation.eulerAngles.x, _logicGame.objectTextFloating.transform.localRotation.eulerAngles.y, _logicGame.objectTextFloating.transform.localRotation.eulerAngles.z);
+                            StartCoroutine(EffectText.FloatingTextFadeOut(_logicGame.objectTextFloating,positioToFloating, "No hay suficientes esferas azules", new Color32(222, 41, 22, 255), new Color32(222, 41, 22, 0),theRotation));
                         }
                     }
                     if (hit.collider.tag == "Player")
@@ -194,11 +202,10 @@ public class GridControlRe : MonoBehaviour
                         {
                             _character.SetDataGrid("SelectMovement", 1);
                             int[,] movkGrid = _attackGrid.GetTypeGrid(_character.moveType);
-
+                            Vector3 posCell = _character.gameObject.transform.position;
                             ClearAllObjectInTilemap(pathMap);
                             _logicGame.DeleteClonesBox();
-
-                            DrawPathGrid(true, _attackGrid, movkGrid, pathMap, pathObject, mousePos);
+                            DrawPathGrid(true, _attackGrid, movkGrid, pathMap, pathObject,  posCell );
                             Debug.Log(" cinco ");
                         }
                         else
@@ -225,9 +232,10 @@ public class GridControlRe : MonoBehaviour
         }
         if (!mousePos.Equals(previousMousePos))
         {
-
             Vector3 worldPositionNow = cursorMap.CellToWorld(mousePos);
-            GameObject go = Instantiate(hoverObject, worldPositionNow + new Vector3(0.5f, 0, 0.5f), Quaternion.identity);
+            // GameObject go = Instantiate(hoverObject, worldPositionNow + new Vector3(0.5f, 0, 0.5f), Quaternion.identity);
+            GameObject go = Instantiate(hoverObject);
+            go.transform.position = worldPositionNow + new Vector3(0.5f, 0, 0.5f);
             go.transform.SetParent(cursorMap.transform);
             objectInMap[1] = objectInMap[0];
             objectInMap[0] = go;
@@ -265,9 +273,8 @@ public class GridControlRe : MonoBehaviour
                     // Por revisar, por alguna razon funciona
                     if (!isIa)
                     {
-                        Vector3Int pos = new Vector3Int((int)mousePos.x + i - positionPlayerInRange.x, (int)mousePos.y + j - positionPlayerInRange.y, (int)mousePos.y + j - positionPlayerInRange.y);
-                        worldPositionNow = pathMap.CellToWorld(pos);
-
+                        
+                        worldPositionNow = new Vector3(mousePos.x + i - positionPlayerInRange.x, 0, mousePos.z + j - positionPlayerInRange.y);
                         positionPlaterInGrid = new Vector3Int((int)mousePos.x + positionPlayerInRange.x / 4, (int)mousePos.y + positionPlayerInRange.y / 4, (int)mousePos.z + positionPlayerInRange.z);
                         // Check if in front of the character, exist a wall or Hero in this case the character not moved
 
@@ -277,7 +284,6 @@ public class GridControlRe : MonoBehaviour
                         if (Physics.Raycast(pathMap.CellToWorld(positionPlaterInGrid) + new Vector3(0.5f, -0.25f, 0.5f), positionToRayCast, out objectHit2, distanceToCheck))
                         {
                             // Debug.Log("The diferrence distance : " + Vector3.Distance(worldPositionNow, pathMap.CellToWorld(positionPlaterInGrid)));
-
                             if (objectHit2.collider.transform.gameObject.layer == LayerMask.NameToLayer("CellHero") || objectHit2.collider.transform.gameObject.layer == LayerMask.NameToLayer("Wall"))
                             {
                                 // Debug.DrawRay(pathMap.CellToWorld(positionPlaterInGrid) + new Vector3(0.5f, -0.25f, 0.5f), positionToRayCast * objectHit2.distance, Color.red, 30, false);
@@ -299,11 +305,10 @@ public class GridControlRe : MonoBehaviour
 
                     // Check if has terrain
                     RaycastHit objectHit;
-                    Debug.DrawRay(worldPositionNow + new Vector3(0.5f, 1, 0.5f), Vector3.down, Color.green, 30, false);
-                    if (Physics.Raycast(worldPositionNow + new Vector3(0.5f, 1, 0.5f), Vector3.down, out objectHit))
+                    Debug.DrawRay(worldPositionNow +  new Vector3(0,2.0f,0), Vector3.down, Color.red, 30, false);
+                    if (Physics.Raycast(worldPositionNow + new Vector3(0,2.0f,0) , Vector3.down, out objectHit,6))
                     {
-                        // Debug.DrawRay(worldPositionNow + new Vector3(0.5f, 0, 0.5f),  Vector3.down, Color.green,30, false);     
-                        // Debug.Log("Golpeo : " + objectHit.collider.transform.gameObject.name);
+                        Debug.Log("Golpeo : " + objectHit.collider.transform.gameObject.name);
                         string textLayerCell;
                         if (isMovement)
                         {
@@ -317,7 +322,8 @@ public class GridControlRe : MonoBehaviour
                         {
                             if (instaciatePath)
                             {
-                                GameObject go = Instantiate(pathObject, worldPositionNow + new Vector3(0.5f, 0, 0.5f), Quaternion.identity);
+                                GameObject go = Instantiate(pathObject);
+                                go.transform.position = worldPositionNow;
                                 go.transform.SetParent(pathMap.transform);
                             }
                             if (isIa)
@@ -466,7 +472,8 @@ public class GridControlRe : MonoBehaviour
     public void DrawPathToHover()
     {
         ClearAllObjectInTilemap(pathMap);
-        Vector3 posCell = _character.gameObject.transform.position - new Vector3(0.5f, 0, 0.5f);
+        // Vector3 posCell = _character.gameObject.transform.position - new Vector3(0.5f, 0, 0.5f);
+        Vector3 posCell = _character.gameObject.transform.position;
         _character.SkillSelectedHover = _character.GetSkillSelected(_character);
         int[,] movkGrid = _attackGrid.GetTypeGrid(_character.SkillSelectedHover.attackType);
         List<Vector3> positionAllCellPos = new List<Vector3>();

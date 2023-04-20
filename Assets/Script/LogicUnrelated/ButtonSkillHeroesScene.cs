@@ -16,7 +16,7 @@ public class ButtonSkillHeroesScene : MonoBehaviour, IPointerClickHandler
     public TMP_Text other;
     public string typeAttack;
     public int IndexCharacter { get => indexCharacter; set => indexCharacter = value; }
-    public int IndexSkill { get => indexSkill; set => indexSkill = value; }
+    public int IndexSkill { get => indexSkill; set => indexSkill = value; }    
     public void OnPointerClick(PointerEventData eventData)
     {
         if(indexCharacter != -1)
