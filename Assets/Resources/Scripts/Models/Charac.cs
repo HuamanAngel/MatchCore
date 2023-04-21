@@ -34,6 +34,10 @@ public class Charac
     public int lifeTotal;
     public int armorTotal;
 
+    // public Charac CloneThisClass()
+    // {
+
+    // }
     public void InitialValuesDerived()
     {
         CalculateArmor();
@@ -78,7 +82,7 @@ public class Charac
         if (skillId1 != 0)
         {
             theSkills.Add(JsonReaderA.SearchSkillById(skillId1));
-            // theSkills[0].attackType = (AttackGrid.TypeOfAttack)System.Enum.Parse(typeof(AttackGrid.TypeOfAttack), theSkills[0].attackTypeGridString);
+            theSkills[0].attackType = (AttackGrid.TypeOfAttack)System.Enum.Parse(typeof(AttackGrid.TypeOfAttack), theSkills[0].attackTypeGridString);
 
             imageText = Resources.Load<Texture>(theSkills[0].pathIcon);
             imageSpr = Resources.Load<Sprite>(theSkills[0].pathIcon);
@@ -91,7 +95,7 @@ public class Charac
         if (skillId2 != 0)
         {
             theSkills.Add(JsonReaderA.SearchSkillById(skillId2));
-            // theSkills[1].attackType = (AttackGrid.TypeOfAttack)System.Enum.Parse(typeof(AttackGrid.TypeOfAttack), theSkills[1].attackTypeGridString);
+            theSkills[1].attackType = (AttackGrid.TypeOfAttack)System.Enum.Parse(typeof(AttackGrid.TypeOfAttack), theSkills[1].attackTypeGridString);
             imageText = Resources.Load<Texture>(theSkills[1].pathIcon);
             imageSpr = Resources.Load<Sprite>(theSkills[1].pathIcon);
             goEffect = Resources.Load<GameObject>(theSkills[1].pathEffectPrefab);
@@ -103,7 +107,7 @@ public class Charac
         if (skillId3 != 0)
         {
             theSkills.Add(JsonReaderA.SearchSkillById(skillId3));
-            // theSkills[2].attackType = (AttackGrid.TypeOfAttack)System.Enum.Parse(typeof(AttackGrid.TypeOfAttack), theSkills[2].attackTypeGridString);
+            theSkills[2].attackType = (AttackGrid.TypeOfAttack)System.Enum.Parse(typeof(AttackGrid.TypeOfAttack), theSkills[2].attackTypeGridString);
             imageText = Resources.Load<Texture>(theSkills[2].pathIcon);
             imageSpr = Resources.Load<Sprite>(theSkills[2].pathIcon);
             goEffect = Resources.Load<GameObject>(theSkills[2].pathEffectPrefab);
@@ -116,7 +120,7 @@ public class Charac
         if (skillId4 != 0)
         {
             theSkills.Add(JsonReaderA.SearchSkillById(skillId4));
-            // theSkills[3].attackType = (AttackGrid.TypeOfAttack)System.Enum.Parse(typeof(AttackGrid.TypeOfAttack), theSkills[3].attackTypeGridString);
+            theSkills[3].attackType = (AttackGrid.TypeOfAttack)System.Enum.Parse(typeof(AttackGrid.TypeOfAttack), theSkills[3].attackTypeGridString);
             imageText = Resources.Load<Texture>(theSkills[3].pathIcon);
             imageSpr = Resources.Load<Sprite>(theSkills[3].pathIcon);
             goEffect = Resources.Load<GameObject>(theSkills[3].pathEffectPrefab);

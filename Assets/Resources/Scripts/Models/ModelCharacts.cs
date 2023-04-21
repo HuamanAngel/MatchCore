@@ -11,7 +11,8 @@ public class ModelCharacts
     public List<Charac> SearchCharacterByTypeAndQuality(string type, string quality)
     {
         List<Charac> theCharactersSelects = new List<Charac>();
-        foreach (Charac character in data)
+        foreach (Charac character in JsonReaderA.GetAllCharacter().data)
+        // foreach (Charac character in data)
         {
             if (character.quality == quality && character.type == type)
             {
@@ -22,10 +23,12 @@ public class ModelCharacts
     }
     public Charac SearchCharacterById(int idCharacter)
     {
-        foreach (Charac character in data)
+        foreach (Charac character in JsonReaderA.GetAllCharacter().data)
+        // foreach (Charac character in data)
         {
             if (character.id == idCharacter)
             {
+                // Charac copyOfCharacter = InstanceCloner.Clonar(character);
                 return character;
             }
         }

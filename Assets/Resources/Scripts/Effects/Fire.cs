@@ -26,7 +26,7 @@ public class Fire : MonoBehaviour
         if (destroyInmediate == true && noDestroy == false)
         {
             Invoke("DestroyThisObject", timeToDestroy);
-        }        
+        }
     }
 
     public void DestroyThisObject()
@@ -49,6 +49,7 @@ public class Fire : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        Vector3 theRotation = new Vector3(Camera.main.transform.localRotation.eulerAngles.x, _logicGame.objectTextFloating.transform.localRotation.eulerAngles.y, _logicGame.objectTextFloating.transform.localRotation.eulerAngles.z);
         if (other.gameObject.GetComponent<HeroController>() != null)
         {
             HeroController h1 = other.gameObject.GetComponent<HeroController>();
@@ -57,7 +58,7 @@ public class Fire : MonoBehaviour
             h1.ReceivedDamage(randomDmg);
             h1.UpdateAllStats();
             Vector3 positioToFloating = other.gameObject.transform.position + new Vector3(0, 0, -2);
-            StartCoroutine(EffectText.FloatingTextFadeOut(_logicGame.objectTextFloating,positioToFloating, "" + randomDmg, new Color32(222, 41, 22, 255), new Color32(222, 41, 22, 0)));
+            StartCoroutine(EffectText.FloatingTextFadeOut(_logicGame.objectTextFloating, positioToFloating, "" + randomDmg, new Color32(222, 41, 22, 255), new Color32(222, 41, 22, 0),theRotation));
         }
         if (other.gameObject.GetComponent<EnemyController>() != null)
         {
@@ -67,7 +68,7 @@ public class Fire : MonoBehaviour
             h1.ReceivedDamage(randomDmg);
             h1.UpdateAllStats();
             Vector3 positioToFloating = other.gameObject.transform.position + new Vector3(0, 0, -2);
-            StartCoroutine(EffectText.FloatingTextFadeOut(_logicGame.objectTextFloating,positioToFloating, "" + randomDmg, new Color32(222, 41, 22, 255), new Color32(222, 41, 22, 0)));
+            StartCoroutine(EffectText.FloatingTextFadeOut(_logicGame.objectTextFloating, positioToFloating, "" + randomDmg, new Color32(222, 41, 22, 255), new Color32(222, 41, 22, 0),theRotation));
 
         }
     }

@@ -79,6 +79,11 @@ public abstract class Character : MonoBehaviour
     }
     public virtual bool CheckifCanAttackSpheres(Skill theSkill)
     {
+        Debug.Log("Oket i gonna evaluate the existense of the character");
+        Debug.Log("I trying get : " + _thePlayer);
+        Debug.Log("I trying get 2: " + _thePlayer.RedSphereG);
+        Debug.Log("I trying get 3: " + theSkill.red);
+
         if (_thePlayer.RedSphereG >= theSkill.red && _thePlayer.YellowSphereG >= theSkill.yellow && _thePlayer.BlueSphereG >= theSkill.blue)
         {
             _thePlayer.BlueSphereG = _thePlayer.BlueSphereG - theSkill.blue;

@@ -10,7 +10,7 @@
             "quality": "Muy Comun",
             "movementTypeGridString": "GRID_CROSS",
             "skillId1": 3,
-            "skillId2": 0,
+            "skillId2": 2,
             "skillId3": 0,
             "skillId4": 0,
             "lifeBase" : 4,

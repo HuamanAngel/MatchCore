@@ -32,10 +32,14 @@ public class GridControlRe : MonoBehaviour
     private bool _enabledAttackPath = false;
     private bool _movementAux = false;
     private Vector3Int mousePos;
+    private GameObject buttonSkillSelected;
     public bool PressSelected { get => _pressSelected; set => _pressSelected = value; }
 
     public bool EnabledAttackPath { get => _enabledAttackPath; set => _enabledAttackPath = value; }
+    public GameObject ButtonSkillSelected { get => buttonSkillSelected; set => buttonSkillSelected = value; }
     public static GridControlRe _instance;
+    private bool _inAttack = false;
+    private bool _inMovement = false;
     public static GridControlRe GetInstance()
     {
         return _instance;
@@ -50,7 +54,6 @@ public class GridControlRe : MonoBehaviour
 
     void Start()
     {
-        // _character = HeroController.GetInstance();
         _logicGame = LogicGame.GetInstance();
     }
 
@@ -58,171 +61,147 @@ public class GridControlRe : MonoBehaviour
     void Update()
     {
         mousePos = GetMousePosition(Input.mousePosition);
-        // Debug.Log("natural diredciton : " + Input.mousePosition);
-        // Debug.Log("int direction : " + mousePos);
         HoverCursor(mousePos);
-        // Path attack cell
-        if (PressSelected)
+        if (!_inAttack && !_inMovement)
         {
-            _logicGame.DeleteClonesBox();
-            ClearAllObjectInTilemap(pathMap);
-            Vector3 posCell = _character.gameObject.transform.position - new Vector3(0.5f, 0, 0.5f);
-            _character.SkillSelectedCurrent = _character.GetSkillSelected(_character);
-            int[,] movkGrid = _attackGrid.GetTypeGrid(_character.SkillSelectedCurrent.attackType);
-            List<Vector3> positionAllCellPos = new List<Vector3>();
-            List<int> existItem = new List<int>();
-            DrawPathGrid(false, _attackGrid, movkGrid, pathMap, attackObject, posCell, true, positionAllCellPos, existItem);
-            _pressSelected = false;
-        }
-        if (_character != null && _character.GetDataGrid("IsAttacking") == 1)
-        {
-            // AttackProcess(_character, positionTarget, effectMap, _character.SkillSelectedCurrent.id);
-            return;
-        }
 
+            // // Control attack button
 
-        // // Control attack button
-
-        if (Input.GetKeyUp(KeyCode.Mouse1))
-        {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-            
-            // LayerMask layerMask = 1 << LayerMask.NameToLayer("Ignore Raycast");
-            // layerMask = ~layerMask;            
-            if (Physics.Raycast(ray, out hit))
+            if (Input.GetKeyUp(KeyCode.Mouse1))
             {
-                // Debug.Log($"hit collider is {hit.collider.tag}");
-                if (hit.collider != null)
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                RaycastHit hit;
+
+                if (Physics.Raycast(ray, out hit))
                 {
-                    if (hit.collider.tag == "AttackObject")
+                    if (hit.collider != null)
                     {
-                        if (_character.CheckifCanAttackSpheres(_character.FirstSkill))
+                        if (hit.collider.tag == "AttackObject")
                         {
-                            Vector3 positioToFloating = hit.collider.gameObject.transform.position + new Vector3(0, 0, -2);
-                            positionTarget = InitAttack(hit.collider.gameObject, _character);
+                            if (_character.CheckifCanAttackSpheres(_character.SkillSelectedCurrent))
+                            {
+                                Vector3 positioToFloating = hit.collider.gameObject.transform.position + new Vector3(0, 0, -2);
+                                positionTarget = InitAttack(hit.collider.gameObject, _character);
+                                AttackProcess(_character, positionTarget, effectMap, _character.SkillSelectedCurrent.id);
+                            }
+                            else
+                            {
+                                Vector3 positioToFloating = hit.collider.gameObject.transform.position + new Vector3(0, 0, -2);
+                                StartCoroutine(EffectText.FloatingTextFadeOut(_logicGame.objectTextFloating, positioToFloating, "No hay suficientes esferas rojas , amarillas o azules", new Color32(222, 41, 22, 255), new Color32(222, 41, 22, 0)));
+                            }
                         }
-                        else
+                        if (hit.collider.tag == "Player")
                         {
-                            Vector3 positioToFloating = hit.collider.gameObject.transform.position + new Vector3(0, 0, -2);
-                            StartCoroutine(EffectText.FloatingTextFadeOut(_logicGame.objectTextFloating,positioToFloating, "No hay suficientes esferas rojas , amarillas o azules", new Color32(222, 41, 22, 255), new Color32(222, 41, 22, 0)));
+                            _character = hit.collider.gameObject.GetComponent<HeroController>();
+                            if (_character.GetDataGrid("SelectMovement") == 1)
+                            {
+                                // Create instance attack animation
+                                _character.SetDataGrid("SelectMovement", 0);
+                                _character.SetDataGrid("SelectAttack", 1);
+                                ClearAllObjectInTilemap(pathMap);
+                                _logicGame.DeleteClonesBox();
+                                _logicGame.CreateSkillsButtonsInGame(_character.gameObject.transform.position, _character);
+
+                            }
+                            else if (_character.GetDataGrid("SelectAttack") == 0)
+                            {
+                                _character.SetDataGrid("SelectAttack", 1);
+                                ClearAllObjectInTilemap(pathMap);
+                                _logicGame.DeleteClonesBox();
+                                _logicGame.CreateSkillsButtonsInGame(_character.gameObject.transform.position, _character);
+                            }
+                            else
+                            {
+                                _character.SetDataGrid("SelectAttack", 0);
+                                ClearAllObjectInTilemap(pathMap);
+                                _logicGame.DeleteClonesBox();
+
+                                // Destroy Skill
+                            }
+
                         }
-                    }
-                    if (hit.collider.tag == "Player")
-                    {
-                        _character = hit.collider.gameObject.GetComponent<HeroController>();
-                        if (_character.GetDataGrid("SelectMovement") == 1)
-                        {
-                            // Create instance attack animation
-
-
-                            _character.SetDataGrid("SelectMovement", 0);
-                            _character.SetDataGrid("SelectAttack", 1);
-                            ClearAllObjectInTilemap(pathMap);
-                            _logicGame.DeleteClonesBox();
-                            _logicGame.CreateSkillsButtonsInGame(_character.gameObject.transform.position, _character);
-
-                        }
-                        else if (_character.GetDataGrid("SelectAttack") == 0)
-                        {
-                            _character.SetDataGrid("SelectAttack", 1);
-                            ClearAllObjectInTilemap(pathMap);
-                            _logicGame.DeleteClonesBox();
-                            _logicGame.CreateSkillsButtonsInGame(_character.gameObject.transform.position, _character);
-                        }
-                        else
-                        {
-                            _character.SetDataGrid("SelectAttack", 0);
-                            ClearAllObjectInTilemap(pathMap);
-                            _logicGame.DeleteClonesBox();
-
-                            // Destroy Skill
-                        }
-
                     }
                 }
+
             }
-
-        }
-        // // Control movement
-        if (Input.GetKeyUp(KeyCode.Mouse0))
-        {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-
-            if (Physics.Raycast(ray, out hit))
+            // // Control movement
+            if (Input.GetKeyUp(KeyCode.Mouse0))
             {
-                Debug.Log($"hit collider is {hit.collider.tag}");
-                if (hit.collider != null)
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                RaycastHit hit;
+
+                if (Physics.Raycast(ray, out hit))
                 {
-                    if (hit.collider.tag == "AttackObject")
+                    // Debug.Log($"hit collider is {hit.collider.tag}");
+                    Debug.Log($"Presiono Mouse0 {hit.collider.tag}");
+                    if (hit.collider != null)
                     {
-                        if (_character.CheckifCanAttackSpheres(_character.FirstSkill))
+                        if (hit.collider.tag == "AttackObject")
                         {
-                            Vector3 positioToFloating = hit.collider.gameObject.transform.position + new Vector3(0, 0, -2);
-                            positionTarget = InitAttack(hit.collider.gameObject, _character);
+                            if (_character.CheckifCanAttackSpheres(_character.SkillSelectedCurrent))
+                            {
+                                Vector3 positioToFloating = hit.collider.gameObject.transform.position + new Vector3(0, 0, -2);
+                                positionTarget = InitAttack(hit.collider.gameObject, _character);
+                                AttackProcess(_character, positionTarget, effectMap, _character.SkillSelectedCurrent.id);
+                            }
+                            else
+                            {
+                                Vector3 positioToFloating = hit.collider.gameObject.transform.position + new Vector3(0, 0, -2);
+                                StartCoroutine(EffectText.FloatingTextFadeOut(_logicGame.objectTextFloating, positioToFloating, "No hay suficientes esferas rojas , amarillas o azules", new Color32(222, 41, 22, 255), new Color32(222, 41, 22, 0)));
+                            }
                         }
-                        else
+                        if (hit.collider.tag == "MovementObject")
                         {
-                            Vector3 positioToFloating = hit.collider.gameObject.transform.position + new Vector3(0, 0, -2);
-                            StartCoroutine(EffectText.FloatingTextFadeOut(_logicGame.objectTextFloating,positioToFloating, "No hay suficientes esferas rojas , amarillas o azules", new Color32(222, 41, 22, 255), new Color32(222, 41, 22, 0)));
+                            if (_character.CheckIfCanMovementSpheres())
+                            {
+                                positionTarget = InitMovement(hit.collider.gameObject, _character);
+                                StartCoroutine(MovementProcessEnumerator(_character, positionTarget));
+                            }
+                            else
+                            {
+                                Vector3 positioToFloating = hit.point + new Vector3(0, 0, -2);
+                                Vector3 theRotation = new Vector3(Camera.main.transform.localRotation.eulerAngles.x, _logicGame.objectTextFloating.transform.localRotation.eulerAngles.y, _logicGame.objectTextFloating.transform.localRotation.eulerAngles.z);
+                                StartCoroutine(EffectText.FloatingTextFadeOut(_logicGame.objectTextFloating, positioToFloating, "No hay suficientes esferas azules", new Color32(222, 41, 22, 255), new Color32(222, 41, 22, 0), theRotation));
+                            }
                         }
-                    }
-                    if (hit.collider.tag == "MovementObject")
-                    {
-                        if (_character.CheckIfCanMovementSpheres())
+                        if (hit.collider.tag == "Player")
                         {
-                            positionTarget = InitMovement(hit.collider.gameObject, _character);
-                            StartCoroutine(MovementProcessEnumerator(_character, positionTarget));
-                        }
-                        else
-                        {
+                            _character = hit.collider.gameObject.GetComponent<HeroController>();
+                            if (_character.GetDataGrid("SelectAttack") == 1)
+                            {
+                                _character.SetDataGrid("SelectAttack", 0);
+                                _character.SetDataGrid("SelectMovement", 1);
+                                int[,] movkGrid = _attackGrid.GetTypeGrid(_character.moveType);
 
-                            // Vector3 positioToFloating = hit.collider.gameObject.transform.position + new Vector3(0, 0, -2);
-                            Vector3 positioToFloating = hit.point + new Vector3(0, 0, -2);
-                            Vector3 theRotation = new Vector3(Camera.main.transform.localRotation.eulerAngles.x, _logicGame.objectTextFloating.transform.localRotation.eulerAngles.y, _logicGame.objectTextFloating.transform.localRotation.eulerAngles.z);
-                            StartCoroutine(EffectText.FloatingTextFadeOut(_logicGame.objectTextFloating,positioToFloating, "No hay suficientes esferas azules", new Color32(222, 41, 22, 255), new Color32(222, 41, 22, 0),theRotation));
-                        }
-                    }
-                    if (hit.collider.tag == "Player")
-                    {
-                        _character = hit.collider.gameObject.GetComponent<HeroController>();
-                        if (_character.GetDataGrid("SelectAttack") == 1)
-                        {
-                            _character.SetDataGrid("SelectAttack", 0);
-                            _character.SetDataGrid("SelectMovement", 1);
-                            int[,] movkGrid = _attackGrid.GetTypeGrid(_character.moveType);
+                                ClearAllObjectInTilemap(pathMap);
+                                _logicGame.DeleteClonesBox();
 
-                            ClearAllObjectInTilemap(pathMap);
-                            _logicGame.DeleteClonesBox();
+                                DrawPathGrid(true, _attackGrid, movkGrid, pathMap, pathObject, mousePos);
+                                Debug.Log("Quedo SelectetAttack 1");
+                            }
 
-                            DrawPathGrid(true, _attackGrid, movkGrid, pathMap, pathObject, mousePos);
+                            if (_character.GetDataGrid("SelectMovement") == 0)
+                            {
+                                _character.SetDataGrid("SelectMovement", 1);
+                                int[,] movkGrid = _attackGrid.GetTypeGrid(_character.moveType);
+                                Vector3 posCell = _character.gameObject.transform.position;
+                                ClearAllObjectInTilemap(pathMap);
+                                _logicGame.DeleteClonesBox();
+                                DrawPathGrid(true, _attackGrid, movkGrid, pathMap, pathObject, posCell);
+                                Debug.Log("Quedo Selectmovement 0");
+                            }
+                            else
+                            {
+                                _character.SetDataGrid("SelectMovement", 0);
+                                ClearAllObjectInTilemap(pathMap);
+                                _logicGame.DeleteClonesBox();
+                                Debug.Log("Quedo En otros");
+                            }
                         }
-                        else if (_character.GetDataGrid("SelectMovement") == 0)
-                        {
-                            _character.SetDataGrid("SelectMovement", 1);
-                            int[,] movkGrid = _attackGrid.GetTypeGrid(_character.moveType);
-                            Vector3 posCell = _character.gameObject.transform.position;
-                            ClearAllObjectInTilemap(pathMap);
-                            _logicGame.DeleteClonesBox();
-                            DrawPathGrid(true, _attackGrid, movkGrid, pathMap, pathObject,  posCell );
-                            Debug.Log(" cinco ");
-                        }
-                        else
-                        {
-                            _character.SetDataGrid("SelectMovement", 0);
-                            ClearAllObjectInTilemap(pathMap);
-                            _logicGame.DeleteClonesBox();
-
-                            Debug.Log(" seis ");
-                        }
-
                     }
                 }
             }
         }
-
-
     }
     public void HoverCursor(Vector3Int mousePos)
     {
@@ -273,26 +252,23 @@ public class GridControlRe : MonoBehaviour
                     // Por revisar, por alguna razon funciona
                     if (!isIa)
                     {
-                        
-                        worldPositionNow = new Vector3(mousePos.x + i - positionPlayerInRange.x, 0, mousePos.z + j - positionPlayerInRange.y);
-                        positionPlaterInGrid = new Vector3Int((int)mousePos.x + positionPlayerInRange.x / 4, (int)mousePos.y + positionPlayerInRange.y / 4, (int)mousePos.z + positionPlayerInRange.z);
-                        // Check if in front of the character, exist a wall or Hero in this case the character not moved
 
-                        Vector3 positionToRayCast = worldPositionNow - pathMap.CellToWorld(positionPlaterInGrid);
+                        worldPositionNow = new Vector3(mousePos.x + i - positionPlayerInRange.x, 0, mousePos.z + j - positionPlayerInRange.y);
+
+                        Vector3 positionToRayCast = worldPositionNow - mousePos;
                         RaycastHit objectHit2;
-                        float distanceToCheck = Vector3.Distance(pathMap.CellToWorld(positionPlaterInGrid) + new Vector3(0.5f, -0.25f, 0.5f), worldPositionNow);
-                        if (Physics.Raycast(pathMap.CellToWorld(positionPlaterInGrid) + new Vector3(0.5f, -0.25f, 0.5f), positionToRayCast, out objectHit2, distanceToCheck))
+                        float distanceToCheck = Vector3.Distance(mousePos, worldPositionNow);
+                        Vector3 originModified = new Vector3(mousePos.x , 0.40f , mousePos.z); 
+                        Debug.DrawRay(originModified, positionToRayCast, Color.red, 30, false);
+                        if (Physics.Raycast(originModified, positionToRayCast, out objectHit2, distanceToCheck))
                         {
-                            // Debug.Log("The diferrence distance : " + Vector3.Distance(worldPositionNow, pathMap.CellToWorld(positionPlaterInGrid)));
+                            // Debug.DrawRay(originModified, positionToRayCast * objectHit2.distance, Color.red, 30, false);
                             if (objectHit2.collider.transform.gameObject.layer == LayerMask.NameToLayer("CellHero") || objectHit2.collider.transform.gameObject.layer == LayerMask.NameToLayer("Wall"))
                             {
                                 // Debug.DrawRay(pathMap.CellToWorld(positionPlaterInGrid) + new Vector3(0.5f, -0.25f, 0.5f), positionToRayCast * objectHit2.distance, Color.red, 30, false);
-                                // Debug.Log("The diferrence distance : " + Vector3.Distance(pathMap.CellToWorld(positionPlaterInGrid) + new Vector3(0.5f, -0.25f, 0.5f), worldPositionNow));
-                                // Debug.Log("distante to hit : " + objectHit2.distance);
                                 continue;
                             }
                         }
-
 
                     }
                     else
@@ -305,10 +281,11 @@ public class GridControlRe : MonoBehaviour
 
                     // Check if has terrain
                     RaycastHit objectHit;
-                    Debug.DrawRay(worldPositionNow +  new Vector3(0,2.0f,0), Vector3.down, Color.red, 30, false);
-                    if (Physics.Raycast(worldPositionNow + new Vector3(0,2.0f,0) , Vector3.down, out objectHit,6))
+                    Debug.DrawRay(worldPositionNow + new Vector3(0, 2.0f, 0), Vector3.down, Color.red, 30, false);
+                    if (Physics.Raycast(worldPositionNow + new Vector3(0, 2.0f, 0), Vector3.down, out objectHit, 6))
                     {
-                        Debug.Log("Golpeo : " + objectHit.collider.transform.gameObject.name);
+                        // Debug.Log("Golpeo : " + objectHit.collider.transform.gameObject.name);
+                        // Debug.Log("Golpeo : " + objectHit.collider.transform.gameObject.layer);
                         string textLayerCell;
                         if (isMovement)
                         {
@@ -318,13 +295,21 @@ public class GridControlRe : MonoBehaviour
                         {
                             textLayerCell = "CellHero";
                         }
-                        if (objectHit.collider.transform.gameObject.layer == LayerMask.NameToLayer("Floor") || objectHit.collider.transform.gameObject.layer == LayerMask.NameToLayer("Items") || objectHit.collider.transform.gameObject.layer == LayerMask.NameToLayer(textLayerCell))
+                        if (objectHit.collider.transform.gameObject.layer == LayerMask.NameToLayer("Floor")
+                        || objectHit.collider.transform.gameObject.layer == LayerMask.NameToLayer("Items")
+                        || objectHit.collider.transform.gameObject.layer == LayerMask.NameToLayer("Wall")
+                        || objectHit.collider.transform.gameObject.layer == LayerMask.NameToLayer(textLayerCell))
                         {
+                            // Create path
+                            // Debug.Log($"valores i y j : {i} {j}");
                             if (instaciatePath)
                             {
-                                GameObject go = Instantiate(pathObject);
-                                go.transform.position = worldPositionNow;
-                                go.transform.SetParent(pathMap.transform);
+                                if (objectHit.collider.transform.gameObject.layer != LayerMask.NameToLayer("Wall"))
+                                {
+                                    GameObject go = Instantiate(pathObject);
+                                    go.transform.position = worldPositionNow;
+                                    go.transform.SetParent(pathMap.transform);
+                                }
                             }
                             if (isIa)
                             {
@@ -384,12 +369,14 @@ public class GridControlRe : MonoBehaviour
     {
         c1.SetDataGrid("IsMoving", 1);
         ClearAllObjectInTilemap(pathMap);
+        _inMovement = false;
         return cellCollider.transform.position;
     }
     public Vector3 InitAttack(GameObject cellCollider, Character c1)
     {
         c1.SetDataGrid("IsAttacking", 1);
         ClearAllObjectInTilemap(pathMap);
+        _inAttack = true;
         return cellCollider.transform.position;
     }
 
@@ -432,6 +419,7 @@ public class GridControlRe : MonoBehaviour
         c1.SetDataGrid("IsMoving", 0);
         c1.ReturnStateOriginalAnim();
         c1.UpdateAllStats();
+        _inMovement = false;
     }
     public void AttackProcess(Character c1, Vector3 targetPos, Tilemap mapToEffectAttack, int id)
     {
@@ -454,7 +442,7 @@ public class GridControlRe : MonoBehaviour
         c1.SetDataGrid("SelectAttack", 0);
         c1.UpdateAllStats();
         StartCoroutine(AttackProcessAnimation(c1));
-
+        _inAttack = false;
     }
     public IEnumerator AttackProcessAnimation(Character c1)
     {
@@ -484,5 +472,20 @@ public class GridControlRe : MonoBehaviour
     public void ClearAllObjectInTilemapInteractive()
     {
         ClearAllObjectInTilemap(pathMap);
+    }
+
+    public void DrawPathAttackWhenSelectedSkill()
+    {
+        _logicGame.DeleteClonesBox();
+        ClearAllObjectInTilemap(pathMap);
+        Vector3 posCell = _character.gameObject.transform.position;
+        _character.SkillSelectedCurrent = _character.GetSkillSelected(_character);
+        int[,] movkGrid = _attackGrid.GetTypeGrid(_character.SkillSelectedCurrent.attackType);
+        List<Vector3> positionAllCellPos = new List<Vector3>();
+        List<int> existItem = new List<int>();
+        DrawPathGrid(false, _attackGrid, movkGrid, pathMap, attackObject, posCell, true, positionAllCellPos, existItem);
+        _pressSelected = false;
+        Debug.Log("Se mantiene en rojo;");
+        Debug.Log("El skill actual : " + _character.SkillSelectedCurrent);
     }
 }

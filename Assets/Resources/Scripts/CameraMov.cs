@@ -7,7 +7,6 @@ public class CameraMov : MonoBehaviour
 {
     // Start is called before the first frame update
 
-    public int modeCamera = 1;
     private Vector3 distanceFromHero;
     public GameObject objectToFollow;
     private HeroInMovement hm;

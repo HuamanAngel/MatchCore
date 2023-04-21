@@ -278,15 +278,18 @@ public class LogicGame : MonoBehaviour
             go.GetComponent<ButtonSkillInBattle>().NumberSkill = numberSkill;
             go.GetComponent<ButtonSkillInBattle>().TheSkillSelected = c1.allSKill[numberSkill];
             go.GetComponent<ButtonSkillInBattle>().CharacterGetSet = c1;            
+            _clonesBoxSkill.Add(go);
+            go.transform.Rotate(Camera.main.transform.localRotation.eulerAngles.x, go.transform.localRotation.eulerAngles.y, go.transform.localRotation.eulerAngles.z);
+
         }
-        else
-        {
-            Debug.Log("Dice que nooo exsite el skill : " + numberSkill);
-            go = Instantiate(objBoxSkillEmptyFloating, positionFloating, Quaternion.identity);
-            go.GetComponent<ButtonSkillInBattle>().NumberSkill = numberSkill;
-        }
-        _clonesBoxSkill.Add(go);
-        go.transform.Rotate(Camera.main.transform.localRotation.eulerAngles.x, go.transform.localRotation.eulerAngles.y, go.transform.localRotation.eulerAngles.z);
+        // else
+        // {
+        //     Debug.Log("Dice que nooo exsite el skill : " + numberSkill);
+        //     go = Instantiate(objBoxSkillEmptyFloating, positionFloating, Quaternion.identity);
+        //     go.GetComponent<ButtonSkillInBattle>().NumberSkill = numberSkill;
+        // }
+        // _clonesBoxSkill.Add(go);
+        // go.transform.Rotate(Camera.main.transform.localRotation.eulerAngles.x, go.transform.localRotation.eulerAngles.y, go.transform.localRotation.eulerAngles.z);
 
     }
 

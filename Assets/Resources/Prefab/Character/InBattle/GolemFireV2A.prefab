@@ -1508,7 +1508,7 @@ GameObject:
   - component: {fileID: 6522716463857537496}
   - component: {fileID: 6522716463857537498}
   - component: {fileID: 6522716463857537497}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: GolemFireV2A
   m_TagString: Untagged
   m_Icon: {fileID: 0}

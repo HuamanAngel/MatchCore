@@ -56,7 +56,6 @@ public class ButtonSkillInBattle : MonoBehaviour
     }
     private void OnMouseEnter()
     {
-        Debug.Log("The number skill now : " + _numberSkill);
         if (_numberSkill != -1)
         {
 
@@ -116,21 +115,24 @@ public class ButtonSkillInBattle : MonoBehaviour
                     break;
                 case 0:
                     _character.SetDataGrid("FirstSkillSelected", 1);
+                    _gridController.DrawPathAttackWhenSelectedSkill();
                     break;
                 case 1:
                     _character.SetDataGrid("SecondSkillSelected", 1);
+                    _gridController.DrawPathAttackWhenSelectedSkill();
                     break;
                 case 2:
                     _character.SetDataGrid("ThirdSkillSelected", 1);
+                    _gridController.DrawPathAttackWhenSelectedSkill();
                     break;
                 case 3:
                     _character.SetDataGrid("FourSkillSelected", 1);
+                    _gridController.DrawPathAttackWhenSelectedSkill();
                     break;
             }
             _gridController.EnabledAttackPath = true;
             _gridController.PressSelected = true;
         }
-        // Debug.Log("Press Skill Select");
     }
     public void DeselectedSkill(int mode = 0)
     {

@@ -65,32 +65,9 @@ public class ButtonSkill : MonoBehaviour
             {
                 float axisX = start.x + stepPointX * i;
                 float axisY = start.y + (stepPointY * i) + (100 * (i / (lengthOfLineRenderer - 1)));
-                // float axisY = start.y + (stepPointY * i)  + i/10;
-                // Debug.Log(t);
-                // float axisY =  Mathf.Sin(i + t) + end.y;
                 lr.SetPosition(i, new Vector3(axisX, axisY, end.z));
             }
             lr.SetPosition(lengthOfLineRenderer - 1, end);
-            // Vector3 start = new Vector3(transform.position.x, transform.position.y, -1);
-            // Vector3 end = new Vector3(20, 20, 20);
-            // myLine.transform.position = start;
-            // // lr.material = new Material(Shader.Find("Particles/Alpha Blended Premultiply"));
-            // // lr.SetColors(color, color);
-            // lr.SetWidth(0.1f, 0.1f);
-            // lr.SetPosition(0, start);
-            // lr.SetPosition(1, end);
-
-            // var t = Time.time;
-            // for(int i = 0; i < lengthOfLineRenderer; i++) {
-            //     _lineRendered.SetPosition(i, new Vector3(i * 0.5f, Mathf.Sin(i + t), 0.0f));
-            // }            
-            // LR.SetPosition(0, PositionOfGameObject);
-            // Debug.Log("Good");
-            // Vector2 CursorPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            // LR.SetPosition(1, CursorPosition);
-            // Rend.material.mainTextureScale = new Vector2((int)Vector3.Distance(PositionOfGameObject, CursorPosition),1);
-            // set your Texture Wrap Mode to Repeat in case you want some texture to repeat over the line.
-            // Rend.material.mainTextureScale = new Vector2((int)Vector2.Distance(PositionOfGameObject, CursorPosition, 1));
         }
 
         if (turnTemp != LogicGame.GetInstance().Turn)

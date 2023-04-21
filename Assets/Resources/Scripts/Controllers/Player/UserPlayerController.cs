@@ -24,7 +24,6 @@ public class UserPlayerController : PlayerBase
         RandomSphere(4, 8);
         SetQuantitySpheres();
         User theUser = _dataUserGameObject.user;
-
         for (int i = 0; i < theUser.CharInCombat.Count; i++)
         {
             // Creation prefab in map
@@ -33,7 +32,7 @@ public class UserPlayerController : PlayerBase
             goHe.AddComponent<HeroController>();
 
             goHe.transform.SetParent(GridControlRe.GetInstance().gameObject.transform);
-            goHe.transform.localPosition =  new Vector3(0.0f,0.0f,-2.0f) +  new Vector3(0.5f - i, 0.0f, 0.5f);
+            goHe.transform.localPosition =  new Vector3(0.0f,0.0f,-4.0f) +  new Vector3(0.5f - i, 0.0f, 0.5f);
             
             // Creation Icon in Canvas
             // GameObject goHe = player1Tiers[i];
@@ -57,16 +56,17 @@ public class UserPlayerController : PlayerBase
             // get less value
 
             int quantity = 0;
-            if(_dataUserGameObject.user.CharInCombat[i].theSkills.Count > skillsCanvas.Count)
-            {
-                quantity = skillsCanvas.Count;
-            }else{
-                quantity = _dataUserGameObject.user.CharInCombat[i].theSkills.Count;
-            }
+            // if(_dataUserGameObject.user.CharInCombat[i].theSkills.Count > skillsCanvas.Count)
+            // {
+            //     quantity = skillsCanvas.Count;
+            // }else{
+            //     quantity = _dataUserGameObject.user.CharInCombat[i].theSkills.Count;
+            // }
             // for (int j = 0; j < _dataUserGameObject.user.CharInCombat[i].theSkills.Count; j++)
             // Debug.Log("Cantidad skiles  : " + _dataUserGameObject.user.CharInCombat[i].theSkills.Count);
             // Debug.Log("skillsCanvas.Count : " + quantity);
-            for (int j = 0; j < quantity; j++)
+            quantity = _dataUserGameObject.user.CharInCombat[i].theSkills.Count;
+            for (int j = 0; j < 2; j++)
             {
                 Dictionary<string, GameObject> dInformation = new Dictionary<string, GameObject>(); 
                 GameObject objSkill = UtilitiesClass.FindChildByName(skillsCanvas[j], "ImageSkill");

@@ -31,7 +31,6 @@ public class HeroController : Character
     private void Awake()
     {
         _animator = GetComponent<Animator>();
-        // allSKill = new List<Skill>();
 
         if (inBattle)
         {

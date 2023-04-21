@@ -25,17 +25,6 @@ public class GameData : MonoBehaviour
         }
         allCharacters = JsonReaderA.GetAllCharacter();
     }
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
     public List<Charac> GetRandomEnemyByMap(int numberMap, string type, string quality, int quantityEnemies = 1)
     {
         List<Charac> enemyInMap = new List<Charac>();

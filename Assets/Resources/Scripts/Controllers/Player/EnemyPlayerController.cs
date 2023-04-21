@@ -33,13 +33,17 @@ public class EnemyPlayerController : PlayerBase
         RandomSphere(4, 8);
         SetQuantitySpheres();
         User theUser = _dataUserGameObject.userEnemy;
-        Debug.Log("En la batalla : " + _dataUserGameObject.userEnemy.CharInCombat.Count);
         
         for (int i = 0; i < theUser.CharInCombat.Count; i++)
         {
-            GameObject goHe = player1Tiers[i];
-            // goHe.tag = "Player2";
+            GameObject goHe = Instantiate(theUser.CharInCombat[i].prefabCharInBattle);
+            goHe.tag = "Player";
             goHe.AddComponent<EnemyController>();
+
+            goHe.transform.SetParent(GridControlRe.GetInstance().gameObject.transform);
+            goHe.transform.localPosition =  new Vector3(1.0f,0.0f,-4.0f) +  new Vector3(0.5f - i, 0.0f, 0.5f);
+
+            // goHe.tag = "Player2";
             goHe.GetComponent<EnemyController>().player1Tiers = player1Tiers[i];
             player1Tiers[i].SetActive(true);
             goHe.GetComponent<EnemyController>().inBattle = true;
@@ -55,14 +59,15 @@ public class EnemyPlayerController : PlayerBase
             GameObject toIcon = UtilitiesClass.FindChildByName(player1Tiers[i], "PanelSkills");
             List<GameObject> skillsCanvas = UtilitiesClass.FindAllChildWithTag(toIcon, "SkillCanvas");
             int quantity = 0;
-            if(theUser.CharInCombat[i].theSkills.Count > skillsCanvas.Count)
-            {
-                quantity = skillsCanvas.Count;
-            }else{
-                quantity = theUser.CharInCombat[i].theSkills.Count;
-            }
-
-            for (int j = 0; j < quantity; j++)
+            // if(theUser.CharInCombat[i].theSkills.Count > skillsCanvas.Count)
+            // {
+            //     quantity = skillsCanvas.Count;
+            // }else{
+            //     quantity = theUser.CharInCombat[i].theSkills.Count;
+            // }
+            // Debug.Log("Aca la cantidad aaaa : " + theUser.CharInCombat[i].theSkills.Count);
+            quantity = theUser.CharInCombat[i].theSkills.Count;
+            for (int j = 0; j < 1; j++)
             {
 
                 Dictionary<string, GameObject> dInformation = new Dictionary<string, GameObject>(); 
@@ -76,9 +81,9 @@ public class EnemyPlayerController : PlayerBase
                 dInformation["red"] = objRed;
                 dInformation["blue"] = objBlue;
 
-                skillsCanvas[j].GetComponent<ButtonSkillInBattle>().CharacterBelong = goHe; 
-                skillsCanvas[j].GetComponent<ButtonSkillInBattle>().TheSkill = theUser.CharInCombat[i].theSkills[j]; 
-                skillsCanvas[j].GetComponent<ButtonSkillInBattle>().ElementsInformation = dInformation; 
+                skillsCanvas[j].GetComponent<ButtonSkill>().CharacterBelong = goHe; 
+                skillsCanvas[j].GetComponent<ButtonSkill>().TheSkill = theUser.CharInCombat[i].theSkills[j]; 
+                skillsCanvas[j].GetComponent<ButtonSkill>().ElementsInformation = dInformation; 
 
                 objSkill.GetComponent<RawImage>().texture = theUser.CharInCombat[i].theSkills[j].iconSkill;
                 objYellow.GetComponent<TMP_Text>().text = "x" + theUser.CharInCombat[i].theSkills[j].yellow;
@@ -86,7 +91,7 @@ public class EnemyPlayerController : PlayerBase
                 objBlue.GetComponent<TMP_Text>().text = "x" + theUser.CharInCombat[i].theSkills[j].blue;
 
                 goHe.GetComponent<EnemyController>().allSKill.Add(theUser.CharInCombat[i].theSkills[j]);
-                skillsCanvas[j].GetComponent<ButtonSkillInBattle>().enabled = true;
+                skillsCanvas[j].GetComponent<ButtonSkill>().enabled = true;
                 skillsCanvas[j].GetComponent<Button>().enabled = true;
             }
             _allHeroInPlay.Add(goHe);

@@ -35,19 +35,4 @@ public class JsonReaderA
         ModelCharacts allData = JsonUtility.FromJson<ModelCharacts>(jsonString);
         return allData;
     }
-    // public static Charac SearchCharacterById(int idCharacter)
-    // {
-    //     string jsonString = Resources.Load<TextAsset>(locationOfFileCharacterJson).ToString();
-    //     ModelCharacts allData = JsonUtility.FromJson<ModelCharacts>(jsonString);
-    //     foreach (Charac character in allData.data)
-    //     {
-    //         if (character.id == idCharacter)
-    //         {
-    //             return character;
-    //         }
-    //     }
-    //     Debug.Log("Character not found");
-    //     return null;
-    // }
-
 }

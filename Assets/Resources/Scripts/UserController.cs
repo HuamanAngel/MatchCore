@@ -29,7 +29,7 @@ public class UserController : MonoBehaviour
         userEnemy = new User();
         _stateInBattle = new StatesInBattle();
 
-        Charac oneCharacter = CreateNewCharacterInScene(1, 1);
+        Charac oneCharacter = CreateNewCharacterInScene(3, 1);
         // Add to user data
         // Debug.Log("IN HERO : " + oneCharacter );
         user.CharInCombat.Add(oneCharacter);
@@ -38,7 +38,7 @@ public class UserController : MonoBehaviour
         user.LvlGeneral = 1;
         user.Name = "Oxipusio";
         user.Money = 0;
-
+        // Debug.Log("Aca user poquito antes de controller  : " + user.CharInCombat[0].theSkills.Count);
 
         // Enemies
 
@@ -60,6 +60,7 @@ public class UserController : MonoBehaviour
         userEnemy.Name = "The enemies";
         userEnemy.Money = 0;
 
+        // Debug.Log("Aca user controller  : " + user.CharInCombat[0].theSkills.Count);
 
     }
 
