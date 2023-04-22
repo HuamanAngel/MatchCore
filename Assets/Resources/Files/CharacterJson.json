@@ -56,6 +56,25 @@
             "pathImage" : "Images/CharacterIcons/i_golem",
             "pathPrefab" : "Prefab/Character/Hold/Golem_1",
             "pathPrefabInBattle" : "Prefab/Character/InBattle/GolemFireV2A"
+        },
+        {
+            "id": 4,
+            "name": "Jabali Salvaje",
+            "type": "Animal",
+            "yellow": 0,
+            "red": 0,
+            "blue": 1,
+            "quality": "Muy Comun",
+            "movementTypeGridString": "GRID_CROSS_L",
+            "skillId1": 4,
+            "skillId2": 0,
+            "skillId3": 0,
+            "skillId4": 0,
+            "lifeBase" : 2,
+            "armorBase" : 2,
+            "pathImage" : "Images/CharacterIcons/i_golem",
+            "pathPrefab" : "Prefab/Character/Hold/Golem_1",
+            "pathPrefabInBattle" : "Prefab/Character/InBattle/WildBoard"
         }
 
     ]

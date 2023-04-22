@@ -60,7 +60,7 @@ public class EnemyPlayerController : PlayerBase
             List<GameObject> skillsCanvas = UtilitiesClass.FindAllChildWithTag(toIcon, "SkillCanvas");
             int quantity = 0;
             quantity = theUser.CharInCombat[i].theSkills.Count;
-            for (int j = 0; j < 1; j++)
+            for (int j = 0; j < quantity; j++)
             {
 
                 Dictionary<string, GameObject> dInformation = new Dictionary<string, GameObject>(); 

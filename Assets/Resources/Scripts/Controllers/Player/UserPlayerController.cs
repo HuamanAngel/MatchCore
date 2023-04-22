@@ -57,7 +57,7 @@ public class UserPlayerController : PlayerBase
 
             int quantity = 0;
             quantity = _dataUserGameObject.user.CharInCombat[i].theSkills.Count;
-            for (int j = 0; j < 2; j++)
+            for (int j = 0; j < quantity; j++)
             {
                 Dictionary<string, GameObject> dInformation = new Dictionary<string, GameObject>(); 
                 GameObject objSkill = UtilitiesClass.FindChildByName(skillsCanvas[j], "ImageSkill");

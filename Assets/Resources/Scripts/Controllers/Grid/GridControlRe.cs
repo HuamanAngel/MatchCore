@@ -393,7 +393,8 @@ public class GridControlRe : MonoBehaviour
         float step = speed * Time.deltaTime;
         Vector3 diferenceVector = new Vector3(targetPos.x, 0, targetPos.z) - new Vector3(c1.transform.position.x, 0, c1.transform.position.z);
         float distance = diferenceVector.magnitude;
-        Vector3 direction = diferenceVector / (-distance);
+        // distance = Mathf.Abs(distance);
+        Vector3 direction = diferenceVector / (distance);
         float damping = 5;
         // c1.transform.rotation = Quaternion.LookRotation(direction);
         // c1.transform.rotation = c1.transform.LookAt(targetPos);
