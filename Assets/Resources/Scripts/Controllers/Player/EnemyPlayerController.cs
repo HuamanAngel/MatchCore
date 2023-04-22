@@ -37,7 +37,7 @@ public class EnemyPlayerController : PlayerBase
         for (int i = 0; i < theUser.CharInCombat.Count; i++)
         {
             GameObject goHe = Instantiate(theUser.CharInCombat[i].prefabCharInBattle);
-            goHe.tag = "Player";
+            goHe.tag = "Player2";
             goHe.AddComponent<EnemyController>();
 
             goHe.transform.SetParent(GridControlRe.GetInstance().gameObject.transform);
@@ -59,13 +59,6 @@ public class EnemyPlayerController : PlayerBase
             GameObject toIcon = UtilitiesClass.FindChildByName(player1Tiers[i], "PanelSkills");
             List<GameObject> skillsCanvas = UtilitiesClass.FindAllChildWithTag(toIcon, "SkillCanvas");
             int quantity = 0;
-            // if(theUser.CharInCombat[i].theSkills.Count > skillsCanvas.Count)
-            // {
-            //     quantity = skillsCanvas.Count;
-            // }else{
-            //     quantity = theUser.CharInCombat[i].theSkills.Count;
-            // }
-            // Debug.Log("Aca la cantidad aaaa : " + theUser.CharInCombat[i].theSkills.Count);
             quantity = theUser.CharInCombat[i].theSkills.Count;
             for (int j = 0; j < 1; j++)
             {
@@ -97,8 +90,8 @@ public class EnemyPlayerController : PlayerBase
             _allHeroInPlay.Add(goHe);
             _allCharactersAlive[goHe] = true;
 
-            // goHe.AddComponent<EnemyInteligence>();
-            // goHe.AddComponent<EnemyInteligence>().NumberOrden = i;
+            goHe.AddComponent<EnemyInteligence>();
+            goHe.AddComponent<EnemyInteligence>().NumberOrden = i;
         }
     }
     public void ChangeControlToOtherEnemy()

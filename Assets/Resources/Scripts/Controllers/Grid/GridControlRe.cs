@@ -90,7 +90,7 @@ public class GridControlRe : MonoBehaviour
                                 StartCoroutine(EffectText.FloatingTextFadeOut(_logicGame.objectTextFloating, positioToFloating, "No hay suficientes esferas rojas , amarillas o azules", new Color32(222, 41, 22, 255), new Color32(222, 41, 22, 0)));
                             }
                         }
-                        if (hit.collider.tag == "Player")
+                        if (hit.collider.tag == "Player1")
                         {
                             _character = hit.collider.gameObject.GetComponent<HeroController>();
                             if (_character.GetDataGrid("SelectMovement") == 1)
@@ -164,7 +164,7 @@ public class GridControlRe : MonoBehaviour
                                 StartCoroutine(EffectText.FloatingTextFadeOut(_logicGame.objectTextFloating, positioToFloating, "No hay suficientes esferas azules", new Color32(222, 41, 22, 255), new Color32(222, 41, 22, 0), theRotation));
                             }
                         }
-                        if (hit.collider.tag == "Player")
+                        if (hit.collider.tag == "Player1")
                         {
                             _character = hit.collider.gameObject.GetComponent<HeroController>();
                             if (_character.GetDataGrid("SelectAttack") == 1)
@@ -214,7 +214,7 @@ public class GridControlRe : MonoBehaviour
             Vector3 worldPositionNow = cursorMap.CellToWorld(mousePos);
             // GameObject go = Instantiate(hoverObject, worldPositionNow + new Vector3(0.5f, 0, 0.5f), Quaternion.identity);
             GameObject go = Instantiate(hoverObject);
-            go.transform.position = worldPositionNow + new Vector3(0.5f, 0, 0.5f);
+            go.transform.position = worldPositionNow + new Vector3(0.5f, 0.1f, 0.5f);
             go.transform.SetParent(cursorMap.transform);
             objectInMap[1] = objectInMap[0];
             objectInMap[0] = go;
@@ -229,7 +229,7 @@ public class GridControlRe : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit))
         {
-            if (hit.transform.gameObject.layer == 7 || hit.collider.tag == "Player" || hit.collider.tag == "Enemies")
+            if (hit.transform.gameObject.layer == 7 || hit.collider.tag == "Player1" || hit.collider.tag == "Player2")
             {
                 pos = pathMap.WorldToCell(hit.point);
             }
@@ -248,36 +248,27 @@ public class GridControlRe : MonoBehaviour
             {
                 if (attackGrid[i, j] == 1)
                 {
+                    // Check if exist wall in front of path
                     Vector3 worldPositionNow;
-                    // Por revisar, por alguna razon funciona
-                    if (!isIa)
+                    // worldPositionNow = new Vector3(mousePos.x + i - positionPlayerInRange.x, 0, mousePos.z + j - positionPlayerInRange.y);
+                    worldPositionNow = new Vector3(mousePos.x + i - positionPlayerInRange.x, 0.1f, mousePos.z + j - positionPlayerInRange.y);
+                    if (isMovement)
                     {
-
-                        worldPositionNow = new Vector3(mousePos.x + i - positionPlayerInRange.x, 0, mousePos.z + j - positionPlayerInRange.y);
-
                         Vector3 positionToRayCast = worldPositionNow - mousePos;
                         RaycastHit objectHit2;
                         float distanceToCheck = Vector3.Distance(mousePos, worldPositionNow);
-                        Vector3 originModified = new Vector3(mousePos.x , 0.40f , mousePos.z); 
+                        Vector3 originModified = new Vector3(mousePos.x, 0.40f, mousePos.z);
                         Debug.DrawRay(originModified, positionToRayCast, Color.red, 30, false);
                         if (Physics.Raycast(originModified, positionToRayCast, out objectHit2, distanceToCheck))
                         {
                             // Debug.DrawRay(originModified, positionToRayCast * objectHit2.distance, Color.red, 30, false);
                             if (objectHit2.collider.transform.gameObject.layer == LayerMask.NameToLayer("CellHero") || objectHit2.collider.transform.gameObject.layer == LayerMask.NameToLayer("Wall"))
                             {
-                                // Debug.DrawRay(pathMap.CellToWorld(positionPlaterInGrid) + new Vector3(0.5f, -0.25f, 0.5f), positionToRayCast * objectHit2.distance, Color.red, 30, false);
                                 continue;
                             }
                         }
 
                     }
-                    else
-                    {
-                        Vector3 pos = new Vector3(mousePos.x + i - positionPlayerInRange.x, mousePos.y, mousePos.z + j - positionPlayerInRange.y);
-                        worldPositionNow = pos;
-                        positionPlaterInGrid = new Vector3Int((int)mousePos.x + positionPlayerInRange.x / 4, (int)mousePos.y + positionPlayerInRange.y / 4, (int)mousePos.z + positionPlayerInRange.z);
-                    }
-
 
                     // Check if has terrain
                     RaycastHit objectHit;
@@ -313,7 +304,7 @@ public class GridControlRe : MonoBehaviour
                             }
                             if (isIa)
                             {
-                                positionAllCellPos.Add(worldPositionNow + new Vector3(0.5f, 0, 0.5f));
+                                positionAllCellPos.Add(worldPositionNow);
 
                                 if (objectHit.collider.transform.gameObject.layer == LayerMask.NameToLayer("Floor"))
                                 {
@@ -338,12 +329,12 @@ public class GridControlRe : MonoBehaviour
                                 }
                                 else if (objectHit.collider.transform.gameObject.layer == LayerMask.NameToLayer("CellHero"))
                                 {
-                                    if (objectHit.collider.transform.gameObject.tag == "Enemies")
+                                    if (objectHit.collider.transform.gameObject.tag == "Player2")
                                     {
                                         existItem.Add(4);
 
                                     }
-                                    if (objectHit.collider.transform.gameObject.tag == "Player")
+                                    if (objectHit.collider.transform.gameObject.tag == "Player1")
                                     {
                                         existItem.Add(5);
                                     }

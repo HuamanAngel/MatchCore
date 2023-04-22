@@ -18,6 +18,8 @@ TagManager:
   - MovementObject
   - AttackObject
   - FloorGrid
+  - Player1
+  - Player2
   layers:
   - Default
   - TransparentFX

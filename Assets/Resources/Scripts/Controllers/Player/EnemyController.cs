@@ -39,8 +39,7 @@ public class EnemyController : Character
     {
         if (inBattle)
         {
-            GameObject[] go = GameObject.FindGameObjectsWithTag("LogicGame");
-            _logicGame = go[0].GetComponent<LogicGame>();
+            _logicGame =  LogicGame.GetInstance();
             _thePlayer = EnemyPlayerController.GetInstance();
 
             player1Tiers.SetActive(true);

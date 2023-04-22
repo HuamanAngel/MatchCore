@@ -82,13 +82,13 @@ public class LogicGame : MonoBehaviour
         {
             whatTurn = 1;
         }
-        if (turn % 9 == 0)
-        {
-            BoardManager.instance.ResetBoard();
-        }
+        // if (turn % 9 == 0)
+        // {
+        //     BoardManager.instance.ResetBoard();
+        // }
         _movementDone = 0;
         SetPlayer();
-        _thePlayer.ResetQuantityMovementBoard();
+        // _thePlayer.ResetQuantityMovementBoard();
         _thePlayer.SetQuantitySpheres();
         StartCoroutine(animationHourSand());
         ChangeTextTurn(turn);

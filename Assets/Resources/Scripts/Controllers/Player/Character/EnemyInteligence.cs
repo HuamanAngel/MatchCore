@@ -6,14 +6,14 @@ public class EnemyInteligence : MonoBehaviour
 {
     // Start is called before the first frame update
     private EnemyController _enemyController;
-    // private GridControlRe _gridController;
+    private GridControlRe _gridController;
     private AttackGrid _attackGrid;
     private LogicGame _logicGame;
     private float myTime;
     private float _otherMyTime;
-    private float timeToMovement = 1.5f;
-    private float timeToAttack = 1.5f;
-    private float timeToTransicionTurn = 6.0f;
+    private float timeToMovement = 1.0f;
+    private float timeToAttack = 1.0f;
+    private float timeToTransicionTurn = 1.0f;
     private float timeBetweenMovements = 0.5f;
     private bool[] _boolStart = new bool[] { false, false, false, false, false, false, false, false, false, false };
     private Vector3 _selectPosition;
@@ -51,10 +51,8 @@ public class EnemyInteligence : MonoBehaviour
     {
         myTime = 0.0f;
         _otherMyTime = 0.0f;
-        GameObject[] go = GameObject.FindGameObjectsWithTag("GridController");
-        GameObject[] go2 = GameObject.FindGameObjectsWithTag("LogicGame");
-        // _gridController = go[0].GetComponent<GridControlRe>();
-        _logicGame = go2[0].GetComponent<LogicGame>();
+        _gridController = GridControlRe.GetInstance();
+        _logicGame = LogicGame.GetInstance();
     }
 
     // Update is called once per frame
@@ -64,7 +62,6 @@ public class EnemyInteligence : MonoBehaviour
         {
             if (_logicGame.WhatTurn == 2 && !_boolStart[0])
             {
-                // Debug.Log("Ejecutando el sigueinte  number orden : " + numberOrden);
                 _boolStart[0] = true;
                 StartCoroutine(DoMoving());
             }
@@ -72,24 +69,24 @@ public class EnemyInteligence : MonoBehaviour
 
     }
 
-    // public void DrawThroughGrid(bool isMovement,AttackGrid.TypeOfAttack actionType, GameObject goToDraw)
-    // {
-    //     // First draw path
-
-    //     Vector3 posCell = transform.position - new Vector3(0.5f, 0, 0.5f);
-    //     int[,] movkGrid = _attackGrid.GetTypeGrid(actionType);
-    //     _positionOfTheMovementCell.Clear();
-    //     _pathExistCollision.Clear();
-    //     _gridController.DrawPathGrid(isMovement,_attackGrid, movkGrid, _gridController.PathMap, goToDraw, posCell, true, _positionOfTheMovementCell, _pathExistCollision);
-    // }
-    public void CheckMyPathWhithoutDraw(Skill theSkill, GameObject goToDraw)
+    public void DrawThroughGrid(bool isMovement,AttackGrid.TypeOfAttack actionType, GameObject goToDraw)
     {
-        AttackGrid.TypeOfAttack actionType = theSkill.attackType;
-        Vector3 posCell = transform.position - new Vector3(0.5f, 0, 0.5f);
+        // First draw path
+
+        Vector3 posCell = transform.position;
         int[,] movkGrid = _attackGrid.GetTypeGrid(actionType);
         _positionOfTheMovementCell.Clear();
         _pathExistCollision.Clear();
-        // _gridController.DrawPathGrid(false,_attackGrid, movkGrid, _gridController.PathMap, goToDraw, posCell, true, _positionOfTheMovementCell, _pathExistCollision, false);
+        _gridController.DrawPathGrid(isMovement,_attackGrid, movkGrid, _gridController.PathMap, goToDraw, posCell, true, _positionOfTheMovementCell, _pathExistCollision);
+    }
+    public void CheckMyPathWhithoutDraw(Skill theSkill, GameObject goToDraw)
+    {
+        AttackGrid.TypeOfAttack actionType = theSkill.attackType;
+        Vector3 posCell = transform.position;
+        int[,] movkGrid = _attackGrid.GetTypeGrid(actionType);
+        _positionOfTheMovementCell.Clear();
+        _pathExistCollision.Clear();
+        _gridController.DrawPathGrid(false, _attackGrid, movkGrid, _gridController.PathMap, goToDraw, posCell, true, _positionOfTheMovementCell, _pathExistCollision, false);
         for (int i = 0; i < _pathExistCollision.Count; i++)
         {
             if (_pathExistCollision[i] == 5)
@@ -111,6 +108,7 @@ public class EnemyInteligence : MonoBehaviour
     // Types of movement in your range 
     public Vector3 MovementToTarget(int selection)
     {
+        Debug.Log("Selection :  "+  selection);
         Vector3 toTarget = new Vector3();
         bool thereIs = false;
         switch (selection)
@@ -236,7 +234,9 @@ public class EnemyInteligence : MonoBehaviour
         RandomHelper random = new RandomHelper();
         int randomValue = random.RandomInt(0, _positionOfTheMovementCell.Count);
         toTarget = _positionOfTheMovementCell[randomValue];
-
+        for(int i = 0; i < _positionOfTheMovementCell.Count;i++){
+            Debug.Log($"Aca el valor  i : {i} y ahora la posicion {_positionOfTheMovementCell[i]}");
+        }
         return toTarget;
     }
 
@@ -276,24 +276,6 @@ public class EnemyInteligence : MonoBehaviour
         }
 
     }
-    public Vector3 velocity;
-    public void ProcessMovementGrid()
-    {
-        // _gridController.MovementProcess(_enemyController, _selectPosition);
-        // float speed = 1.0f;
-        // float step = speed * Time.deltaTime;
-        // if (Vector2.Distance(new Vector2(c1.transform.position.x, c1.transform.position.z), new Vector2(targetPos.x, targetPos.z)) > 0.1f)
-        // {
-        //     c1.transform.position = Vector3.MoveTowards(c1.transform.position, new Vector3(targetPos.x, c1.transform.position.y, targetPos.z), step);
-        // }
-        // else
-        // {
-        //     c1.SetDataGrid("SelectMovement", 0);
-        //     c1.SetDataGrid("IsMoving", 0);
-        // }
-
-    }
-
     public void InitAttack()
     {
         // _selectPosition = _gridController.InitAttack(transform.gameObject, _enemyController);
@@ -305,7 +287,7 @@ public class EnemyInteligence : MonoBehaviour
     {
         if (_selectPosition != Vector3.zero)
         {
-            // _gridController.AttackProcess(_enemyController, _selectPosition, _gridController.EffectMap, _enemyController.SkillSelectedCurrent.id);
+            _gridController.AttackProcess(_enemyController, _selectPosition, _gridController.EffectMap, _enemyController.SkillSelectedCurrent.id);
         }
     }
     public void AttackByThroughGrid()
@@ -366,25 +348,27 @@ public class EnemyInteligence : MonoBehaviour
     IEnumerator DoMoving()
     {
         bool stillMoving = false;
-        // _gridController.ClearAllObjectInTilemap(_gridController.PathMap);
+        _gridController.ClearAllObjectInTilemap(_gridController.PathMap);
         _skillInRangeAttack = null;
         for (int i = 0; i < _enemyController.allSKill.Count; i++)
         {
             if (inRangeToAttack == false)
             {
-                // CheckMyPathWhithoutDraw(_enemyController.allSKill[0], _gridController.PathObject);
+                // Fixed, not working
+                CheckMyPathWhithoutDraw(_enemyController.allSKill[0], _gridController.PathObject);
             }
         }
+        Debug.Log("Algo de atacar : " + inRangeToAttack);
         yield return new WaitForSeconds(timeToTransicionTurn);
         if (inRangeToAttack)
         {
             if (_enemyController.CheckifCanAttackSpheres(_skillInRangeAttack))
             {
                 // Attack
-                // DrawThroughGrid(false,_skillInRangeAttack.attackType, _gridController.AttackObject);
+                DrawThroughGrid(false,_skillInRangeAttack.attackType, _gridController.AttackObject);
                 yield return new WaitForSeconds(timeToAttack);
 
-                // _gridController.ClearAllObjectInTilemap(_gridController.PathMap);
+                _gridController.ClearAllObjectInTilemap(_gridController.PathMap);
                 yield return new WaitForSeconds(timeBetweenMovements);
 
                 InitAttack();
@@ -394,14 +378,14 @@ public class EnemyInteligence : MonoBehaviour
             if (_enemyController.CheckIfCanMovementSpheres())
             {
                 // Movement
-                // DrawThroughGrid(true,_enemyController.moveType, _gridController.PathObject);
+                DrawThroughGrid(true,_enemyController.moveType, _gridController.PathObject);
                 yield return new WaitForSeconds(timeToMovement);
 
-                // _gridController.ClearAllObjectInTilemap(_gridController.PathMap);
+                _gridController.ClearAllObjectInTilemap(_gridController.PathMap);
                 yield return new WaitForSeconds(timeBetweenMovements);
 
                 InitMovementGrid(4);
-                // yield return StartCoroutine(_gridController.MovementProcessEnumerator(_enemyController, _selectPosition));
+                yield return StartCoroutine(_gridController.MovementProcessEnumerator(_enemyController, _selectPosition));
                 yield return new WaitForSeconds(timeToMovement);
 
             }
@@ -412,14 +396,14 @@ public class EnemyInteligence : MonoBehaviour
             if (_enemyController.CheckIfCanMovementSpheres())
             {
                 // Movement
-                // DrawThroughGrid(true,_enemyController.moveType, _gridController.PathObject);
+                DrawThroughGrid(true,_enemyController.moveType, _gridController.PathObject);
                 yield return new WaitForSeconds(timeToMovement);
 
-                // _gridController.ClearAllObjectInTilemap(_gridController.PathMap);
+                _gridController.ClearAllObjectInTilemap(_gridController.PathMap);
                 yield return new WaitForSeconds(timeBetweenMovements);
 
                 InitMovementGrid(4);
-                // yield return StartCoroutine(_gridController.MovementProcessEnumerator(_enemyController, _selectPosition));
+                yield return StartCoroutine(_gridController.MovementProcessEnumerator(_enemyController, _selectPosition));
                 yield return new WaitForSeconds(timeToMovement);
 
             }
@@ -430,17 +414,17 @@ public class EnemyInteligence : MonoBehaviour
                 {
                     if (inRangeToAttack == false)
                     {
-                        // CheckMyPathWhithoutDraw(_enemyController.allSKill[i], _gridController.PathObject);
+                        CheckMyPathWhithoutDraw(_enemyController.allSKill[i], _gridController.PathObject);
                     }
                 }
                 if (inRangeToAttack == true)
                 {
                     // Attack
-                    // DrawThroughGrid(false,_skillInRangeAttack.attackType, _gridController.AttackObject);
+                    DrawThroughGrid(false,_skillInRangeAttack.attackType, _gridController.AttackObject);
                     yield return new WaitForSeconds(timeToAttack);
 
 
-                    // _gridController.ClearAllObjectInTilemap(_gridController.PathMap);
+                    _gridController.ClearAllObjectInTilemap(_gridController.PathMap);
                     yield return new WaitForSeconds(timeBetweenMovements);
 
                     InitAttack();
@@ -452,7 +436,7 @@ public class EnemyInteligence : MonoBehaviour
         }
         ReturnToOriginalState();
         EnemyPlayerController.GetInstance().ChangeControlToOtherEnemy();
-        if(EnemyPlayerController.GetInstance().EndTurnAllEnemies)
+        if (EnemyPlayerController.GetInstance().EndTurnAllEnemies)
         {
             _logicGame.NextTurn();
             EnemyPlayerController.GetInstance().EndTurnAllEnemies = false;

@@ -28,7 +28,7 @@ public class UserPlayerController : PlayerBase
         {
             // Creation prefab in map
             GameObject goHe = Instantiate(theUser.CharInCombat[i].prefabCharInBattle);
-            goHe.tag = "Player";
+            goHe.tag = "Player1";
             goHe.AddComponent<HeroController>();
 
             goHe.transform.SetParent(GridControlRe.GetInstance().gameObject.transform);
@@ -56,15 +56,6 @@ public class UserPlayerController : PlayerBase
             // get less value
 
             int quantity = 0;
-            // if(_dataUserGameObject.user.CharInCombat[i].theSkills.Count > skillsCanvas.Count)
-            // {
-            //     quantity = skillsCanvas.Count;
-            // }else{
-            //     quantity = _dataUserGameObject.user.CharInCombat[i].theSkills.Count;
-            // }
-            // for (int j = 0; j < _dataUserGameObject.user.CharInCombat[i].theSkills.Count; j++)
-            // Debug.Log("Cantidad skiles  : " + _dataUserGameObject.user.CharInCombat[i].theSkills.Count);
-            // Debug.Log("skillsCanvas.Count : " + quantity);
             quantity = _dataUserGameObject.user.CharInCombat[i].theSkills.Count;
             for (int j = 0; j < 2; j++)
             {
