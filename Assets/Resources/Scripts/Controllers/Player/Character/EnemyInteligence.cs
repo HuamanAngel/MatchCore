@@ -9,8 +9,6 @@ public class EnemyInteligence : MonoBehaviour
     private GridControlRe _gridController;
     private AttackGrid _attackGrid;
     private LogicGame _logicGame;
-    private float myTime;
-    private float _otherMyTime;
     private float timeToMovement = 1.0f;
     private float timeToAttack = 1.0f;
     private float timeToTransicionTurn = 1.0f;
@@ -27,7 +25,6 @@ public class EnemyInteligence : MonoBehaviour
     public int NumberOrden { get => numberOrden; set => numberOrden = value; }
     private bool inRangeToAttack;
     private bool canAttack = false;
-    private bool canMovement = false;
     private Skill _skillInRangeAttack;
     private void Awake()
     {
@@ -49,8 +46,6 @@ public class EnemyInteligence : MonoBehaviour
     }
     void Start()
     {
-        myTime = 0.0f;
-        _otherMyTime = 0.0f;
         _gridController = GridControlRe.GetInstance();
         _logicGame = LogicGame.GetInstance();
     }
@@ -102,7 +97,6 @@ public class EnemyInteligence : MonoBehaviour
     {
         // _selectPosition = _gridController.InitMovement(transform.gameObject, _enemyController);
         _selectPosition = MovementToTarget(selection);
-        canMovement = true;
     }
 
     // Types of movement in your range 
@@ -300,19 +294,16 @@ public class EnemyInteligence : MonoBehaviour
         {
             _boolStart[i] = false;
         }
-        myTime = 0.0f;
-        _otherMyTime = 0.0f;
         _positionOfTheMovementCell.Clear();
         inRangeToAttack = false;
         canAttack = false;
-        canMovement = false;
     }
 
     public void CheckAllFloor()
     {
-        List<GameObject> go;
+        // List<GameObject> go;
         // go = UtilitiesClass.FindAllChildByLayer(_gridController.FloorMap.gameObject, "Floor");
-        Vector3 pivotValue = new Vector3(0, 0.5f, 0);
+        // Vector3 pivotValue = new Vector3(0, 0.5f, 0);
         // for (int i = 0; i < go.Count; i++)
         // {
         //     // Debug.DrawRay(go[i].transform.position + pivotValue, Vector3.up * 2, Color.green, 30);
@@ -347,7 +338,6 @@ public class EnemyInteligence : MonoBehaviour
 
     IEnumerator DoMoving()
     {
-        bool stillMoving = false;
         _gridController.ClearAllObjectInTilemap(_gridController.PathMap);
         _skillInRangeAttack = null;
         for (int i = 0; i < _enemyController.allSKill.Count; i++)

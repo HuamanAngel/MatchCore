@@ -7,7 +7,6 @@ using TMPro;
 
 public class ButtonSkillInBattle : MonoBehaviour
 {
-    private bool _isPressed = false;
     private Character _character;
     private GridControlRe _gridController;
     private int _numberSkill;
@@ -139,14 +138,11 @@ public class ButtonSkillInBattle : MonoBehaviour
         if (mode == 0)
         {
             LogicGame.GetInstance().IsCurrentSelectedSkill = false;
-            _isPressed = false;
-
         }
         else if (mode == 1)
         {
 
             LogicGame.GetInstance().IsCurrentSelectedSkill = false;
-            _isPressed = false;
             turnActivateSkill = LogicGame.GetInstance().Turn;
             if(_numberSkill  != -1)
             {

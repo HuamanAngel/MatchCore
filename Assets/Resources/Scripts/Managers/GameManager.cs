@@ -16,7 +16,7 @@ public class GameManager : MonoBehaviour
     private Color fadeTransparency = new Color(0, 0, 0, .04f);
     private string currentScene;
     private AsyncOperation async;
-    public bool GameOver { set; get; }
+    public bool GameOver { set => _gameOver = value; get => _gameOver; }
     void Awake()
     {
         instance = GetComponent<GameManager>();

@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 public class CharacterUiOption : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
-    private bool mouse_over = false;
+    // private bool mouse_over = false;
     private bool isActive = false;
     public bool IsActive { get => isActive; set => isActive = value; }
     private Color colorDefault = Color.white;
@@ -31,7 +31,7 @@ public class CharacterUiOption : MonoBehaviour, IPointerEnterHandler, IPointerEx
         if (isActive)
         {
             GetComponent<Image>().color = Color.red;
-            mouse_over = true;
+            // mouse_over = true;
         }
     }
 
@@ -40,7 +40,7 @@ public class CharacterUiOption : MonoBehaviour, IPointerEnterHandler, IPointerEx
         if (isActive)
         {
             GetComponent<Image>().color = colorDefault;
-            mouse_over = false;
+            // mouse_over = false;
         }
     }
     public void OnPointerClick(PointerEventData data)

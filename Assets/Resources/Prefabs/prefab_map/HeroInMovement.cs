@@ -396,11 +396,11 @@ public class HeroInMovement : MonoBehaviour
         float initialValueFocalLength = 100;
         float endValueFocalLength = 300;
 
-        float initialBloomIntesity = 1;
+        // float initialBloomIntesity = 1;
         float endBloomIntensity = 40.0f;
         b.diffusion.value = 4;
 
-        float initialValueMinEv = 0;
+        // float initialValueMinEv = 0;
         float endValueMinEv = 6;
 
         float initTransitionBloom = endValueFocalLength - endBloomIntensity;
@@ -485,7 +485,6 @@ public class HeroInMovement : MonoBehaviour
                     // Debug.Log("No hay suficiente llaves");
                     return false;
                 }
-                break;
             case ElementsInteractuable.OptionObstacle.FENCE_MEDIUM:
                 if (_quantityKeyMedium >= quantityToConsumed)
                 {
@@ -498,7 +497,6 @@ public class HeroInMovement : MonoBehaviour
                     // Debug.Log("No hay suficiente llaves");
                     return false;
                 }
-                break;
 
             case ElementsInteractuable.OptionObstacle.FENCE_BIG:
                 if (_quantityKeyBig >= quantityToConsumed)
@@ -512,7 +510,6 @@ public class HeroInMovement : MonoBehaviour
                     // Debug.Log("No hay suficiente llaves");
                     return false;
                 }
-                break;
             case ElementsInteractuable.OptionObstacle.FENCE_GRAND_TRANSITION:
                 if (_quantityNextLvl >= quantityToConsumed)
                 {
@@ -525,12 +522,10 @@ public class HeroInMovement : MonoBehaviour
                     // Debug.Log("No hay suficiente llaves");
                     return false;
                 }
-                break;
 
             default:
                 Debug.Log("Tipo de obstaculo no identificado");
                 return false;
-                break;
         }
 
     }

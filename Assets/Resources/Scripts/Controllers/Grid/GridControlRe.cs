@@ -30,7 +30,6 @@ public class GridControlRe : MonoBehaviour
     public GameObject AttackObject { get => attackObject; }
     private LogicGame _logicGame;
     private bool _enabledAttackPath = false;
-    private bool _movementAux = false;
     private Vector3Int mousePos;
     private GameObject buttonSkillSelected;
     public bool PressSelected { get => _pressSelected; set => _pressSelected = value; }
@@ -241,7 +240,6 @@ public class GridControlRe : MonoBehaviour
     {
         // int valIterationOptional = 0;
         Vector3Int positionPlayerInRange = _attackGrid.GetAttackGridPositionPlayer(attackGrid);
-        Vector3Int positionPlaterInGrid;
         for (int i = 0; i < attackGrid.GetLength(0); i++)
         {
             for (int j = 0; j < attackGrid.GetLength(1); j++)
@@ -394,16 +392,21 @@ public class GridControlRe : MonoBehaviour
         Vector3 diferenceVector = new Vector3(targetPos.x, 0, targetPos.z) - new Vector3(c1.transform.position.x, 0, c1.transform.position.z);
         float distance = diferenceVector.magnitude;
         // distance = Mathf.Abs(distance);
-        Vector3 direction = diferenceVector / (distance);
+        Vector3 direction = diferenceVector / (-distance);
         float damping = 5;
         // c1.transform.rotation = Quaternion.LookRotation(direction);
         // c1.transform.rotation = c1.transform.LookAt(targetPos);
         // Debug.Log("Nomralized positon : " + direction);
         c1.WalkingAnim();
+        Debug.Log("Rotation initial : " + c1.transform.rotation);
+        // Debug.Log("LookRotation final : " + Quaternion.LookRotation(direction,direction,Vector3.up));        
+        // Debug.Log("LookRotation final : " + direction.LookAt());        
+        
         while (Vector2.Distance(new Vector2(c1.transform.position.x, c1.transform.position.z), new Vector2(targetPos.x, targetPos.z)) > 0.001f)
         {
             c1.transform.position = Vector3.MoveTowards(c1.transform.position, new Vector3(targetPos.x, c1.transform.position.y, targetPos.z), step);
-            c1.transform.rotation = Quaternion.Lerp(c1.transform.rotation, Quaternion.LookRotation(direction), Time.deltaTime * damping);
+            // c1.transform.rotation = Quaternion.Lerp(c1.transform.rotation, Quaternion.LookRotation(direction,Vector3.up), Time.deltaTime * damping);
+            c1.transform.rotation = Quaternion.Lerp(c1.transform.rotation, Quaternion.LookRotation(diferenceVector,Vector3.up), Time.deltaTime * damping);
             yield return null;
         }
         // Termino
@@ -439,8 +442,17 @@ public class GridControlRe : MonoBehaviour
     public IEnumerator AttackProcessAnimation(Character c1)
     {
         float t = 0;
-        // float lengtA = _character.ReturnTimeAnimation();
-        c1.AttackAnim();
+
+        int numIteration = 0;
+        foreach (Skill theSkillI in c1.allSKill)
+        {
+            numIteration++;
+            if(theSkillI.id == c1.SkillSelectedCurrent.id)
+            {
+                break;
+            }
+        }
+        c1.AttackAnim(numIteration);
         while (1.0f > t)
         {
             t = t + Time.deltaTime;

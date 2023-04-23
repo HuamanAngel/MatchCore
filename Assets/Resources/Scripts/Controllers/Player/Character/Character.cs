@@ -30,7 +30,7 @@ public abstract class Character : MonoBehaviour
     public Skill SecondtSkill { get => secondtSkill; }
     public Skill ThreeSkill { get => threeSkill; }
     public Skill FourSkill { get => fourSkill; }
-    
+
     protected LogicGame _logicGame;
     protected PlayerBase _thePlayer;
     public PlayerBase ThePlayer { get => _thePlayer; set => _thePlayer = value; }
@@ -132,19 +132,38 @@ public abstract class Character : MonoBehaviour
     public void WalkingAnim()
     {
         _animator.SetBool("IsWalking", true);
-        _animator.SetBool("IsAttack", false);
+        _animator.SetBool("Attack1", false);
+        _animator.SetBool("Attack2", false);
+        _animator.SetBool("Attack3", false);
     }
 
-    public void AttackAnim()
+    public void AttackAnim(int numberSkill)
     {
         _animator.SetBool("IsWalking", false);
-        _animator.SetBool("IsAttack", true);
+        switch (numberSkill)
+        {
+            case 1:
+                _animator.SetBool("Attack1", true);
+                break;
+            case 2:
+                _animator.SetBool("Attack2", true);
+                break;
+            case 3:
+                _animator.SetBool("Attack3", true);
+                break;
+            default:
+                _animator.SetBool("Attack1", true);
+                break;
+        }
     }
 
     public void ReturnStateOriginalAnim()
     {
         _animator.SetBool("IsWalking", false);
-        _animator.SetBool("IsAttack", false);
+        _animator.SetBool("Attack1", false);
+        _animator.SetBool("Attack2", false);
+        _animator.SetBool("Attack3", false);
+        _animator.SetBool("IsDie", false);
     }
 
     public bool CharacterIsAlive()

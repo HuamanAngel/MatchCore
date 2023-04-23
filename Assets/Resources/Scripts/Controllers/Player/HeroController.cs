@@ -26,8 +26,6 @@ public class HeroController : Character
     public GameObject objectQuantitySpheresRed;
     private UserController _dataUserGameObject;
     public Texture textureIcon;
-    private float speedTheMovement = 5.0f;
-
     private void Awake()
     {
         _animator = GetComponent<Animator>();
@@ -65,10 +63,6 @@ public class HeroController : Character
 
             // End Data User 
             StartBattle();
-        }
-        else
-        {
-            speedTheMovement = 3.0f;
         }
     }
 
