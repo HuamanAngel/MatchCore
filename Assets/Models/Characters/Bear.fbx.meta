@@ -1,0 +1,160 @@
+fileFormatVersion: 2
+guid: 7273985a55c3dfc4d9fba05320dffc57
+ModelImporter:
+  serializedVersion: 21300
+  internalIDToNameTable:
+  - first:
+      74: 5545914768964157808
+    second: Armature.037|Armature.006Action
+  - first:
+      74: 7770477847016780977
+    second: Armature.037|Armature.022Action
+  - first:
+      74: 3531865909322376783
+    second: Armature.037|Armature.022Action.001
+  - first:
+      74: 3957518901484357934
+    second: Armature.037|Armature.022Action.002
+  - first:
+      74: 2249054525042475248
+    second: Armature.037|Armature.022Action.003
+  - first:
+      74: -7574896776664464722
+    second: Armature.037|Armature.022Action.004
+  - first:
+      74: 5204788525895900807
+    second: Armature.037|Armature.022Action.005
+  - first:
+      74: -4085466161666092003
+    second: Armature.037|ArmatureAction.003
+  - first:
+      74: -3653967104745972961
+    second: Armature.037|wolf_rig|wolf_rig|fallen
+  - first:
+      74: 44462731193336752
+    second: Armature.031|Armature.006Action
+  - first:
+      74: 167864226372419125
+    second: Armature.031|Armature.022Action
+  - first:
+      74: 5061730405197979900
+    second: Armature.031|Armature.022Action.001
+  - first:
+      74: -6650778785300363126
+    second: Armature.031|Armature.022Action.002
+  - first:
+      74: -3194418422598671881
+    second: Armature.031|Armature.022Action.003
+  - first:
+      74: 3849029279676976697
+    second: Armature.031|Armature.022Action.004
+  - first:
+      74: -7294010632974437424
+    second: Armature.031|Armature.022Action.005
+  - first:
+      74: -129100388309680393
+    second: Armature.031|ArmatureAction.003
+  - first:
+      74: 2472626625751588295
+    second: Armature.031|wolf_rig|wolf_rig|fallen
+  externalObjects: {}
+  materials:
+    materialImportMode: 2
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    removeConstantScaleCurves: 1
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 0
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    nodeNameCollisionStrategy: 1
+    fileIdsGeneration: 2
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    keepQuads: 0
+    weldVertices: 1
+    bakeAxisConversion: 0
+    preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    optimizeBones: 1
+    meshOptimizationFlags: -1
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVMarginMethod: 1
+    secondaryUVMinLightmapResolution: 40
+    secondaryUVMinObjectScale: 1
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  referencedClips: []
+  importAnimation: 1
+  humanDescription:
+    serializedVersion: 3
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    globalScale: 1
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  autoGenerateAvatarMappingIfUnspecified: 1
+  animationType: 2
+  humanoidOversampling: 1
+  avatarSetup: 0
+  addHumanoidExtraRootOnlyWhenUsingAvatar: 1
+  remapMaterialsIfMaterialImportModeIsNone: 0
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

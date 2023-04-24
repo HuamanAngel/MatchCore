@@ -6,7 +6,7 @@
             "name": "Espada",
             "yellow": 0,
             "red": 1,
-            "blue": 2,
+            "blue": 0,
             "skillSpecial": "None",
             "type": "Normal",
             "quality": "Muy Comun",

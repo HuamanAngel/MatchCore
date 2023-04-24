@@ -29,7 +29,7 @@ public class UserController : MonoBehaviour
         userEnemy = new User();
         _stateInBattle = new StatesInBattle();
 
-        Charac oneCharacter = CreateNewCharacterInScene(3, 1);
+        Charac oneCharacter = CreateNewCharacterInScene(6, 1);
         // Add to user data
         // Debug.Log("IN HERO : " + oneCharacter );
         user.CharInCombat.Add(oneCharacter);
@@ -43,7 +43,7 @@ public class UserController : MonoBehaviour
         // Enemies
 
 
-        Charac oneCharacterE = CreateNewCharacterInScene(4, 1);
+        Charac oneCharacterE = CreateNewCharacterInScene(5, 1);
         // Charac secondCharacterE = CreateNewCharacterInScene(3,4);
         // Charac thirdCharacterE = CreateNewCharacterInScene(1,10);
 
