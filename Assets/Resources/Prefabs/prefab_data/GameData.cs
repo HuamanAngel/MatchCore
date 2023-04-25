@@ -33,11 +33,14 @@ public class GameData : MonoBehaviour
         switch (numberMap)
         {
             case 1:
-                for(int i = 0; i<quantityEnemies ; i++)
+                for (int i = 0; i < quantityEnemies; i++)
                 {
-                    enemyInMap[Random.Range(0, enemyInMap.Count)].lvl = 1;
-                    enemyInMap[Random.Range(0, enemyInMap.Count)].InitialValuesDerived();
-                    enemyCurrentSelected.Add(enemyInMap[Random.Range(0, enemyInMap.Count)]);
+                    int valueRandom = Random.Range(0, enemyInMap.Count);
+                    // enemyInMap[Random.Range(0, enemyInMap.Count)].lvl = 1;
+                    // enemyInMap[Random.Range(0, enemyInMap.Count)].InitialValuesDerived();
+                    enemyInMap[valueRandom].lvl = 1;
+                    enemyInMap[valueRandom].InitialValuesDerived();
+                    enemyCurrentSelected.Add(enemyInMap[valueRandom]);
                 }
                 break;
             case 2:
@@ -47,6 +50,6 @@ public class GameData : MonoBehaviour
             case 4:
                 break;
         }
-        return enemyInMap;
+        return enemyCurrentSelected;
     }
 }

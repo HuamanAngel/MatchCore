@@ -13,11 +13,11 @@
             "skillId2": 2,
             "skillId3": 0,
             "skillId4": 0,
-            "lifeBase" : 4,
-            "armorBase" : 4,
-            "pathImage" : "Images/CharacterIcons/i_golem",
-            "pathPrefab" : "Prefab/Character/Hold/Golem_1",
-            "pathPrefabInBattle" : "Prefab/Character/InBattle/Golem_1"
+            "lifeBase": 4,
+            "armorBase": 4,
+            "pathImage": "Images/CharacterIcons/i_golem",
+            "pathPrefab": "Prefab/Character/Hold/Golem_1",
+            "pathPrefabInBattle": "Prefab/Character/InBattle/Golem_1"
         },
         {
             "id": 2,
@@ -32,11 +32,11 @@
             "skillId2": 2,
             "skillId3": 0,
             "skillId4": 0,
-            "lifeBase" : 4,
-            "armorBase" : 2,
-            "pathImage" : "Images/CharacterIcons/i_golem",
-            "pathPrefab" : "Prefab/Character/Hold/Golem_1",
-            "pathPrefabInBattle" : "Prefab/Character/InBattle/Golem_1"
+            "lifeBase": 4,
+            "armorBase": 2,
+            "pathImage": "Images/CharacterIcons/i_golem",
+            "pathPrefab": "Prefab/Character/Hold/Golem_1",
+            "pathPrefabInBattle": "Prefab/Character/InBattle/Golem_1"
         },
         {
             "id": 3,
@@ -51,11 +51,11 @@
             "skillId2": 3,
             "skillId3": 5,
             "skillId4": 0,
-            "lifeBase" : 2,
-            "armorBase" : 2,
-            "pathImage" : "Images/CharacterIcons/i_golem",
-            "pathPrefab" : "Prefab/Character/Hold/Golem_1",
-            "pathPrefabInBattle" : "Prefab/Character/InBattle/GolemFireV2A"
+            "lifeBase": 2,
+            "armorBase": 2,
+            "pathImage": "Images/CharacterIcons/i_golem_fire",
+            "pathPrefab": "Prefab/Character/Hold/Golem_1",
+            "pathPrefabInBattle": "Prefab/Character/InBattle/GolemFireV2A"
         },
         {
             "id": 4,
@@ -70,11 +70,11 @@
             "skillId2": 0,
             "skillId3": 0,
             "skillId4": 0,
-            "lifeBase" : 2,
-            "armorBase" : 2,
-            "pathImage" : "Images/CharacterIcons/i_golem",
-            "pathPrefab" : "Prefab/Character/Hold/Golem_1",
-            "pathPrefabInBattle" : "Prefab/Character/InBattle/WildBoard"
+            "lifeBase": 2,
+            "armorBase": 2,
+            "pathImage": "Images/CharacterIcons/i_board",
+            "pathPrefab": "Prefab/Character/Hold/Golem_1",
+            "pathPrefabInBattle": "Prefab/Character/InBattle/WildBoard"
         },
         {
             "id": 5,
@@ -89,14 +89,14 @@
             "skillId2": 0,
             "skillId3": 0,
             "skillId4": 0,
-            "lifeBase" : 2,
-            "armorBase" : 2,
-            "pathImage" : "Images/CharacterIcons/i_golem",
-            "pathPrefab" : "Prefab/Character/Hold/Golem_1",
-            "pathPrefabInBattle" : "Prefab/Character/InBattle/Bear"
+            "lifeBase": 2,
+            "armorBase": 2,
+            "pathImage": "Images/CharacterIcons/i_bear",
+            "pathPrefab": "Prefab/Character/Hold/Golem_1",
+            "pathPrefabInBattle": "Prefab/Character/InBattle/Bear"
         },
         {
-            "id":6,
+            "id": 6,
             "name": "Lobo salvaje",
             "type": "Animal",
             "yellow": 0,
@@ -108,14 +108,11 @@
             "skillId2": 0,
             "skillId3": 0,
             "skillId4": 0,
-            "lifeBase" : 2,
-            "armorBase" : 2,
-            "pathImage" : "Images/CharacterIcons/i_golem",
-            "pathPrefab" : "Prefab/Character/Hold/Golem_1",
-            "pathPrefabInBattle" : "Prefab/Character/InBattle/Wolf"
+            "lifeBase": 2,
+            "armorBase": 2,
+            "pathImage": "Images/CharacterIcons/i_wolf",
+            "pathPrefab": "Prefab/Character/Hold/Golem_1",
+            "pathPrefabInBattle": "Prefab/Character/InBattle/Wolf"
         }
- 
-
-
     ]
 }

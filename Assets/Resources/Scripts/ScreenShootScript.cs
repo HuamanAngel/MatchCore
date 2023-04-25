@@ -22,7 +22,7 @@ public class ScreenShootScript : MonoBehaviour
         if (Input.GetKeyDown("space"))
         {
             TakeTransparentScreenshot(Camera.main, Screen.width, Screen.height, filename);
-            // Debug.Log("Screenshoot Sucessfull");
+            Debug.Log("Screenshoot Sucessfull");
         }
 
     }

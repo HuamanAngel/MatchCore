@@ -32,6 +32,7 @@ public class EnemyPlayerController : PlayerBase
         _dataUserGameObject = UserController.GetInstance();
         RandomSphere(4, 8);
         SetQuantitySpheres();
+        // StateInBattle
         User theUser = _dataUserGameObject.userEnemy;
         
         for (int i = 0; i < theUser.CharInCombat.Count; i++)

@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class EnemyInMovement : MonoBehaviour
 {
+    [Header("In case not create dynamical")]
+    public List<int> setSpecificalIdCharacter;
+    public bool randomCharacterSpecific = false;
     private List<Charac> _theCharacters;
     private bool _isALive;
     private bool _isEnemyFinalOfMap;
@@ -21,12 +24,29 @@ public class EnemyInMovement : MonoBehaviour
         // Debug.Log("Recine me lenvate");
         _theCharacters = new List<Charac>();
         _isALive = true;
-        _theCharacters = GameData.GetInstance().GetRandomEnemyByMap(numberMap: 1, type: "Golem", quality: "Muy Comun", 1);
         _isEnemyFinalOfMap = false;
 
     }
     void Start()
     {
+        if (_theCharacters.Count == 0)
+        {
+            if (randomCharacterSpecific)
+            {
+                _theCharacters = GameData.GetInstance().GetRandomEnemyByMap(numberMap: 1, type: "Animal", quality: "Muy Comun", Random.Range(0, 4));
+            }
+            else
+            {
+                foreach (int idCharacterInLoop in setSpecificalIdCharacter)
+                {
+                    Charac theCharE = GameData.GetInstance().allCharacters.SearchCharacterById(idCharacterInLoop);
+                    theCharE.InitialValuesDerived();
+                    _theCharacters.Add(theCharE);
+                }
+                CreatePrefab();
+            }
+
+        }
     }
     // Update is called once per frame
     void Update()
@@ -55,12 +75,12 @@ public class EnemyInMovement : MonoBehaviour
             yield return null;
         }
 
-        myAnim.SetBool("IsDie", false);
+        // myAnim.SetBool("IsDie", false);
         UserController.GetInstance().StateInBattle.IsDeadCharacter = false;
         PointInteractiveStructure goPointInteractive = UserController.GetInstance().StateInBattle.EnemiesInMap[_idElementPointInteractive];
-        Debug.Log("ANtes : " + UserController.GetInstance().StateInBattle.EnemiesInMap[_idElementPointInteractive].PositionEnemies.Count);
+        // Debug.Log("ANtes : " + UserController.GetInstance().StateInBattle.EnemiesInMap[_idElementPointInteractive].PositionEnemies.Count);
         goPointInteractive.PositionEnemies.Remove(_directionBelongToPoint);
-        Debug.Log("Despues : " + UserController.GetInstance().StateInBattle.EnemiesInMap[_idElementPointInteractive].PositionEnemies.Count);
+        // Debug.Log("Despues : " + UserController.GetInstance().StateInBattle.EnemiesInMap[_idElementPointInteractive].PositionEnemies.Count);
         UserController.GetInstance().StateInBattle.CounterQuantityElements--;
         UserController.GetInstance().StateInBattle.TotalElementsInMap--;
         // UserController.GetInstance().StateInBattle.EnemiesInMap[_idElementPointInteractive]
@@ -78,5 +98,28 @@ public class EnemyInMovement : MonoBehaviour
         // }
 
         Destroy(transform.parent.gameObject);
+    }
+
+    public void CreatePrefab()
+    {
+        // Get parent Interactive point
+
+        GameObject enemyContainer =  this.transform.parent.gameObject;        
+        GameObject pointInteractiveLocal =  enemyContainer.transform.parent.gameObject;
+        GetComponent<MeshRenderer>().enabled = false;
+        Charac theCharacterEnemyToShow = _theCharacters[0];
+
+        GameObject theEnemyRealPrefab = Instantiate(theCharacterEnemyToShow.prefabCharInBattle);
+        
+        theEnemyRealPrefab.transform.SetParent(this.transform);
+        theEnemyRealPrefab.transform.localPosition = new Vector3(0, -0.5f, 0);
+
+        float factorToScale = 3.2f;
+        theEnemyRealPrefab.transform.localScale = new Vector3(theEnemyRealPrefab.transform.localScale.x * factorToScale, theEnemyRealPrefab.transform.localScale.y * factorToScale, theEnemyRealPrefab.transform.localScale.z * factorToScale);
+        Vector3 diferenceVector = new Vector3(pointInteractiveLocal.transform.position.x, 0, pointInteractiveLocal.transform.position.z) - new Vector3(theEnemyRealPrefab.transform.position.x, 0, theEnemyRealPrefab.transform.position.z);
+        theEnemyRealPrefab.transform.rotation = Quaternion.LookRotation(diferenceVector, Vector3.up);
+
+        // Disabled component from enemies prefab
+        theEnemyRealPrefab.GetComponent<BoxCollider>().enabled = false;
     }
 }

@@ -137,7 +137,10 @@ public class PointInteractive : MonoBehaviour
                 if (_sideAvaibles.Count > 0)
                 {
                     DirectionMove.OptionMovements directionSelectedToCreate = DirectionMove.OptionMovements.LEFT;
+                    
                     GameObject enemyObject = Instantiate(SelectionBattleManager.GetInstance().prefabEnemies[0]);
+                    // Charac theCharacterEnemy = UserController.GetInstance().CreateNewCharacterInScene(5,1);
+                    // GameObject enemyObject = Instantiate(theCharacterEnemy.prefabCharInBattle);
                     enemyObject.transform.parent = transform;
                     directionSelectedToCreate = _sideAvaibles[Random.Range(0, _sideAvaibles.Count)];
                     _sideAvaibles.Remove(directionSelectedToCreate);
@@ -149,6 +152,24 @@ public class PointInteractive : MonoBehaviour
                     theEnemyBody.GetComponent<EnemyInMovement>().IdElementPointInteractive = idElement;
                     theEnemyBody.GetComponent<EnemyInMovement>().DirectionBelongToPoint = directionSelectedToCreate;
 
+                    // Remove Mesh rendered for default
+                    theEnemyBody.GetComponent<MeshRenderer>().enabled = false;
+                    List<Charac> allEnemies =  GameData.GetInstance().GetRandomEnemyByMap(1,"Animal","Muy Comun",1);
+                    Charac theCharacterEnemyToShow = allEnemies[0];  
+                    theEnemyBody.GetComponent<EnemyInMovement>().TheCharacters = allEnemies;
+                    GameObject theEnemyRealPrefab = Instantiate(theCharacterEnemyToShow.prefabCharInBattle);
+                    Debug.Log("El preagab : " + theCharacterEnemyToShow.prefabCharInBattle);
+                    theEnemyRealPrefab.transform.SetParent(theEnemyBody.transform);
+                    theEnemyRealPrefab.transform.localPosition = new Vector3(0,-0.5f,0);
+
+                    float factorToScale = 3.2f;
+                    theEnemyRealPrefab.transform.localScale = new Vector3(theEnemyRealPrefab.transform.localScale.x * factorToScale,theEnemyRealPrefab.transform.localScale.y * factorToScale,theEnemyRealPrefab.transform.localScale.z * factorToScale);
+                    Vector3 diferenceVector = new Vector3(this.transform.position.x, 0, this.transform.position.z) - new Vector3(theEnemyRealPrefab.transform.position.x, 0, theEnemyRealPrefab.transform.position.z);
+                    theEnemyRealPrefab.transform.rotation =   Quaternion.LookRotation(diferenceVector,Vector3.up);                    
+                    
+                    // Disabled component from enemies prefab
+                    theEnemyRealPrefab.GetComponent<BoxCollider>().enabled = false;
+                                        
                     UserController.GetInstance().StateInBattle.TotalElementsInMap++;
                 }
             }

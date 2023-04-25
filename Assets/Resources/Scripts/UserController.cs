@@ -43,7 +43,7 @@ public class UserController : MonoBehaviour
         // Enemies
 
 
-        Charac oneCharacterE = CreateNewCharacterInScene(5, 1);
+        Charac oneCharacterE = CreateNewCharacterInScene(6, 1);
         // Charac secondCharacterE = CreateNewCharacterInScene(3,4);
         // Charac thirdCharacterE = CreateNewCharacterInScene(1,10);
 
