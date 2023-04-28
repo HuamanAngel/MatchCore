@@ -33,7 +33,7 @@ public class SceneController : MonoBehaviour
     {
         SceneManager.LoadScene(3,LoadSceneMode.Single);
     }
-    public void ToTale1()
+    public static void ToTale1()
     {
         SceneManager.LoadScene(4,LoadSceneMode.Single);
     }
