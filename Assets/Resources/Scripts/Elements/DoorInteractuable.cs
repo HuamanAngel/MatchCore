@@ -6,54 +6,29 @@ public class DoorInteractuable : ElementInteractuableBase
 {
     private void OnMouseDown()
     {
-        StartCoroutine(ProcessOpen());
 
-        // bool isConsumedKey = false;
-        // bool canInteractiveFromHere = false;
-        // foreach (GameObject goPointInteractive in _goParent.GetComponent<BrigdeLogic>().pointsInteractuableInCaseExistObstacle)
-        // {
-        //     if (goPointInteractive.GetComponent<PointInteractive>().HeroIsHere)
-        //     {
-        //         canInteractiveFromHere = true;
-        //         break;
-        //     }
-        // }
+        bool canInteractiveFromHere = false;
+        float distanceEnabled = 2.5f;
+        if (Vector3.Distance(transform.position, HeroControllerInSelectMap.GetInstance().transform.position) <= 2.5f)
+        {
+            canInteractiveFromHere = true;
+        }
+        if (canInteractiveFromHere)
+        {
+            LogicSelectTale.GetInstance().goConfirmationLvl.SetActive(true);
+            LogicSelectTale.GetInstance().GoDoorLvlInConfirmation = this.gameObject;
+        }
+
         // if (canInteractiveFromHere)
         // {
-        //     isConsumedKey = HeroInMovement.GetInstance().ConsumeKey(1, typeObstacleOverHere);
-        //     if (!isConsumedKey)
-        //     {
-        //         Color32 theColor = Color.red;
-        //         Color32 endColor;
-
-        //         endColor = theColor;
-        //         endColor.a = 0;
-        //         Vector3 positionToFloating = transform.position + new Vector3(0, 2, 0);
-        //         Vector3 theRotation = new Vector3(Camera.main.transform.localRotation.eulerAngles.x, prefabTextFloating.transform.localRotation.eulerAngles.y, prefabTextFloating.transform.localRotation.eulerAngles.z);
-        //         StartCoroutine(EffectText.FloatingTextFadeOut(prefabTextFloating, positionToFloating, "Te faltan mas llaves", theColor, endColor, theRotation));
-        //     }
-        //     else
-        //     {
-        //         _isInteractuable = false;
-        //         StartCoroutine(ProcessDie());
-        //     }
-        // }
-        // else
-        // {
-        //     Color32 theColor = Color.red;
-        //     Color32 endColor;
-
-        //     endColor = theColor;
-        //     endColor.a = 0;
-        //     Vector3 positionToFloating = transform.position + new Vector3(0, 2, 0);
-        //     Vector3 theRotation = new Vector3(Camera.main.transform.localRotation.eulerAngles.x, prefabTextFloating.transform.localRotation.eulerAngles.y, prefabTextFloating.transform.localRotation.eulerAngles.z);
-        //     StartCoroutine(EffectText.FloatingTextFadeOut(prefabTextFloating, positionToFloating, "Acercate", theColor, endColor, theRotation));
-
+        //     StartCoroutine(ProcessOpen());
         // }
     }
 
     public IEnumerator ProcessOpen()
     {
+        GameObject parentN = transform.parent.gameObject;
+        _myAnim = parentN.GetComponent<Animator>();
         _myAnim.SetBool("Open", true);
         while (!_myAnim.GetCurrentAnimatorStateInfo(0).IsName("Open"))
         {
@@ -63,7 +38,7 @@ public class DoorInteractuable : ElementInteractuableBase
         {
             yield return null;
         }
-        SceneController.ToTale1();
+        // SceneController.ToTale1();
         yield return null;
     }
 

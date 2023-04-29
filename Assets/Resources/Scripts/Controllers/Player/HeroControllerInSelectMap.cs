@@ -8,6 +8,16 @@ public class HeroControllerInSelectMap : MonoBehaviour
     private float rotacionSuave = 0.1f;
     public float velocidadRotacionSuave = 1.0f;
     public Transform cam;
+    private static HeroControllerInSelectMap _instance;
+    private void Awake()
+    {
+        _instance = this;
+    }
+    public static HeroControllerInSelectMap GetInstance()
+    {
+        return _instance;
+    }
+
     void Start()
     {
 
@@ -15,7 +25,10 @@ public class HeroControllerInSelectMap : MonoBehaviour
 
     private void FixedUpdate()
     {
-        MovementOutBattle();
+        if (LogicSelectTale.GetInstance().goInformationMap.activeSelf == false && LogicSelectTale.GetInstance().goConfirmationLvl.activeSelf == false)
+        {
+            MovementOutBattle();
+        }
     }
 
     public void MovementOutBattle()
