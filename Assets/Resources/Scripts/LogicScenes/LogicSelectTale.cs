@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class LogicSelectTale : MonoBehaviour
 {
@@ -9,6 +10,9 @@ public class LogicSelectTale : MonoBehaviour
     public GameObject goConfirmationLvl;
     public List<GameObject> goDoorLvls;
     private GameObject goDoorLvlInConfirmation;
+    private Chronometer theChronometerObject;
+    public TMP_Text chronometerTmpText;
+    public TMP_Text dayTmpText;
     public GameObject GoDoorLvlInConfirmation { get => goDoorLvlInConfirmation; set => goDoorLvlInConfirmation = value; }
     private void Awake()
     {
@@ -21,12 +25,14 @@ public class LogicSelectTale : MonoBehaviour
     void Start()
     {
         StartDownLvl();
+        theChronometerObject = Chronometer.GetInstance();
     }
 
     // Update is called once per frame
     void Update()
     {
-
+        chronometerTmpText.text = theChronometerObject.GetInformationHour();
+        dayTmpText.text  = theChronometerObject.DayText;
     }
     private void StartDownLvl()
     {
@@ -55,4 +61,7 @@ public class LogicSelectTale : MonoBehaviour
         goConfirmationLvl.SetActive(false);
         StartCoroutine(goDoorLvlInConfirmation.GetComponent<DoorInteractuable>().ProcessOpen());        
     }
+
+
+
 }
