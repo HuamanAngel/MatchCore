@@ -18,7 +18,7 @@ public class Chronometer : MonoBehaviour
     public float timeInitial;
 
     [Tooltip("Escala del tiempo in game")]
-    [Range(0.0f, 100.0f)]
+    [Range(0.0f, 1000.0f)]
     public float scaleTime = 25;
 
     private float _hourActual = -1;
@@ -28,12 +28,15 @@ public class Chronometer : MonoBehaviour
     private string _dayText;
     public Calendar calendar;
     public string DayText { get => _dayText; }
-    // Start is called before the first frame update
+    public float HourActual { get => _hourActual; }
+    public float MinuteActual { get => _minuteActual; }
+
     private void Awake()
     {
         _instance = this;
-        calendar = new Calendar(day : initialDay, month : initialMonth, year : initialYear);        
-        _dayText = calendar.GetTimeInText(); 
+        calendar = new Calendar(day: initialDay, month: initialMonth, year: initialYear);
+        _dayText = calendar.GetTimeInText();
+         timeInSecondsToShow = timeInitial;
     }
     public static Chronometer GetInstance()
     {

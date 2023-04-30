@@ -11,12 +11,20 @@ public class LogicSelectTale : MonoBehaviour
     public List<GameObject> goDoorLvls;
     private GameObject goDoorLvlInConfirmation;
     private Chronometer theChronometerObject;
+    private int _hourToShowLvlAvaible;
+    private int _hourToShowLvlAvaibleFinish;
+    private string _whereIsLvl;
+    private bool _actuallyShowLvl = false;
     public TMP_Text chronometerTmpText;
     public TMP_Text dayTmpText;
     public GameObject GoDoorLvlInConfirmation { get => goDoorLvlInConfirmation; set => goDoorLvlInConfirmation = value; }
+
     private void Awake()
     {
         _instance = this;
+        _hourToShowLvlAvaible = 18;
+        _hourToShowLvlAvaibleFinish = 19;
+        _whereIsLvl = "Hidden";
     }
     public static LogicSelectTale GetInstance()
     {
@@ -24,7 +32,6 @@ public class LogicSelectTale : MonoBehaviour
     }
     void Start()
     {
-        StartDownLvl();
         theChronometerObject = Chronometer.GetInstance();
     }
 
@@ -33,6 +40,22 @@ public class LogicSelectTale : MonoBehaviour
     {
         chronometerTmpText.text = theChronometerObject.GetInformationHour();
         dayTmpText.text  = theChronometerObject.DayText;
+        if(_hourToShowLvlAvaible == theChronometerObject.HourActual && !_actuallyShowLvl)
+        {
+            StartDownLvl();    
+            _actuallyShowLvl = true;
+            _whereIsLvl = "Show";
+        }
+
+        if(_hourToShowLvlAvaibleFinish == theChronometerObject.HourActual && _actuallyShowLvl)
+        {
+            _actuallyShowLvl = false;
+            if(_whereIsLvl == "Show")
+            {
+                StartHiddenLvl();
+                _whereIsLvl = "Hidden";
+            }
+        }
     }
     private void StartDownLvl()
     {
@@ -46,6 +69,8 @@ public class LogicSelectTale : MonoBehaviour
     {
         Animator _myAnim = go.GetComponent<Animator>();
         _myAnim.SetBool("DownLvl", true);
+        _myAnim.SetBool("ReverseDownLvl", false);
+        
         while (!_myAnim.GetCurrentAnimatorStateInfo(0).IsName("DownLevel"))
         {
             yield return null;
@@ -55,6 +80,31 @@ public class LogicSelectTale : MonoBehaviour
             yield return null;
         }
     }
+
+    private void StartHiddenLvl()
+    {
+        foreach (GameObject goDoorLvl in goDoorLvls)
+        {
+            StartCoroutine(ProcessHidden(goDoorLvl));
+        }
+    }
+
+    public IEnumerator ProcessHidden(GameObject go)
+    {
+        Animator _myAnim = go.GetComponent<Animator>();
+        _myAnim.SetBool("DownLvl", false);
+        _myAnim.SetBool("ReverseDownLvl", true);
+
+        while (!_myAnim.GetCurrentAnimatorStateInfo(0).IsName("ReveseDownLevel"))
+        {
+            yield return null;
+        }
+        while (_myAnim.GetCurrentAnimatorStateInfo(0).normalizedTime <= 1.0f)
+        {
+            yield return null;
+        }
+    }
+
 
     public void ContinueOpenDoor()
     {
