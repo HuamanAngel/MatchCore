@@ -114,6 +114,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   idElement: 
+  isInitialPoint: 1
+  isFinalPoint: 0
+  belongToNumberMap: -1
   directionsNotInteractuable: 
 --- !u!1001 &5185037231958609437
 PrefabInstance:

@@ -5,6 +5,9 @@ using UnityEngine;
 public class PointInteractive : MonoBehaviour
 {
     public string idElement;
+    public bool isInitialPoint = false;
+    public bool isFinalPoint = false;
+    public int belongToNumberMap = -1;
     [Header("Select directions no interactuables")]
     public List<DirectionMove.OptionMovements> directionsNotInteractuable;
     private int posX;
