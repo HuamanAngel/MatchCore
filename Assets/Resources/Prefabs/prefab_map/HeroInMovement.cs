@@ -53,6 +53,12 @@ public class HeroInMovement : MonoBehaviour
 
     void Start()
     {
+        if (UserController.GetInstance().PositionInitialPoint != Vector3.zero)
+        {
+            this.transform.position = new Vector3(UserController.GetInstance().PositionInitialPoint.x, this.transform.position.y, UserController.GetInstance().PositionInitialPoint.z);
+            Camera.main.transform.position =  new Vector3(UserController.GetInstance().PositionInitialPoint.x, Camera.main.transform.position.y, UserController.GetInstance().PositionInitialPoint.z);
+        }
+        Debug.Log("Position initial point " + UserController.GetInstance().PositionInitialPoint);
         SetInformationInCanvas();
         if (UserController.GetInstance().StateInBattle.CurrentPosition != Vector3.zero)
         {

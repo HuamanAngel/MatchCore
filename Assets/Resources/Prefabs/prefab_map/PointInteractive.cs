@@ -7,7 +7,7 @@ public class PointInteractive : MonoBehaviour
     public string idElement;
     public bool isInitialPoint = false;
     public bool isFinalPoint = false;
-    public int belongToNumberMap = -1;
+    public int belongToNumberPositionMap = -1;
     [Header("Select directions no interactuables")]
     public List<DirectionMove.OptionMovements> directionsNotInteractuable;
     private int posX;
@@ -56,7 +56,15 @@ public class PointInteractive : MonoBehaviour
 
                 }
             }
-            _heroIsHere = CheckIfHereIsHere();
+            if(!UserController.GetInstance().StartMap && isInitialPoint && UserController.GetInstance().NumberPositionMap == belongToNumberPositionMap)
+            {
+                UserController.GetInstance().StartMap = true;
+                UserController.GetInstance().PositionInitialPoint = this.transform.position;
+                _heroIsHere = true;
+            }else{
+                _heroIsHere = CheckIfHereIsHere();
+            }
+
             if (!_heroIsHere)
             {
                 CreateEnemyAround();

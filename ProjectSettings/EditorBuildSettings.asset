@@ -23,4 +23,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/BattleScene_V2.unity
     guid: 13c4b9a25e714484db0951847e444521
+  - enabled: 1
+    path: Assets/Scenes/MapS/Stage1/Map1_snow.unity
+    guid: 95155fe9c1f0e19459d9d4c8191a0a4d
+  - enabled: 1
+    path: Assets/Scenes/MapS/Stage1/Map2_fire.unity
+    guid: 8c40b6bb6d0202348a745fa2d0a50d25
   m_configObjects: {}

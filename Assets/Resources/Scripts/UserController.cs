@@ -6,9 +6,15 @@ public class UserController : MonoBehaviour
 {
     private static UserController _instance;
     private StatesInBattle _stateInBattle;
+    private int _numberPositionMap;
+    private bool _startMap;
+    private Vector3 _positionInitialPoint = Vector3.zero;
     public User user;
     public User userEnemy;
     public StatesInBattle StateInBattle { get => _stateInBattle; set => _stateInBattle = value; }
+    public int NumberPositionMap { get => _numberPositionMap; set => _numberPositionMap = value; }
+    public bool StartMap { get => _startMap; set => _startMap = value; }
+    public Vector3 PositionInitialPoint { get => _positionInitialPoint; set => _positionInitialPoint = value; }
     public static UserController GetInstance()
     {
         return _instance;
@@ -16,6 +22,8 @@ public class UserController : MonoBehaviour
 
     private void Awake()
     {
+        _startMap = false;
+        _numberPositionMap = 1;
         if (UserController.GetInstance() != null)
         {
             Destroy(this.gameObject);

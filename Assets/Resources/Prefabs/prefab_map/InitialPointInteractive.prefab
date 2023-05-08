@@ -116,7 +116,7 @@ MonoBehaviour:
   idElement: 
   isInitialPoint: 1
   isFinalPoint: 0
-  belongToNumberMap: -1
+  belongToNumberPositionMap: -1
   directionsNotInteractuable: 
 --- !u!1001 &5185037231958609437
 PrefabInstance:
@@ -193,6 +193,10 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[1]
       value: 
       objectReference: {fileID: 2100000, guid: 15a2e8dcee4efbe4aa2ea0e37ccde455, type: 2}
+    - target: {fileID: 7784105506988773346, guid: 915018cc6b56ad448aab684afaf75ad6, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 915018cc6b56ad448aab684afaf75ad6, type: 3}
 --- !u!4 &854518256504648927 stripped
