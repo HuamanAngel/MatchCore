@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class DoorInteractuable : ElementInteractuableBase
 {
+    public List<GameObject> goBlockDoor;
+    private int _numberMap;
+    private int _positionNumberMap;
+    public int NumberMap { get => _numberMap; set => _numberMap = value; }
+    public int PositionNumberMap { get => _positionNumberMap; set => _positionNumberMap = value; }
     private void OnMouseDown()
     {
 
@@ -38,8 +43,28 @@ public class DoorInteractuable : ElementInteractuableBase
         {
             yield return null;
         }
-        // SceneController.ToTale1();
+        UserController.GetInstance().NumberPositionMap = _positionNumberMap;
+        SceneController.ToSceneByNumber(_numberMap);
         yield return null;
     }
 
+    public void HideOrShowDoor()
+    {
+        if (_numberMap == -1)
+        {
+            this.gameObject.SetActive(false);
+            foreach (GameObject goBlock in goBlockDoor)
+            {
+                goBlock.SetActive(true);
+            }
+        }
+        else
+        {
+            this.gameObject.SetActive(true);
+            foreach (GameObject goBlock in goBlockDoor)
+            {
+                goBlock.SetActive(false);
+            }
+        }
+    }
 }

@@ -20,6 +20,7 @@ TagManager:
   - FloorGrid
   - Player1
   - Player2
+  - EntryPointLevel
   layers:
   - Default
   - TransparentFX

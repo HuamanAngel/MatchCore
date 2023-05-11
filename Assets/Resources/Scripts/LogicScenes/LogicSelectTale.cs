@@ -73,6 +73,27 @@ public class LogicSelectTale : MonoBehaviour
         foreach (GameObject goDoorLvl in goDoorLvls)
         {
             StartCoroutine(ProcessDown(goDoorLvl));
+            GameObject levelGo = UtilitiesClass.FindChildByName(goDoorLvl, "Level");
+            GameObject entryPointGo = UtilitiesClass.FindChildWithTag(levelGo, "EntryPointLevel");
+            GameObject doorGo = UtilitiesClass.FindChildByName(entryPointGo, "door");
+
+            int quantityPositionNumberByMap = 5;
+            List<int> numberSceneList = new List<int>();
+            // numberSceneList.Add(5);
+            // numberSceneList.Add(6);
+            numberSceneList = SceneController.ToMaps(1);
+            int randomValue = Random.Range(0, numberSceneList.Count + 1);
+            if (randomValue == numberSceneList.Count)
+            {
+                doorGo.GetComponent<DoorInteractuable>().NumberMap = -1;
+                doorGo.GetComponent<DoorInteractuable>().PositionNumberMap = -1;
+            }
+            else
+            {
+                doorGo.GetComponent<DoorInteractuable>().NumberMap = numberSceneList[randomValue];
+                doorGo.GetComponent<DoorInteractuable>().PositionNumberMap = Random.Range(0, quantityPositionNumberByMap + 1);
+            }
+            doorGo.GetComponent<DoorInteractuable>().HideOrShowDoor();
         }
     }
 
@@ -155,6 +176,8 @@ public class LogicSelectTale : MonoBehaviour
         int quantityMapRandom = 0;
         int quantityTotalDoorInMap = 3;
         int quantityMinTotalDoorInMap = 1;
+        // Scene snow : 5 map, 0 big
+        // Scene lava : 5 map, 0 big
         switch (numberStage)
         {
             // SceneManager.LoadScene(4,LoadSceneMode.Single);
