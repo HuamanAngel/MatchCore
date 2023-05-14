@@ -302,79 +302,97 @@ public class LogicGame : MonoBehaviour
     }
 
 
-    public void ProcessAttackSelected(GameObject targetAttack)
+    // public void ProcessAttackSelected(GameObject targetAttack)
+    // {
+    //     GameObject originAttack = buttonSkillSelected.GetComponent<ButtonSkillInBattle>().CharacterBelong;
+    //     Character characterTmp;
+    //     if (originAttack.GetComponent<HeroController>() != null)
+    //     {
+    //         characterTmp = originAttack.GetComponent<HeroController>();
+    //     }
+    //     else if (originAttack.GetComponent<EnemyController>() != null)
+    //     {
+    //         characterTmp = originAttack.GetComponent<EnemyController>();
+    //     }
+    //     else
+    //     {
+    //         characterTmp = null;
+    //     }
+
+
+    //     if (targetAttack.GetComponent<HeroController>() != null)
+    //     {
+    //         if (characterTmp.CheckifCanAttackSpheres(buttonSkillSelected.GetComponent<ButtonSkillInBattle>().TheSkill))
+    //         {
+    //             int damageMin = (int)buttonSkillSelected.GetComponent<ButtonSkillInBattle>().TheSkill.damage_min;
+    //             int damageMax = (int)buttonSkillSelected.GetComponent<ButtonSkillInBattle>().TheSkill.damage_max;
+    //             targetAttack.GetComponent<HeroController>().ReceivedDamage(Random.Range(damageMin, damageMax));
+    //             buttonSkillSelected.GetComponent<ButtonSkillInBattle>().DeselectedSkill(1);
+    //             SoundManager.instance.PlaySFX(SoundManager.ClipItem.Attack);
+    //             // bool isAlive = targetAttack.GetComponent<HeroController>().ThePlayer.EvaluateIfAliveCharacter(targetAttack);
+    //             // if(targetAttack.GetComponent<HeroController>().life)
+    //             bool isAlive = targetAttack.GetComponent<HeroController>().CharacterIsAlive();
+    //             if (!isAlive)
+    //             {
+    //                 targetAttack.GetComponent<HeroController>().ThePlayer.ChangeStateAliveCharacter(targetAttack, false);
+    //                 bool stillSomethingAlive = targetAttack.GetComponent<HeroController>().ThePlayer.EvaluateIfExistStillAliveCharacter();
+    //                 if (!stillSomethingAlive)
+    //                 {
+    //                     GameManager.instance.GameOver = true;
+    //                     ShowLoss();
+    //                 }
+    //             }
+    //         }
+    //     }
+    //     else if (targetAttack.GetComponent<EnemyController>() != null)
+    //     {
+    //         if (characterTmp.CheckifCanAttackSpheres(buttonSkillSelected.GetComponent<ButtonSkillInBattle>().TheSkill))
+    //         {
+    //             int damageMin = (int)buttonSkillSelected.GetComponent<ButtonSkillInBattle>().TheSkill.damage_min;
+    //             int damageMax = (int)buttonSkillSelected.GetComponent<ButtonSkillInBattle>().TheSkill.damage_max;
+    //             targetAttack.GetComponent<EnemyController>().ReceivedDamage(Random.Range(damageMin, damageMax));
+    //             buttonSkillSelected.GetComponent<ButtonSkillInBattle>().DeselectedSkill(1);
+    //             SoundManager.instance.PlaySFX(SoundManager.ClipItem.Attack);
+    //             bool isAlive = targetAttack.GetComponent<EnemyController>().CharacterIsAlive();
+    //             Debug.Log("is alive : " + isAlive);
+    //             if (!isAlive)
+    //             {
+    //                 targetAttack.GetComponent<EnemyController>().ThePlayer.ChangeStateAliveCharacter(targetAttack, false);
+    //                 bool stillSomethingAlive = targetAttack.GetComponent<EnemyController>().ThePlayer.EvaluateIfExistStillAliveCharacter();
+    //                 if (!stillSomethingAlive)
+    //                 {
+    //                     GameManager.instance.GameOver = true;
+    //                     UserController.GetInstance().StateInBattle.IsDeadCharacter = true;
+    //                     ShowVictory();
+    //                 }
+    //             }
+
+    //         }
+    //     }
+    //     else
+    //     {
+    //     }
+
+
+    // }
+
+    public void CheckIfEndBattle()
     {
-        GameObject originAttack = buttonSkillSelected.GetComponent<ButtonSkillInBattle>().CharacterBelong;
-        Character characterTmp;
-        if (originAttack.GetComponent<HeroController>() != null)
+        bool stillSomethingAlivePlayer1 = UserPlayerController.GetInstance().EvaluateIfExistStillAliveCharacter();
+        bool stillSomethingAlivePlayer2 = EnemyPlayerController.GetInstance().EvaluateIfExistStillAliveCharacter();
+        // bool stillSomethingAlive = targetAttack.GetComponent<HeroController>().ThePlayer.EvaluateIfExistStillAliveCharacter();
+        if (!stillSomethingAlivePlayer1)
         {
-            characterTmp = originAttack.GetComponent<HeroController>();
+            GameManager.instance.GameOver = true;
+            ShowLoss();
         }
-        else if (originAttack.GetComponent<EnemyController>() != null)
+        if (!stillSomethingAlivePlayer2)
         {
-            characterTmp = originAttack.GetComponent<EnemyController>();
-        }
-        else
-        {
-            characterTmp = null;
-        }
-
-
-        if (targetAttack.GetComponent<HeroController>() != null)
-        {
-            if (characterTmp.CheckifCanAttackSpheres(buttonSkillSelected.GetComponent<ButtonSkillInBattle>().TheSkill))
-            {
-                int damageMin = (int)buttonSkillSelected.GetComponent<ButtonSkillInBattle>().TheSkill.damage_min;
-                int damageMax = (int)buttonSkillSelected.GetComponent<ButtonSkillInBattle>().TheSkill.damage_max;
-                targetAttack.GetComponent<HeroController>().ReceivedDamage(Random.Range(damageMin, damageMax));
-                buttonSkillSelected.GetComponent<ButtonSkillInBattle>().DeselectedSkill(1);
-                SoundManager.instance.PlaySFX(SoundManager.ClipItem.Attack);
-                // bool isAlive = targetAttack.GetComponent<HeroController>().ThePlayer.EvaluateIfAliveCharacter(targetAttack);
-                // if(targetAttack.GetComponent<HeroController>().life)
-                bool isAlive = targetAttack.GetComponent<HeroController>().CharacterIsAlive();
-                if (!isAlive)
-                {
-                    targetAttack.GetComponent<HeroController>().ThePlayer.ChangeStateAliveCharacter(targetAttack, false);
-                    bool stillSomethingAlive = targetAttack.GetComponent<HeroController>().ThePlayer.EvaluateIfExistStillAliveCharacter();
-                    if (!stillSomethingAlive)
-                    {
-                        GameManager.instance.GameOver = true;
-                        ShowLoss();
-                    }
-                }
-            }
-        }
-        else if (targetAttack.GetComponent<EnemyController>() != null)
-        {
-            if (characterTmp.CheckifCanAttackSpheres(buttonSkillSelected.GetComponent<ButtonSkillInBattle>().TheSkill))
-            {
-                int damageMin = (int)buttonSkillSelected.GetComponent<ButtonSkillInBattle>().TheSkill.damage_min;
-                int damageMax = (int)buttonSkillSelected.GetComponent<ButtonSkillInBattle>().TheSkill.damage_max;
-                targetAttack.GetComponent<EnemyController>().ReceivedDamage(Random.Range(damageMin, damageMax));
-                buttonSkillSelected.GetComponent<ButtonSkillInBattle>().DeselectedSkill(1);
-                SoundManager.instance.PlaySFX(SoundManager.ClipItem.Attack);
-                bool isAlive = targetAttack.GetComponent<EnemyController>().CharacterIsAlive();
-                Debug.Log("is alive : " + isAlive);
-                if (!isAlive)
-                {
-                    targetAttack.GetComponent<EnemyController>().ThePlayer.ChangeStateAliveCharacter(targetAttack, false);
-                    bool stillSomethingAlive = targetAttack.GetComponent<EnemyController>().ThePlayer.EvaluateIfExistStillAliveCharacter();
-                    if (!stillSomethingAlive)
-                    {
-                        GameManager.instance.GameOver = true;
-                        UserController.GetInstance().StateInBattle.IsDeadCharacter = true;
-                        ShowVictory();
-                    }
-                }
-
-            }
-        }
-        else
-        {
-        }
-
-
+            GameManager.instance.GameOver = true;
+            ShowVictory();
+        }        
     }
+
 
     public void IncrementMovement(int increment = 1)
     {
@@ -391,5 +409,4 @@ public class LogicGame : MonoBehaviour
     {
         objLoss.SetActive(true);
     }
-
 }

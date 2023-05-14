@@ -48,7 +48,7 @@ public class CharacterUiOption : MonoBehaviour, IPointerEnterHandler, IPointerEx
         if (isActive)
         {
             LogicGame.GetInstance().IsCurrentSelectedCharacterToAttack = true;
-            LogicGame.GetInstance().ProcessAttackSelected(data.rawPointerPress.transform.parent.gameObject);
+            // LogicGame.GetInstance().ProcessAttackSelected(data.rawPointerPress.transform.parent.gameObject);
             // LogicGame.GetInstance().ButtonCharacterSelectedToAttack = data.rawPointerPress.transform.parent.gameObject;
             Debug.Log("OnPointerClick parent. + " + data.rawPointerPress.transform.parent.gameObject);
         }

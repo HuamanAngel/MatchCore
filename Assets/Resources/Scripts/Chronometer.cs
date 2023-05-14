@@ -36,7 +36,8 @@ public class Chronometer : MonoBehaviour
         _instance = this;
         calendar = new Calendar(day: initialDay, month: initialMonth, year: initialYear);
         _dayText = calendar.GetTimeInText();
-         timeInSecondsToShow = timeInitial;
+        timeInSecondsToShow = timeInitial;
+        isPaused = false;
     }
     public static Chronometer GetInstance()
     {
@@ -94,6 +95,26 @@ public class Chronometer : MonoBehaviour
     public string GetInformationHour()
     {
         return _hourActual.ToString("00") + ":" + _minuteActual.ToString("00");
+    }
+
+
+    public void Pause()
+    {
+        if(isPaused == false)
+        {
+            isPaused = true;
+            scaleTimeToPause = scaleTime;
+            scaleTime = 0;
+        }
+    }
+
+    public void Continue()
+    {
+        if(isPaused)
+        {
+            isPaused = false;
+            scaleTime = scaleTimeToPause;
+        }
     }
 
 }

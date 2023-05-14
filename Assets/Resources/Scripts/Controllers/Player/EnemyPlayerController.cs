@@ -29,6 +29,8 @@ public class EnemyPlayerController : PlayerBase
 
     void Start()
     {
+        GameObject bonusMap = GridControlRe.GetInstance().BonusMap.gameObject;
+        List<GameObject> listPosition = UtilitiesClass.FindAllChildWithTag(bonusMap, "PositionPlayer2");
         _dataUserGameObject = UserController.GetInstance();
         RandomSphere(4, 8);
         SetQuantitySpheres();
@@ -42,7 +44,15 @@ public class EnemyPlayerController : PlayerBase
             goHe.AddComponent<EnemyController>();
 
             goHe.transform.SetParent(GridControlRe.GetInstance().gameObject.transform);
-            goHe.transform.localPosition =  new Vector3(1.0f,0.0f,-4.0f) +  new Vector3(0.5f - i, 0.0f, 0.5f);
+
+            int random = Random.Range(0, listPosition.Count);
+            Vector3 positionFinal = new Vector3(listPosition[random].transform.position.x, 0.0f, listPosition[random].transform.position.z);
+            // Aditional Position
+            goHe.transform.position = positionFinal;
+            listPosition[random].SetActive(false);
+            listPosition.RemoveAt(random);
+
+            // goHe.transform.localPosition =  new Vector3(1.0f,0.0f,-4.0f) +  new Vector3(0.5f - i, 0.0f, 0.5f);
 
             // goHe.tag = "Player2";
             goHe.GetComponent<EnemyController>().player1Tiers = player1Tiers[i];
@@ -94,6 +104,11 @@ public class EnemyPlayerController : PlayerBase
             goHe.AddComponent<EnemyInteligence>();
             goHe.AddComponent<EnemyInteligence>().NumberOrden = i;
         }
+        
+        foreach (GameObject goPositions in listPosition)
+        {
+            goPositions.SetActive(false);
+        }        
     }
     public void ChangeControlToOtherEnemy()
     {

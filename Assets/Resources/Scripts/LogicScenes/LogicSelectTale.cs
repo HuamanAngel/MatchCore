@@ -206,4 +206,23 @@ public class LogicSelectTale : MonoBehaviour
         }
     }
 
+    public void InWindow(bool state)
+    {
+        if (state)
+        {
+            theChronometerObject.Pause();
+        }
+        else
+        {
+            theChronometerObject.Continue();
+        }
+    }
+
+    public void HiddenAllWindowInThisFile()
+    {
+        goConfirmationLvl.SetActive(false);
+        goInformationMap.SetActive(false);
+        InWindow(false);
+    }
+
 }

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-    using TMPro;
+using TMPro;
 public class UserPlayerController : PlayerBase
 {
     // Start is called before the first frame update
@@ -20,6 +20,8 @@ public class UserPlayerController : PlayerBase
 
     void Start()
     {
+        GameObject bonusMap = GridControlRe.GetInstance().BonusMap.gameObject;
+        List<GameObject> listPosition = UtilitiesClass.FindAllChildWithTag(bonusMap, "PositionPlayer1");
         _dataUserGameObject = UserController.GetInstance();
         RandomSphere(4, 8);
         SetQuantitySpheres();
@@ -32,8 +34,14 @@ public class UserPlayerController : PlayerBase
             goHe.AddComponent<HeroController>();
 
             goHe.transform.SetParent(GridControlRe.GetInstance().gameObject.transform);
-            goHe.transform.localPosition =  new Vector3(0.0f,0.0f,-4.0f) +  new Vector3(0.5f - i, 0.0f, 0.5f);
-            
+
+            int random = Random.Range(0, listPosition.Count);
+            Vector3 positionFinal = new Vector3(listPosition[random].transform.position.x, 0.0f, listPosition[random].transform.position.z);
+            // Aditional Position
+            goHe.transform.position = positionFinal;
+            listPosition[random].SetActive(false);
+            listPosition.RemoveAt(random);
+
             // Creation Icon in Canvas
             // GameObject goHe = player1Tiers[i];
 
@@ -59,7 +67,7 @@ public class UserPlayerController : PlayerBase
             quantity = _dataUserGameObject.user.CharInCombat[i].theSkills.Count;
             for (int j = 0; j < quantity; j++)
             {
-                Dictionary<string, GameObject> dInformation = new Dictionary<string, GameObject>(); 
+                Dictionary<string, GameObject> dInformation = new Dictionary<string, GameObject>();
                 GameObject objSkill = UtilitiesClass.FindChildByName(skillsCanvas[j], "ImageSkill");
                 GameObject objInformation = UtilitiesClass.FindChildByName(skillsCanvas[j], "Information");
                 GameObject objYellow = UtilitiesClass.FindChildByName(objInformation, "yellow");
@@ -70,9 +78,9 @@ public class UserPlayerController : PlayerBase
                 dInformation["red"] = objRed;
                 dInformation["blue"] = objBlue;
                 // Change
-                skillsCanvas[j].GetComponent<ButtonSkill>().CharacterBelong = goHe; 
-                skillsCanvas[j].GetComponent<ButtonSkill>().TheSkill = theUser.CharInCombat[i].theSkills[j]; 
-                skillsCanvas[j].GetComponent<ButtonSkill>().ElementsInformation = dInformation; 
+                skillsCanvas[j].GetComponent<ButtonSkill>().CharacterBelong = goHe;
+                skillsCanvas[j].GetComponent<ButtonSkill>().TheSkill = theUser.CharInCombat[i].theSkills[j];
+                skillsCanvas[j].GetComponent<ButtonSkill>().ElementsInformation = dInformation;
 
                 objSkill.GetComponent<RawImage>().texture = theUser.CharInCombat[i].theSkills[j].iconSkill;
                 objYellow.GetComponent<TMP_Text>().text = "x" + theUser.CharInCombat[i].theSkills[j].yellow;
@@ -86,6 +94,11 @@ public class UserPlayerController : PlayerBase
             }
             _allHeroInPlay.Add(goHe);
             _allCharactersAlive[goHe] = true;
+        }
+
+        foreach (GameObject goPositions in listPosition)
+        {
+            goPositions.SetActive(false);
         }
     }
 

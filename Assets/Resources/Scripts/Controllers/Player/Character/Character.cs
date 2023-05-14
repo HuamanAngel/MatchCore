@@ -79,11 +79,6 @@ public abstract class Character : MonoBehaviour
     }
     public virtual bool CheckifCanAttackSpheres(Skill theSkill)
     {
-        Debug.Log("Oket i gonna evaluate the existense of the character");
-        Debug.Log("I trying get : " + _thePlayer);
-        Debug.Log("I trying get 2: " + _thePlayer.RedSphereG);
-        Debug.Log("I trying get 3: " + theSkill.red);
-
         if (_thePlayer.RedSphereG >= theSkill.red && _thePlayer.YellowSphereG >= theSkill.yellow && _thePlayer.BlueSphereG >= theSkill.blue)
         {
             _thePlayer.BlueSphereG = _thePlayer.BlueSphereG - theSkill.blue;
@@ -169,5 +164,32 @@ public abstract class Character : MonoBehaviour
     public bool CharacterIsAlive()
     {
         return life > 0;
+    }
+
+    public void EvaluateIfCanFight()
+    {
+        bool isAlive = CharacterIsAlive();
+        if (!isAlive)
+        {
+            _thePlayer.ChangeStateAliveCharacter(this.gameObject, false);
+            StartCoroutine(AnimationDeadInBattle());
+        }
+    }
+
+    public IEnumerator AnimationDeadInBattle()
+    {
+        Animator myAnim = _animator;
+        myAnim.SetBool("IsDie", true);
+        // Waiting for start animation
+        while (!myAnim.GetCurrentAnimatorStateInfo(0).IsName("Die"))
+        {
+            yield return null;
+        }
+        while (myAnim.GetCurrentAnimatorStateInfo(0).normalizedTime <= 1.0f)
+        {
+            yield return null;
+        }
+        myAnim.SetBool("IsDie", false);
+        _logicGame.CheckIfEndBattle();
     }
 }

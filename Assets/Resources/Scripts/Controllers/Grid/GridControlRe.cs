@@ -26,6 +26,7 @@ public class GridControlRe : MonoBehaviour
     public Tilemap FloorMap { get => floorMap; }
     public Tilemap PathMap { get => pathMap; }
     public Tilemap EffectMap { get => effectMap; }
+    public Tilemap BonusMap { get => bonusMap; }
     public GameObject PathObject { get => pathObject; }
     public GameObject AttackObject { get => attackObject; }
     private LogicGame _logicGame;

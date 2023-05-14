@@ -8,6 +8,7 @@ public class UserController : MonoBehaviour
     private StatesInBattle _stateInBattle;
     private int _numberPositionMap;
     private bool _startMap;
+    private int _numberScene;
     private Vector3 _positionInitialPoint = Vector3.zero;
     public User user;
     public User userEnemy;
@@ -15,6 +16,7 @@ public class UserController : MonoBehaviour
     public int NumberPositionMap { get => _numberPositionMap; set => _numberPositionMap = value; }
     public bool StartMap { get => _startMap; set => _startMap = value; }
     public Vector3 PositionInitialPoint { get => _positionInitialPoint; set => _positionInitialPoint = value; }
+    public int NumberScene { get => _numberScene; set => _numberScene = value; }
     public static UserController GetInstance()
     {
         return _instance;
@@ -84,4 +86,9 @@ public class UserController : MonoBehaviour
     {
         _stateInBattle.ResetStateInitial();
     }
+    public void SendPreviousMap()
+    {
+        SceneController.ToSceneByNumber(_numberScene);
+    }
+
 }

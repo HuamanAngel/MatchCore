@@ -127,6 +127,7 @@ public class EnemyController : Character
         }
         countingCoroutine = StartCoroutine(EffectText.CountNumber(((result) => objLife.GetComponent<TMP_Text>().text = result), lifeBefore, life));
         LogicGame.GetInstance().StartCoroutineTextFloating(originPosition, "" + totalDamage, new Color32(0xFF, 0x00, 0x00, 0xFF), new Color32(0xFF, 0x00, 0x00, 0x00));
+        EvaluateIfCanFight();
     }
     public override void StartBattle()
     {

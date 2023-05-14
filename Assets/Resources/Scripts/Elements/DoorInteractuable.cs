@@ -22,6 +22,7 @@ public class DoorInteractuable : ElementInteractuableBase
         {
             LogicSelectTale.GetInstance().goConfirmationLvl.SetActive(true);
             LogicSelectTale.GetInstance().GoDoorLvlInConfirmation = this.gameObject;
+            LogicSelectTale.GetInstance().InWindow(true);
         }
 
         // if (canInteractiveFromHere)
@@ -44,6 +45,8 @@ public class DoorInteractuable : ElementInteractuableBase
             yield return null;
         }
         UserController.GetInstance().NumberPositionMap = _positionNumberMap;
+        UserController.GetInstance().NumberScene = _numberMap;
+
         SceneController.ToSceneByNumber(_numberMap);
         yield return null;
     }

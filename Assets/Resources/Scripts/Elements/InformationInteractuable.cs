@@ -17,6 +17,7 @@ public class InformationInteractuable : ElementInteractuableBase
         if (canInteractiveFromHere)
         {
             LogicSelectTale.GetInstance().goInformationMap.SetActive(true);          
+            LogicSelectTale.GetInstance().InWindow(true);
         }
     }
 }

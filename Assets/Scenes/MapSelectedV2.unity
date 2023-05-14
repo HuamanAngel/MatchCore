@@ -11848,6 +11848,22 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 49.8
       objectReference: {fileID: 0}
+    - target: {fileID: 4900839933007054227, guid: 742a7661088295545bfe5e631ce35791, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4900839933007054227, guid: 742a7661088295545bfe5e631ce35791, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 426604846}
+    - target: {fileID: 4900839933007054227, guid: 742a7661088295545bfe5e631ce35791, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: HiddenAllWindowInThisFile
+      objectReference: {fileID: 0}
+    - target: {fileID: 4900839933007054227, guid: 742a7661088295545bfe5e631ce35791, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: LogicSelectTale, Assembly-CSharp
+      objectReference: {fileID: 0}
     - target: {fileID: 4900839933147824110, guid: 742a7661088295545bfe5e631ce35791, type: 3}
       propertyPath: m_LocalScale.y
       value: 0.83028
@@ -13518,10 +13534,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1760170462}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
+      - m_Target: {fileID: 426604846}
+        m_TargetAssemblyTypeName: LogicSelectTale, Assembly-CSharp
+        m_MethodName: HiddenAllWindowInThisFile
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -33502,7 +33518,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1827307321}
-  m_LocalRotation: {x: 0.10774223, y: -0.0034824065, z: 0.00037740142, w: 0.9941727}
+  m_LocalRotation: {x: 0.10774276, y: -0.0014796276, z: 0.00016035278, w: 0.9941777}
   m_LocalPosition: {x: 587.4887, y: 2.022, z: 422.90656}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -33852,7 +33868,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1840933635}
-  m_LocalRotation: {x: 0.10774223, y: -0.0034824065, z: 0.00037740142, w: 0.9941727}
+  m_LocalRotation: {x: 0.10774276, y: -0.0014796276, z: 0.00016035278, w: 0.9941777}
   m_LocalPosition: {x: 587.4887, y: 2.022, z: 422.90656}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
