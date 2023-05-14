@@ -19,10 +19,25 @@ public class LogicSelectTale : MonoBehaviour
     public TMP_Text chronometerTmpText;
     public TMP_Text dayTmpText;
     public GameObject parentWhatContainAllLight;
+    public Light lightDirectional;
     public GameObject GoDoorLvlInConfirmation { get => goDoorLvlInConfirmation; set => goDoorLvlInConfirmation = value; }
     private Color32 _colorAlertDownLevel;
     private List<Color32> _colorOld;
     private int _numberStage;
+
+    // _typeDay = 0 -> Day
+    // _typeDay = 1 -> MiddleDay
+    // _typeDay = 2 -> Night
+    // _typeDay = 3 -> MiddleNight
+
+    private int _typeDay = -1;
+
+    // Colors days 
+    public Color32 dayNormal = new Color32(254, 241, 222, 255);
+    public Color32 dayBoom = new Color32(252, 209, 144, 255);
+    public Color32 nightNormal = new Color32(147, 192, 219, 255);
+    public Color32 nightBoom = new Color32(60, 136, 182, 255);
+    private float _timeActualHour;
     private void Awake()
     {
         _instance = this;
@@ -44,6 +59,9 @@ public class LogicSelectTale : MonoBehaviour
     void Start()
     {
         theChronometerObject = Chronometer.GetInstance();
+        _timeActualHour = theChronometerObject.HourActual;
+        lightDirectional.color = CheckColorInTime(_timeActualHour);
+
     }
 
     // Update is called once per frame
@@ -66,6 +84,13 @@ public class LogicSelectTale : MonoBehaviour
                 StartHiddenLvl();
                 _whereIsLvl = "Hidden";
             }
+        }
+
+        // Light
+        if (_timeActualHour != theChronometerObject.HourActual)
+        {
+            _timeActualHour = theChronometerObject.HourActual;
+            lightDirectional.color = CheckColorInTime(theChronometerObject.HourActual);
         }
     }
     private void StartDownLvl()
@@ -223,6 +248,127 @@ public class LogicSelectTale : MonoBehaviour
         goConfirmationLvl.SetActive(false);
         goInformationMap.SetActive(false);
         InWindow(false);
+    }
+    public Color32 CheckColorInTime(float timeHour)
+    {
+        int hour = (int)timeHour;
+        int addHourLight = 0;
+        int addHourNight = 0;
+        Calendar calendar = theChronometerObject.calendar;
+        // Add time for season
+        // Se lee de atras para adelante
+        // 21 de marzo - 21 de diciembre , 1 hora mas de noche
+        // Meses : 12,1,2,3
+        // 23 de septiembre - 21 de junio , 1 hora mas de dia
+        // Meses : 6,7,8,9
+        if (calendar.GetMonth() >= 6 && calendar.GetMonth() <= 9)
+        {
+            if (calendar.GetMonth() == 6)
+            {
+                if (calendar.GetDay() >= 21)
+                {
+                    addHourLight = 1;
+                }
+            }
+            else if (calendar.GetMonth() == 9)
+            {
+                if (calendar.GetDay() <= 23)
+                {
+                    addHourLight = 1;
+                }
+            }
+            else
+            {
+                addHourLight = 1;
+            }
+        }
+        else if (calendar.GetMonth() == 12 || calendar.GetMonth() <= 3)
+        {
+            if (calendar.GetMonth() == 12)
+            {
+                if (calendar.GetDay() >= 21)
+                {
+                    addHourNight = 1;
+                }
+            }
+            else if (calendar.GetMonth() == 3)
+            {
+                if (calendar.GetDay() <= 21)
+                {
+                    addHourNight = 1;
+                }
+            }
+            else
+            {
+                addHourNight = 1;
+            }
+        }
+
+
+        // Check special date 
+        // Solsticio de verano	21 de junio	La noche mas corta	3 horas menos antes de acabar la noche
+        // Solsticio de invierno	21 de diciembre	La noche mas larga	3 horas mas antes de acabar la noche
+
+        if (calendar.GetMonth() == 6 && calendar.GetDay() == 21)
+        {
+            addHourLight = 3;
+        }
+        else if (calendar.GetMonth() == 12 && calendar.GetDay() == 21)
+        {
+            addHourNight = 3;
+        }
+
+        // Tiempo
+        // Horas de luz normal
+        if ((hour >= 8 && hour < 11) || (hour >= 13 && hour < 18 + addHourLight - addHourNight))
+        {
+            if (_typeDay != 0)
+            {
+                _typeDay = 0;
+                // soundManager.GetComponent<SoundManager>().SetAudioStartDay(true, false);
+            }
+            return dayNormal;
+            // Hora de luz al maximo
+        }
+        else if (hour >= 11 && hour < 13)
+        {
+            if (_typeDay != 1)
+            {
+                _typeDay = 1;
+                // soundManager.GetComponent<SoundManager>().SetAudioStartDay(true, false);
+            }
+            return dayBoom;
+            // Hora de noche nornal
+        }
+        else if ((hour >= 18 + addHourLight - addHourNight && hour < 23) || (hour >= 1 && hour < 8))
+        {
+            if (_typeDay != 2)
+            {
+                _typeDay = 2;
+                // soundManager.GetComponent<SoundManager>().SetAudioStartNight(true, false);
+            }
+
+            return nightNormal;
+            // Hora de noche al maximo 
+        }
+        else if ((hour >= 23 && hour < 24) || (hour >= 0 && hour < 1))
+        {
+            if (_typeDay != 3)
+            {
+                _typeDay = 3;
+                // soundManager.GetComponent<SoundManager>().SetAudioMiddleNight(true, false);
+            }
+            return nightBoom;
+        }
+        else
+        {
+            if (_typeDay != 3)
+            {
+                _typeDay = 3;
+                // soundManager.GetComponent<SoundManager>().SetAudioMiddleNight(true, false);
+            }
+            return nightBoom;
+        }
     }
 
 }

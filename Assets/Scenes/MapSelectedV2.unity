@@ -1044,7 +1044,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!108 &57349105
 Light:
   m_ObjectHideFlags: 0
@@ -7517,6 +7517,7 @@ MonoBehaviour:
   chronometerTmpText: {fileID: 1830080553}
   dayTmpText: {fileID: 1813967976}
   parentWhatContainAllLight: {fileID: 14996563}
+  lightDirectional: {fileID: 57349105}
 --- !u!1001 &428916827
 PrefabInstance:
   m_ObjectHideFlags: 0
