@@ -24,17 +24,20 @@ public class UserController : MonoBehaviour
 
     private void Awake()
     {
-        _startMap = false;
+        _numberScene = 6;
         _numberPositionMap = 1;
-        if (UserController.GetInstance() != null)
-        {
-            Destroy(this.gameObject);
-        }
-        else
+        if (_instance == null)
         {
             _instance = this;
             DontDestroyOnLoad(gameObject);
         }
+        else
+        {
+            Destroy(gameObject);
+        }
+
+        _startMap = false;
+        _numberPositionMap = 1;
         user = new User();
         userEnemy = new User();
         _stateInBattle = new StatesInBattle();
@@ -73,7 +76,6 @@ public class UserController : MonoBehaviour
         // Debug.Log("Aca user controller  : " + user.CharInCombat[0].theSkills.Count);
 
     }
-
     public Charac CreateNewCharacterInScene(int idCharacter, int lvl)
     {
         Charac theNewCharacter = GameData.GetInstance().allCharacters.SearchCharacterById(idCharacter);
@@ -85,10 +87,6 @@ public class UserController : MonoBehaviour
     public void ResetValuesStateInBattleMovement()
     {
         _stateInBattle.ResetStateInitial();
-    }
-    public void SendPreviousMap()
-    {
-        SceneController.ToSceneByNumber(_numberScene);
     }
 
 }

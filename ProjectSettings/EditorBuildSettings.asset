@@ -12,8 +12,8 @@ EditorBuildSettings:
     path: Assets/Scenes/HomeUser.unity
     guid: b14e7eefbc36f13409131459be169584
   - enabled: 1
-    path: Assets/Scenes/MapSelectionLvl.unity
-    guid: 21d5d34f0874f5549ab8b9d48eef8571
+    path: Assets/Scenes/MapSelectedV2.unity
+    guid: f46c6b683603e894ab7ed021d88be090
   - enabled: 1
     path: Assets/Scenes/Heroes.unity
     guid: 0aa833e4115253243973bb29838cfca9

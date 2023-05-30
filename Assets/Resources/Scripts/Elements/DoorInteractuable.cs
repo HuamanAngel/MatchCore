@@ -46,8 +46,9 @@ public class DoorInteractuable : ElementInteractuableBase
         }
         UserController.GetInstance().NumberPositionMap = _positionNumberMap;
         UserController.GetInstance().NumberScene = _numberMap;
-
-        SceneController.ToSceneByNumber(_numberMap);
+        // Change scene
+        StartCoroutine(LoadingScreen.LoadAsyncScene(_numberMap));
+        // SceneController.ToSceneByNumber(_numberMap);
         yield return null;
     }
 

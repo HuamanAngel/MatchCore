@@ -29,20 +29,24 @@ public class EnemyInMovement : MonoBehaviour
     }
     void Start()
     {
+        Debug.Log("El valor de thCharacters : " + _theCharacters.Count);
         if (_theCharacters.Count == 0)
         {
-            if (randomCharacterSpecific)
+            // if (randomCharacterSpecific)
+            if(setSpecificalIdCharacter.Count == 0)
             {
                 _theCharacters = GameData.GetInstance().GetRandomEnemyByMap(numberMap: 1, type: "Animal", quality: "Muy Comun", Random.Range(0, 4));
             }
             else
             {
+                // Debug.Log("Aca lo9s characteres en loop");
                 foreach (int idCharacterInLoop in setSpecificalIdCharacter)
                 {
                     Charac theCharE = GameData.GetInstance().allCharacters.SearchCharacterById(idCharacterInLoop);
                     theCharE.InitialValuesDerived();
                     _theCharacters.Add(theCharE);
                 }
+                // Necessary for create SpecificalIdCharacter
                 CreatePrefab();
             }
 
