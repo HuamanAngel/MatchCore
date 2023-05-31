@@ -20,7 +20,7 @@ public class HeroInMovement : MonoBehaviour
     private Rigidbody _rb;
     public TMP_Text textQuantityMoves;
     private bool _isMovement = false;
-    private int _quantityMovementsInScene = 4;
+    private int _quantityMovementsInScene = 12;
     public GameObject screenGameOver;
     public GameObject screenVictory;
     public Coroutine coroutineMovement;
@@ -53,15 +53,23 @@ public class HeroInMovement : MonoBehaviour
 
     void Start()
     {
+        // Set quantity movement
+        if(UserController.GetInstance().StateInBattle.QuantityMovementAvaible != 0)
+        {
+            _quantityMovementsInScene = UserController.GetInstance().StateInBattle.QuantityMovementAvaible;
+        }
         if (UserController.GetInstance().PositionInitialPoint != Vector3.zero)
         {
-            this.transform.position = new Vector3(UserController.GetInstance().PositionInitialPoint.x, this.transform.position.y, UserController.GetInstance().PositionInitialPoint.z);
+            // Set position hero and camera the first time
+            transform.position = new Vector3(UserController.GetInstance().PositionInitialPoint.x, this.transform.position.y, UserController.GetInstance().PositionInitialPoint.z);
             Camera.main.transform.position =  new Vector3(UserController.GetInstance().PositionInitialPoint.x, Camera.main.transform.position.y, UserController.GetInstance().PositionInitialPoint.z);
         }
         SetInformationInCanvas();
         if (UserController.GetInstance().StateInBattle.CurrentPosition != Vector3.zero)
         {
+            // Set position hero and camera every time we back to map
             transform.position = UserController.GetInstance().StateInBattle.CurrentPosition;
+            Camera.main.transform.position =  new Vector3(transform.position.x, Camera.main.transform.position.y, transform.position.z);
         }
         SetQuantityMovements();
         // UserController.GetInstance().StateInBattle.IsDeadCharacter = true;
