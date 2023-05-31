@@ -58,7 +58,6 @@ public class HeroInMovement : MonoBehaviour
             this.transform.position = new Vector3(UserController.GetInstance().PositionInitialPoint.x, this.transform.position.y, UserController.GetInstance().PositionInitialPoint.z);
             Camera.main.transform.position =  new Vector3(UserController.GetInstance().PositionInitialPoint.x, Camera.main.transform.position.y, UserController.GetInstance().PositionInitialPoint.z);
         }
-        Debug.Log("Position initial point " + UserController.GetInstance().PositionInitialPoint);
         SetInformationInCanvas();
         if (UserController.GetInstance().StateInBattle.CurrentPosition != Vector3.zero)
         {
@@ -280,33 +279,10 @@ public class HeroInMovement : MonoBehaviour
         }
         else
         {
-            GameObject twoSword = Instantiate(prefabToBattle);
+            
             List<Charac> allCharactersEnemiesCollision = new List<Charac>();
-            Vector3 positionToArrow = Vector3.zero;
             allCharactersEnemiesCollision = goEnemiesCollision[0].GetComponent<EnemyInMovement>().TheCharacters;
-            switch (goEnemiesCollision[0].GetComponent<EnemyInMovement>().DirectionBelongToPoint)
-            {
-                case DirectionMove.OptionMovements.UP:
-                    positionToArrow = new Vector3(transform.position.x, transform.position.y, transform.position.z + pivotTransformArrow / 2);
-                    twoSword.transform.position = positionToArrow;
-                    transform.Rotate(0, 0, 0);
-                    break;
-                case DirectionMove.OptionMovements.BOTTOM:
-                    positionToArrow = new Vector3(transform.position.x, transform.position.y, transform.position.z - pivotTransformArrow / 2);
-                    twoSword.transform.position = positionToArrow;
-                    transform.Rotate(0, 0, -180);
-                    break;
-                case DirectionMove.OptionMovements.RIGHT:
-                    positionToArrow = new Vector3(transform.position.x + pivotTransformArrow / 2, transform.position.y, transform.position.z);
-                    twoSword.transform.position = positionToArrow;
-                    transform.Rotate(0, 0, 90);
-                    break;
-                case DirectionMove.OptionMovements.LEFT:
-                    positionToArrow = new Vector3(transform.position.x - pivotTransformArrow / 2, transform.position.y, transform.position.z);
-                    twoSword.transform.position = positionToArrow;
-                    transform.Rotate(0, 0, -90);
-                    break;
-            }
+            CreateIconAfterBattle(goEnemiesCollision[0].GetComponent<EnemyInMovement>().DirectionBelongToPoint);
             StartCoroutine(TransitionToBattle(allCharactersEnemiesCollision));
 
         }
@@ -560,5 +536,33 @@ public class HeroInMovement : MonoBehaviour
         _quantityNextLvl += addKeyNextLvl;
         _quantityMovementsInScene += addMovement;
         SetInformationInCanvas();
+    }
+    public void CreateIconAfterBattle(DirectionMove.OptionMovements directionCreate)
+    {
+            GameObject twoSword = Instantiate(prefabToBattle);
+            Vector3 positionToArrow = Vector3.zero;
+            switch (directionCreate)
+            {
+                case DirectionMove.OptionMovements.UP:
+                    positionToArrow = new Vector3(transform.position.x, transform.position.y, transform.position.z + pivotTransformArrow / 2);
+                    twoSword.transform.position = positionToArrow;
+                    transform.Rotate(0, 0, 0);
+                    break;
+                case DirectionMove.OptionMovements.BOTTOM:
+                    positionToArrow = new Vector3(transform.position.x, transform.position.y, transform.position.z - pivotTransformArrow / 2);
+                    twoSword.transform.position = positionToArrow;
+                    transform.Rotate(0, 0, -180);
+                    break;
+                case DirectionMove.OptionMovements.RIGHT:
+                    positionToArrow = new Vector3(transform.position.x + pivotTransformArrow / 2, transform.position.y, transform.position.z);
+                    twoSword.transform.position = positionToArrow;
+                    transform.Rotate(0, 0, 90);
+                    break;
+                case DirectionMove.OptionMovements.LEFT:
+                    positionToArrow = new Vector3(transform.position.x - pivotTransformArrow / 2, transform.position.y, transform.position.z);
+                    twoSword.transform.position = positionToArrow;
+                    transform.Rotate(0, 0, -90);
+                    break;
+            }
     }
 }

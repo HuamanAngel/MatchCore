@@ -29,7 +29,7 @@ public class EnemyInMovement : MonoBehaviour
     }
     void Start()
     {
-        Debug.Log("El valor de thCharacters : " + _theCharacters.Count);
+        // Debug.Log("El valor de thCharacters : " + _theCharacters.Count);
         if (_theCharacters.Count == 0)
         {
             // if (randomCharacterSpecific)

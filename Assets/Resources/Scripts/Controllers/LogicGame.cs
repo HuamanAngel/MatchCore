@@ -389,7 +389,9 @@ public class LogicGame : MonoBehaviour
         if (!stillSomethingAlivePlayer2)
         {
             GameManager.instance.GameOver = true;
+            UserController.GetInstance().StateInBattle.IsDeadCharacter = true;
             ShowVictory();
+
         }        
     }
 

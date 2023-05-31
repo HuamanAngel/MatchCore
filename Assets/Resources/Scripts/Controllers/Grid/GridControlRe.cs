@@ -133,7 +133,7 @@ public class GridControlRe : MonoBehaviour
                 if (Physics.Raycast(ray, out hit))
                 {
                     // Debug.Log($"hit collider is {hit.collider.tag}");
-                    Debug.Log($"Presiono Mouse0 {hit.collider.tag}");
+                    // Debug.Log($"Presiono Mouse0 {hit.collider.tag}");
                     if (hit.collider != null)
                     {
                         if (hit.collider.tag == "AttackObject")
