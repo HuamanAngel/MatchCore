@@ -25,7 +25,7 @@ public class SceneController : MonoBehaviour
     {
         SceneManager.LoadScene(1, LoadSceneMode.Single);
     }
-    public void ToMapSelectionLvl()
+    public static void ToMapSelectionLvl()
     {
         SceneManager.LoadScene(2, LoadSceneMode.Single);
     }

@@ -6,6 +6,8 @@ using TMPro;
 
 public class RewardInMovement : ElementInteractuableBase
 {
+    public DirectionMove.OptionMovements _theDirection;
+    public DirectionMove.OptionMovements TheDirection { get => _theDirection; set => value = _theDirection; }
     public ElementsInteractuable.OptionReward typeReward;
     private void OnMouseDown()
     {
@@ -28,6 +30,8 @@ public class RewardInMovement : ElementInteractuableBase
 
     public IEnumerator ProcessDie()
     {
+        HeroInMovement.GetInstance().ClearAllArrows();
+
         Color32 theColor = Color.blue;
         Color32 endColor;
 
@@ -119,7 +123,25 @@ public class RewardInMovement : ElementInteractuableBase
                 break;
         }
         typeReward = ElementsInteractuable.OptionReward.NOTHING;
+        // Aditional action
+        this.gameObject.SetActive(false);
+        Debug.Log("/////Remove init");
+        foreach(var a in _goParent.GetComponent<PointInteractive>().TreasuresAround)
+        {
+            Debug.Log(a.Key);
+        } 
+        Debug.Log("/////Remove init");
+        Debug.Log("Elemento to remove : " + _theDirection);
 
+        // _goParent.GetComponent<PointInteractive>().TreasuresAround = _goParent.GetComponent<PointInteractive>().TreasuresAround.Remove(_theDirection);
+        _goParent.GetComponent<PointInteractive>().RemoveTreasureByKey(_theDirection);
+        Debug.Log("/////Remove end");
+        foreach(var a in _goParent.GetComponent<PointInteractive>().TreasuresAround)
+        {
+            Debug.Log(a.Key);
+        } 
+        Debug.Log("/////Remove end");
+        HeroInMovement.GetInstance().TryCreationArrowDirection();
         Destroy(this.gameObject);
     }
 

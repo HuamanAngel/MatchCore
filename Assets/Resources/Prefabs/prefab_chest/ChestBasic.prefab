@@ -254,4 +254,5 @@ MonoBehaviour:
   - {fileID: 1905957859960452692}
   - {fileID: 1073713772921691208}
   prefabTextFloating: {fileID: 7040368486460627544, guid: 5d34390077bb84e4dbdc92f593d57a8d, type: 3}
+  _theDirection: 0
   typeReward: 1

@@ -54,7 +54,7 @@ public class HeroInMovement : MonoBehaviour
     void Start()
     {
         // Set quantity movement
-        if(UserController.GetInstance().StateInBattle.QuantityMovementAvaible != 0)
+        if (UserController.GetInstance().StateInBattle.QuantityMovementAvaible != 0)
         {
             _quantityMovementsInScene = UserController.GetInstance().StateInBattle.QuantityMovementAvaible;
         }
@@ -62,17 +62,16 @@ public class HeroInMovement : MonoBehaviour
         {
             // Set position hero and camera the first time
             transform.position = new Vector3(UserController.GetInstance().PositionInitialPoint.x, this.transform.position.y, UserController.GetInstance().PositionInitialPoint.z);
-            Camera.main.transform.position =  new Vector3(UserController.GetInstance().PositionInitialPoint.x, Camera.main.transform.position.y, UserController.GetInstance().PositionInitialPoint.z);
+            Camera.main.transform.position = new Vector3(UserController.GetInstance().PositionInitialPoint.x, Camera.main.transform.position.y, UserController.GetInstance().PositionInitialPoint.z);
         }
         SetInformationInCanvas();
         if (UserController.GetInstance().StateInBattle.CurrentPosition != Vector3.zero)
         {
             // Set position hero and camera every time we back to map
             transform.position = UserController.GetInstance().StateInBattle.CurrentPosition;
-            Camera.main.transform.position =  new Vector3(transform.position.x, Camera.main.transform.position.y, transform.position.z);
+            Camera.main.transform.position = new Vector3(transform.position.x, Camera.main.transform.position.y, transform.position.z);
         }
         SetQuantityMovements();
-        // UserController.GetInstance().StateInBattle.IsDeadCharacter = true;
         if (UserController.GetInstance().StateInBattle.IsDeadCharacter)
         {
             _avaibleNextMovement = true;
@@ -156,44 +155,59 @@ public class HeroInMovement : MonoBehaviour
             _avaibleNextMovement = false;
         }
 
+        if (UserController.GetInstance().ReturnToPreviousMap)
+        {
+            GameObject goPoint = GetPointInteractiveOverHere();
+            if (goPoint != null)
+            {
+                goPoint.GetComponent<PointInteractive>().HeroIsHere = true;
+            }
+            UserController.GetInstance().ReturnToPreviousMap = false;
+        }
     }
 
     public void CreateArrowDirection()
     {
-
-        RaycastHit objectHit;
         Vector3 positionToArrow = Vector3.zero;
         // Debug.DrawRay(transform.position, Vector3.down, Color.green, 30, false);
-        if (Physics.Raycast(transform.position, Vector3.down, out objectHit))
+        GameObject goPoint = GetPointInteractiveOverHere();
+        if (goPoint != null)
         {
-            if (objectHit.collider.transform.gameObject.tag == "Point")
+
+            // Check if is final point
+            if (goPoint.GetComponent<PointInteractive>().isFinalPoint)
             {
-                List<DirectionMove.OptionMovements> movementsAvaibles;
-                objectHit.collider.transform.gameObject.GetComponent<PointInteractive>().CheckBrigdeAllDirections();
-                movementsAvaibles = objectHit.collider.transform.gameObject.GetComponent<PointInteractive>().DirectionAvaibleMovement;
-                foreach (DirectionMove.OptionMovements theMovement in movementsAvaibles)
+                SceneController.ToMapSelectionLvl();
+            }
+            // Recheck Movements in point
+            // goPoint.GetComponent<PointInteractive>().RecheckDirectionMovements();
+
+            List<DirectionMove.OptionMovements> movementsAvaibles;
+            movementsAvaibles = goPoint.GetComponent<PointInteractive>().DirectionAvaibleMovement;
+
+            foreach (DirectionMove.OptionMovements theMovement in movementsAvaibles)
+            {
+                switch (theMovement)
                 {
-                    switch (theMovement)
-                    {
-                        case DirectionMove.OptionMovements.UP:
-                            positionToArrow = new Vector3(transform.position.x, transform.position.y, transform.position.z + pivotTransformArrow);
-                            CreateOneArrowDirection(positionToArrow, DirectionMove.OptionMovements.UP);
-                            break;
-                        case DirectionMove.OptionMovements.BOTTOM:
-                            positionToArrow = new Vector3(transform.position.x, transform.position.y, transform.position.z - pivotTransformArrow);
-                            CreateOneArrowDirection(positionToArrow, DirectionMove.OptionMovements.BOTTOM);
-                            break;
-                        case DirectionMove.OptionMovements.RIGHT:
-                            positionToArrow = new Vector3(transform.position.x + pivotTransformArrow, transform.position.y, transform.position.z);
-                            CreateOneArrowDirection(positionToArrow, DirectionMove.OptionMovements.RIGHT);
-                            break;
-                        case DirectionMove.OptionMovements.LEFT:
-                            positionToArrow = new Vector3(transform.position.x - pivotTransformArrow, transform.position.y, transform.position.z);
-                            CreateOneArrowDirection(positionToArrow, DirectionMove.OptionMovements.LEFT);
-                            break;
-                    }
+                    case DirectionMove.OptionMovements.UP:
+                        positionToArrow = new Vector3(transform.position.x, transform.position.y, transform.position.z + pivotTransformArrow);
+                        CreateOneArrowDirection(positionToArrow, DirectionMove.OptionMovements.UP);
+                        break;
+                    case DirectionMove.OptionMovements.BOTTOM:
+                        positionToArrow = new Vector3(transform.position.x, transform.position.y, transform.position.z - pivotTransformArrow);
+                        CreateOneArrowDirection(positionToArrow, DirectionMove.OptionMovements.BOTTOM);
+                        break;
+                    case DirectionMove.OptionMovements.RIGHT:
+                        positionToArrow = new Vector3(transform.position.x + pivotTransformArrow, transform.position.y, transform.position.z);
+                        CreateOneArrowDirection(positionToArrow, DirectionMove.OptionMovements.RIGHT);
+                        break;
+                    case DirectionMove.OptionMovements.LEFT:
+                        positionToArrow = new Vector3(transform.position.x - pivotTransformArrow, transform.position.y, transform.position.z);
+                        CreateOneArrowDirection(positionToArrow, DirectionMove.OptionMovements.LEFT);
+                        break;
                 }
             }
+
         }
     }
     private void CreateOneArrowDirection(Vector3 positionObject, DirectionMove.OptionMovements directionMovement)
@@ -287,7 +301,7 @@ public class HeroInMovement : MonoBehaviour
         }
         else
         {
-            
+
             List<Charac> allCharactersEnemiesCollision = new List<Charac>();
             allCharactersEnemiesCollision = goEnemiesCollision[0].GetComponent<EnemyInMovement>().TheCharacters;
             CreateIconAfterBattle(goEnemiesCollision[0].GetComponent<EnemyInMovement>().DirectionBelongToPoint);
@@ -365,6 +379,7 @@ public class HeroInMovement : MonoBehaviour
         {
             if (objectHit.collider.transform.gameObject.tag == "Point")
             {
+                // Debug.Log("Colocando este como hero is here true");
                 objectHit.collider.transform.gameObject.GetComponent<PointInteractive>().HeroIsHere = true;
                 return new Vector3(objectHit.collider.transform.position.x, 0, objectHit.collider.transform.position.z);
             }
@@ -533,7 +548,16 @@ public class HeroInMovement : MonoBehaviour
         // CheckBrigdeAllDirections
         ClearAllArrows();
         // Debug.Log("Termine de limpiar");
+
+        GameObject goPoint = GetPointInteractiveOverHere();
+        if (goPoint != null)
+        {
+            // Recheck Movements in point
+            goPoint.GetComponent<PointInteractive>().RecheckDirectionMovements();
+        }
         CreateArrowDirection();
+        // RecheckDirectionMovements
+        UserController.GetInstance().ReturnToPreviousMap = false;
         // Debug.Log("Termine de revisar los brigde");
     }
     public void ModifyValuesFromHero(int addKeyBasic = 0, int addKeyMedium = 0, int addKeyBig = 0, int addKeyNextLvl = 0, int addMovement = 0)
@@ -547,30 +571,48 @@ public class HeroInMovement : MonoBehaviour
     }
     public void CreateIconAfterBattle(DirectionMove.OptionMovements directionCreate)
     {
-            GameObject twoSword = Instantiate(prefabToBattle);
-            Vector3 positionToArrow = Vector3.zero;
-            switch (directionCreate)
+        GameObject twoSword = Instantiate(prefabToBattle);
+        Vector3 positionToArrow = Vector3.zero;
+        switch (directionCreate)
+        {
+            case DirectionMove.OptionMovements.UP:
+                positionToArrow = new Vector3(transform.position.x, transform.position.y, transform.position.z + pivotTransformArrow / 2);
+                twoSword.transform.position = positionToArrow;
+                transform.Rotate(0, 0, 0);
+                break;
+            case DirectionMove.OptionMovements.BOTTOM:
+                positionToArrow = new Vector3(transform.position.x, transform.position.y, transform.position.z - pivotTransformArrow / 2);
+                twoSword.transform.position = positionToArrow;
+                transform.Rotate(0, 0, -180);
+                break;
+            case DirectionMove.OptionMovements.RIGHT:
+                positionToArrow = new Vector3(transform.position.x + pivotTransformArrow / 2, transform.position.y, transform.position.z);
+                twoSword.transform.position = positionToArrow;
+                transform.Rotate(0, 0, 90);
+                break;
+            case DirectionMove.OptionMovements.LEFT:
+                positionToArrow = new Vector3(transform.position.x - pivotTransformArrow / 2, transform.position.y, transform.position.z);
+                twoSword.transform.position = positionToArrow;
+                transform.Rotate(0, 0, -90);
+                break;
+        }
+    }
+
+    public GameObject GetPointInteractiveOverHere()
+    {
+        RaycastHit objectHit;
+        if (Physics.Raycast(transform.position, Vector3.down, out objectHit))
+        {
+            if (objectHit.collider.transform.gameObject.tag == "Point")
             {
-                case DirectionMove.OptionMovements.UP:
-                    positionToArrow = new Vector3(transform.position.x, transform.position.y, transform.position.z + pivotTransformArrow / 2);
-                    twoSword.transform.position = positionToArrow;
-                    transform.Rotate(0, 0, 0);
-                    break;
-                case DirectionMove.OptionMovements.BOTTOM:
-                    positionToArrow = new Vector3(transform.position.x, transform.position.y, transform.position.z - pivotTransformArrow / 2);
-                    twoSword.transform.position = positionToArrow;
-                    transform.Rotate(0, 0, -180);
-                    break;
-                case DirectionMove.OptionMovements.RIGHT:
-                    positionToArrow = new Vector3(transform.position.x + pivotTransformArrow / 2, transform.position.y, transform.position.z);
-                    twoSword.transform.position = positionToArrow;
-                    transform.Rotate(0, 0, 90);
-                    break;
-                case DirectionMove.OptionMovements.LEFT:
-                    positionToArrow = new Vector3(transform.position.x - pivotTransformArrow / 2, transform.position.y, transform.position.z);
-                    twoSword.transform.position = positionToArrow;
-                    transform.Rotate(0, 0, -90);
-                    break;
+                // objectHit.collider.transform.gameObject.GetComponent<PointInteractive>().HeroIsHere = true;
+                return objectHit.collider.transform.gameObject;
             }
+            return null;
+        }
+        else
+        {
+            return null;
+        }
     }
 }

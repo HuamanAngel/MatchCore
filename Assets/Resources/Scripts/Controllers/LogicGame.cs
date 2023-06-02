@@ -132,6 +132,7 @@ public class LogicGame : MonoBehaviour
     void Start()
     {
         SetPlayer();
+        UserController.GetInstance().ReturnToPreviousMap = true;
     }
 
     // Update is called once per frame

@@ -85,6 +85,7 @@ MonoBehaviour:
   - {fileID: 6533892391069797170}
   - {fileID: 5636473656690909486}
   prefabTextFloating: {fileID: 7040368486460627544, guid: 5d34390077bb84e4dbdc92f593d57a8d, type: 3}
+  _theDirection: 1
   typeReward: 1
 --- !u!1 &5636473656690909486
 GameObject:

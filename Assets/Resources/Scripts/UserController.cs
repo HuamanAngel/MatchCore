@@ -10,6 +10,7 @@ public class UserController : MonoBehaviour
     private bool _startMap;
     private int _numberScene;
     private Vector3 _positionInitialPoint = Vector3.zero;
+    private bool _returnToPreviousMap  = false;
     public User user;
     public User userEnemy;
     public StatesInBattle StateInBattle { get => _stateInBattle; set => _stateInBattle = value; }
@@ -17,6 +18,8 @@ public class UserController : MonoBehaviour
     public bool StartMap { get => _startMap; set => _startMap = value; }
     public Vector3 PositionInitialPoint { get => _positionInitialPoint; set => _positionInitialPoint = value; }
     public int NumberScene { get => _numberScene; set => _numberScene = value; }
+    public bool ReturnToPreviousMap { get => _returnToPreviousMap; set => _returnToPreviousMap = value; }
+    // 
     public static UserController GetInstance()
     {
         return _instance;
