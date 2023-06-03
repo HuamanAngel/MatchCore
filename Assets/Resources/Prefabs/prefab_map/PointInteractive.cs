@@ -15,6 +15,7 @@ public class PointInteractive : MonoBehaviour
     private Dictionary<DirectionMove.OptionMovements, GameObject> _enemiesAround;
     private Dictionary<DirectionMove.OptionMovements, GameObject> _treasuresAround;
     private bool _heroIsHere = false;
+    private Dictionary<int, float> theListProbTreasure;
     public int PosX { get => posX; set => posX = value; }
     public int PosY { get => posY; set => posY = value; }
     private List<DirectionMove.OptionMovements> _directionAvaibleMovement;
@@ -24,6 +25,15 @@ public class PointInteractive : MonoBehaviour
     public bool HeroIsHere { get => _heroIsHere; set => _heroIsHere = value; }
     private void Awake()
     {
+        // Treasure Probability
+        theListProbTreasure = new Dictionary<int, float>();
+        theListProbTreasure[1] = 90.0f;
+        theListProbTreasure[2] = 8.0f;
+        theListProbTreasure[3] = 1.5f;
+        theListProbTreasure[4] = 0.5f;
+
+        // 
+
         _enemiesAround = new Dictionary<DirectionMove.OptionMovements, GameObject>();
         _treasuresAround = new Dictionary<DirectionMove.OptionMovements, GameObject>();
         // Directions movements avaible
@@ -79,7 +89,8 @@ public class PointInteractive : MonoBehaviour
                     if (UserController.GetInstance().NumberPositionMap == belongToNumberPositionMap)
                     {
                         // CreateEnemyAround();
-                        CreateTreasureAround();
+                        CreateTreasureInMap();
+                        // CreateTreasureAround();
                     }
                 }
                 // Directiones Movement block way, just treasures 
@@ -132,18 +143,6 @@ public class PointInteractive : MonoBehaviour
                 foreach (var treasurePosition in goPointInteractive.PositionTreasures)
                 {
                     CreateTreasureAround(isRecreate: true, treasurePosition.Key);
-                    // GameObject treasureObject = Instantiate(SelectionBattleManager.GetInstance().prefabTreasures[0]);
-                    // treasureObject.transform.parent = transform;
-                    // directionSelectedToCreate = treasurePosition.Key;
-                    // treasureObject.transform.localPosition = PositionAroundThisPoint(directionSelectedToCreate);
-                    // treasureObject.transform.localPosition = new Vector3(treasureObject.transform.localPosition.x, 0.5f, treasureObject.transform.localPosition.z);
-                    // _treasuresAround[directionSelectedToCreate] = treasureObject;
-
-                    // // Look to point
-                    // Vector3 diferenceVector = new Vector3(this.transform.position.x, 0, this.transform.position.z) - new Vector3(treasureObject.transform.position.x, 0, treasureObject.transform.position.z);
-                    // treasureObject.transform.rotation = Quaternion.LookRotation(diferenceVector, Vector3.up);
-
-                    // UserController.GetInstance().StateInBattle.CounterQuantityElements++;
                 }
 
             }
@@ -306,48 +305,36 @@ public class PointInteractive : MonoBehaviour
 
     public void CreateTreasureAround(bool isRecreate = false, DirectionMove.OptionMovements directionSelectedToCreate = DirectionMove.OptionMovements.LEFT)
     {
-        if (_directionAvaibleMovement.Count != 0 || isRecreate)
+        GameObject enemyObject = Instantiate(SelectionBattleManager.GetInstance().prefabTreasures[0]);
+        enemyObject.transform.parent = transform;
+        if (!isRecreate)
         {
-            // int createEnemy = Random.Range(1, 6);
-            int createEnemy = Random.Range(1, 3);
-            if (createEnemy == 1 || createEnemy == 2 || isRecreate)
-            {
-                if (_sideAvaibles.Count > 0 || isRecreate)
-                {
-                    GameObject enemyObject = Instantiate(SelectionBattleManager.GetInstance().prefabTreasures[0]);
-                    enemyObject.transform.parent = transform;
-                    if (!isRecreate)
-                    {
-                        directionSelectedToCreate = _sideAvaibles[Random.Range(0, _sideAvaibles.Count)];
-                        _sideAvaibles.Remove(directionSelectedToCreate);
-                        Debug.Log("I create treasure in this direction : " + directionSelectedToCreate);
+            directionSelectedToCreate = _sideAvaibles[Random.Range(0, _sideAvaibles.Count)];
+            _sideAvaibles.Remove(directionSelectedToCreate);
+            // Debug.Log("I create treasure in this direction : " + directionSelectedToCreate);
 
-                    }
-                    else
-                    {
-                        directionSelectedToCreate = directionSelectedToCreate;
-
-                    }
-                    enemyObject.transform.localPosition = PositionAroundThisPoint(directionSelectedToCreate);
-                    enemyObject.transform.localPosition = new Vector3(enemyObject.transform.localPosition.x, 0.5f, enemyObject.transform.localPosition.z);
-                    // float factorToScale = 3.2f;
-                    // enemyObject.transform.localScale = new Vector3(enemyObject.transform.localScale.x * factorToScale, enemyObject.transform.localScale.y * factorToScale, enemyObject.transform.localScale.z * factorToScale);
-                    Vector3 diferenceVector = new Vector3(this.transform.position.x, 0, this.transform.position.z) - new Vector3(enemyObject.transform.position.x, 0, enemyObject.transform.position.z);
-                    enemyObject.transform.rotation = Quaternion.LookRotation(diferenceVector, Vector3.up);
-
-                    // Aca el codigo puede fallar, revisarlo
-                    // Debug.Log("Before the assign direction : " + directionSelectedToCreate);
-                    // Debug.Log("Check default assign direction : " + enemyObject.GetComponent<RewardInMovement>()._theDirection);
-                    enemyObject.GetComponent<RewardInMovement>()._theDirection = directionSelectedToCreate;
-                    // Debug.Log("Check the assign direction : " + enemyObject.GetComponent<RewardInMovement>()._theDirection);
-
-                    // UserController.GetInstance().StateInBattle.TotalElementsInMap++;
-                    // UserController.GetInstance().StateInBattle.CounterQuantityElements++;
-                    _treasuresAround[directionSelectedToCreate] = enemyObject;
-
-                }
-            }
         }
+        else
+        {
+            directionSelectedToCreate = directionSelectedToCreate;
+
+        }
+        enemyObject.transform.localPosition = PositionAroundThisPoint(directionSelectedToCreate);
+        enemyObject.transform.localPosition = new Vector3(enemyObject.transform.localPosition.x, 0.5f, enemyObject.transform.localPosition.z);
+        // float factorToScale = 3.2f;
+        // enemyObject.transform.localScale = new Vector3(enemyObject.transform.localScale.x * factorToScale, enemyObject.transform.localScale.y * factorToScale, enemyObject.transform.localScale.z * factorToScale);
+        Vector3 diferenceVector = new Vector3(this.transform.position.x, 0, this.transform.position.z) - new Vector3(enemyObject.transform.position.x, 0, enemyObject.transform.position.z);
+        enemyObject.transform.rotation = Quaternion.LookRotation(diferenceVector, Vector3.up);
+
+        // Aca el codigo puede fallar, revisarlo
+        // Debug.Log("Before the assign direction : " + directionSelectedToCreate);
+        // Debug.Log("Check default assign direction : " + enemyObject.GetComponent<RewardInMovement>()._theDirection);
+        enemyObject.GetComponent<RewardInMovement>()._theDirection = directionSelectedToCreate;
+        // Debug.Log("Check the assign direction : " + enemyObject.GetComponent<RewardInMovement>()._theDirection);
+
+        // UserController.GetInstance().StateInBattle.TotalElementsInMap++;
+        // UserController.GetInstance().StateInBattle.CounterQuantityElements++;
+        _treasuresAround[directionSelectedToCreate] = enemyObject;
     }
 
     public Vector3 PositionAroundThisPoint(DirectionMove.OptionMovements directionSelectedToCreate)
@@ -451,5 +438,27 @@ public class PointInteractive : MonoBehaviour
     public void RemoveTreasureByKey(DirectionMove.OptionMovements direction)
     {
         _treasuresAround.Remove(direction);
+    }
+
+    public void CreateTreasureInMap()
+    {
+        if (_directionAvaibleMovement.Count != 0)
+        {
+            int createEnemy = Random.Range(1, 101);
+
+            // 10%
+            if (createEnemy <= 15)
+            {
+                int quantityTreasureAroundThisPoint = RandomHelper.GetRandomValueByProbabilityAndValues(theListProbTreasure);
+                for (int i = 0; i < quantityTreasureAroundThisPoint; i++)
+                {
+                    if (_sideAvaibles.Count > 0)
+                    {
+                        CreateTreasureAround();
+                    }
+                }
+            }
+        }
+
     }
 }
