@@ -16,6 +16,7 @@ public class PointInteractive : MonoBehaviour
     private Dictionary<DirectionMove.OptionMovements, GameObject> _treasuresAround;
     private bool _heroIsHere = false;
     private Dictionary<int, float> theListProbTreasure;
+    private Dictionary<int, float> theListProbEnemies;
     public int PosX { get => posX; set => posX = value; }
     public int PosY { get => posY; set => posY = value; }
     private List<DirectionMove.OptionMovements> _directionAvaibleMovement;
@@ -32,7 +33,13 @@ public class PointInteractive : MonoBehaviour
         theListProbTreasure[3] = 1.5f;
         theListProbTreasure[4] = 0.5f;
 
-        // 
+        // Enemie Probability
+
+        theListProbEnemies = new Dictionary<int, float>();
+        theListProbEnemies[1] = 70.0f;
+        theListProbEnemies[2] = 20.0f;
+        theListProbEnemies[3] = 8.0f;
+        theListProbEnemies[4] = 2.0f;
 
         _enemiesAround = new Dictionary<DirectionMove.OptionMovements, GameObject>();
         _treasuresAround = new Dictionary<DirectionMove.OptionMovements, GameObject>();
@@ -88,9 +95,8 @@ public class PointInteractive : MonoBehaviour
                 {
                     if (UserController.GetInstance().NumberPositionMap == belongToNumberPositionMap)
                     {
-                        // CreateEnemyAround();
+                        CreateEnemieInMap();
                         CreateTreasureInMap();
-                        // CreateTreasureAround();
                     }
                 }
                 // Directiones Movement block way, just treasures 
@@ -104,40 +110,9 @@ public class PointInteractive : MonoBehaviour
                 _directionAvaibleMovement = goPointInteractive.DirectionAvaibleMovement;
                 _sideAvaibles = goPointInteractive.SideAvaibles;
 
-
-                DirectionMove.OptionMovements directionSelectedToCreate = DirectionMove.OptionMovements.LEFT;
                 foreach (var enemiesPosition in goPointInteractive.PositionEnemies)
                 {
-                    GameObject enemyObject = Instantiate(SelectionBattleManager.GetInstance().prefabEnemies[0]);
-                    enemyObject.transform.parent = transform;
-                    directionSelectedToCreate = enemiesPosition.Key;
-                    enemyObject.transform.localPosition = PositionAroundThisPoint(directionSelectedToCreate);
-                    _enemiesAround[directionSelectedToCreate] = enemyObject;
-
-                    GameObject theEnemyBody = UtilitiesClass.FindAllChildWithTag(enemyObject, "Enemy")[0];
-                    theEnemyBody.GetComponent<EnemyInMovement>().IdElement = idElement + "" + directionSelectedToCreate;
-                    theEnemyBody.GetComponent<EnemyInMovement>().IdElementPointInteractive = idElement;
-                    theEnemyBody.GetComponent<EnemyInMovement>().DirectionBelongToPoint = directionSelectedToCreate;
-                    UserController.GetInstance().StateInBattle.CounterQuantityElements++;
-
-                    // Remove Mesh rendered for default
-                    theEnemyBody.GetComponent<MeshRenderer>().enabled = false;
-                    // List<Charac> allEnemies =  GameData.GetInstance().GetRandomEnemyByMap(1,"Animal","Muy Comun",1);
-                    List<Charac> allEnemies = enemiesPosition.Value;
-                    Charac theCharacterEnemyToShow = allEnemies[0];
-                    theEnemyBody.GetComponent<EnemyInMovement>().TheCharacters = allEnemies;
-                    GameObject theEnemyRealPrefab = Instantiate(theCharacterEnemyToShow.prefabCharInBattle);
-                    // Debug.Log("El preagab : " + theCharacterEnemyToShow.prefabCharInBattle);
-                    theEnemyRealPrefab.transform.SetParent(theEnemyBody.transform);
-                    theEnemyRealPrefab.transform.localPosition = new Vector3(0, -0.5f, 0);
-
-                    float factorToScale = 3.2f;
-                    theEnemyRealPrefab.transform.localScale = new Vector3(theEnemyRealPrefab.transform.localScale.x * factorToScale, theEnemyRealPrefab.transform.localScale.y * factorToScale, theEnemyRealPrefab.transform.localScale.z * factorToScale);
-                    Vector3 diferenceVector = new Vector3(this.transform.position.x, 0, this.transform.position.z) - new Vector3(theEnemyRealPrefab.transform.position.x, 0, theEnemyRealPrefab.transform.position.z);
-                    theEnemyRealPrefab.transform.rotation = Quaternion.LookRotation(diferenceVector, Vector3.up);
-
-                    // Disabled component from enemies prefab
-                    theEnemyRealPrefab.GetComponent<BoxCollider>().enabled = false;
+                    CreateEnemyAround(isRecreate: true, enemiesPosition.Key, enemiesPosition.Value);
                 }
 
                 foreach (var treasurePosition in goPointInteractive.PositionTreasures)
@@ -184,55 +159,53 @@ public class PointInteractive : MonoBehaviour
         }
         return false;
     }
-    public void CreateEnemyAround()
+    public void CreateEnemyAround(bool isRecreate = false, DirectionMove.OptionMovements directionSelectedToCreate = DirectionMove.OptionMovements.LEFT, List<Charac> charactList = default(List<Charac>))
     {
-        if (_directionAvaibleMovement.Count != 0)
+
+        GameObject enemyObject = Instantiate(SelectionBattleManager.GetInstance().prefabEnemies[0]);
+
+        enemyObject.transform.parent = transform;
+        if (!isRecreate)
         {
-            int createEnemy = Random.Range(1, 10);
-            if (createEnemy > 0)
-            {
-                if (_sideAvaibles.Count > 0)
-                {
-                    DirectionMove.OptionMovements directionSelectedToCreate = DirectionMove.OptionMovements.LEFT;
-
-                    GameObject enemyObject = Instantiate(SelectionBattleManager.GetInstance().prefabEnemies[0]);
-                    // Charac theCharacterEnemy = UserController.GetInstance().CreateNewCharacterInScene(5,1);
-                    // GameObject enemyObject = Instantiate(theCharacterEnemy.prefabCharInBattle);
-                    enemyObject.transform.parent = transform;
-                    directionSelectedToCreate = _sideAvaibles[Random.Range(0, _sideAvaibles.Count)];
-                    _sideAvaibles.Remove(directionSelectedToCreate);
-                    enemyObject.transform.localPosition = PositionAroundThisPoint(directionSelectedToCreate);
-                    _enemiesAround[directionSelectedToCreate] = enemyObject;
-
-                    GameObject theEnemyBody = UtilitiesClass.FindAllChildWithTag(enemyObject, "Enemy")[0];
-                    theEnemyBody.GetComponent<EnemyInMovement>().IdElement = idElement + "" + directionSelectedToCreate;
-                    theEnemyBody.GetComponent<EnemyInMovement>().IdElementPointInteractive = idElement;
-                    theEnemyBody.GetComponent<EnemyInMovement>().DirectionBelongToPoint = directionSelectedToCreate;
-
-                    // Remove Mesh rendered for default
-                    theEnemyBody.GetComponent<MeshRenderer>().enabled = false;
-                    List<Charac> allEnemies = GameData.GetInstance().GetRandomEnemyByMap(1, "Animal", "Muy Comun", 1);
-                    Charac theCharacterEnemyToShow = allEnemies[0];
-
-                    theEnemyBody.GetComponent<EnemyInMovement>().TheCharacters = allEnemies;
-
-                    GameObject theEnemyRealPrefab = Instantiate(theCharacterEnemyToShow.prefabCharInBattle);
-                    // Debug.Log("El preagab : " + theCharacterEnemyToShow.prefabCharInBattle);
-                    theEnemyRealPrefab.transform.SetParent(theEnemyBody.transform);
-                    theEnemyRealPrefab.transform.localPosition = new Vector3(0, -0.5f, 0);
-
-                    float factorToScale = 3.2f;
-                    theEnemyRealPrefab.transform.localScale = new Vector3(theEnemyRealPrefab.transform.localScale.x * factorToScale, theEnemyRealPrefab.transform.localScale.y * factorToScale, theEnemyRealPrefab.transform.localScale.z * factorToScale);
-                    Vector3 diferenceVector = new Vector3(this.transform.position.x, 0, this.transform.position.z) - new Vector3(theEnemyRealPrefab.transform.position.x, 0, theEnemyRealPrefab.transform.position.z);
-                    theEnemyRealPrefab.transform.rotation = Quaternion.LookRotation(diferenceVector, Vector3.up);
-
-                    // Disabled component from enemies prefab
-                    theEnemyRealPrefab.GetComponent<BoxCollider>().enabled = false;
-
-                    UserController.GetInstance().StateInBattle.TotalElementsInMap++;
-                }
-            }
+            directionSelectedToCreate = _sideAvaibles[Random.Range(0, _sideAvaibles.Count)];
+            _sideAvaibles.Remove(directionSelectedToCreate);
         }
+        enemyObject.transform.localPosition = PositionAroundThisPoint(directionSelectedToCreate);
+        _enemiesAround[directionSelectedToCreate] = enemyObject;
+
+        GameObject theEnemyBody = UtilitiesClass.FindAllChildWithTag(enemyObject, "Enemy")[0];
+        theEnemyBody.GetComponent<EnemyInMovement>().IdElement = idElement + "" + directionSelectedToCreate;
+        theEnemyBody.GetComponent<EnemyInMovement>().IdElementPointInteractive = idElement;
+        theEnemyBody.GetComponent<EnemyInMovement>().DirectionBelongToPoint = directionSelectedToCreate;
+
+        // Remove Mesh rendered for default
+        theEnemyBody.GetComponent<MeshRenderer>().enabled = false;
+        List<Charac> allEnemies = new List<Charac>();
+        if (!isRecreate)
+        {
+            allEnemies = GameData.GetInstance().GetRandomEnemyByMap(1, "Animal", "Muy Comun", 1);
+        }
+        else
+        {
+            // Ojo
+            allEnemies = charactList;
+        }
+        Charac theCharacterEnemyToShow = allEnemies[0];
+
+        theEnemyBody.GetComponent<EnemyInMovement>().TheCharacters = allEnemies;
+
+        GameObject theEnemyRealPrefab = Instantiate(theCharacterEnemyToShow.prefabCharInBattle);
+        // Debug.Log("El preagab : " + theCharacterEnemyToShow.prefabCharInBattle);
+        theEnemyRealPrefab.transform.SetParent(theEnemyBody.transform);
+        theEnemyRealPrefab.transform.localPosition = new Vector3(0, -0.5f, 0);
+
+        float factorToScale = 3.2f;
+        theEnemyRealPrefab.transform.localScale = new Vector3(theEnemyRealPrefab.transform.localScale.x * factorToScale, theEnemyRealPrefab.transform.localScale.y * factorToScale, theEnemyRealPrefab.transform.localScale.z * factorToScale);
+        Vector3 diferenceVector = new Vector3(this.transform.position.x, 0, this.transform.position.z) - new Vector3(theEnemyRealPrefab.transform.position.x, 0, theEnemyRealPrefab.transform.position.z);
+        theEnemyRealPrefab.transform.rotation = Quaternion.LookRotation(diferenceVector, Vector3.up);
+
+        // Disabled component from enemies prefab
+        theEnemyRealPrefab.GetComponent<BoxCollider>().enabled = false;
 
     }
     public void CheckMapAndSetValuesInArray()
@@ -312,11 +285,6 @@ public class PointInteractive : MonoBehaviour
             directionSelectedToCreate = _sideAvaibles[Random.Range(0, _sideAvaibles.Count)];
             _sideAvaibles.Remove(directionSelectedToCreate);
             // Debug.Log("I create treasure in this direction : " + directionSelectedToCreate);
-
-        }
-        else
-        {
-            directionSelectedToCreate = directionSelectedToCreate;
 
         }
         enemyObject.transform.localPosition = PositionAroundThisPoint(directionSelectedToCreate);
@@ -414,24 +382,24 @@ public class PointInteractive : MonoBehaviour
     {
         // Directions Movements Avaible Path
         CheckBrigdeAllDirections();
-        Debug.Log(" ///////// before check elementos blquesd //////");
-        foreach (DirectionMove.OptionMovements dir in _directionAvaibleMovement)
-        {
-            Debug.Log("Direction : " + dir);
+        // Debug.Log(" ///////// before check elementos blquesd //////");
+        // foreach (DirectionMove.OptionMovements dir in _directionAvaibleMovement)
+        // {
+        //     Debug.Log("Direction : " + dir);
 
-        }
-        Debug.Log(" ///////// before end //////");
+        // }
+        // Debug.Log(" ///////// before end //////");
         // Directiones Movement block way, just treasures 
         CheckIfElementsBlockedTheWay();
-        Debug.Log("I going to recheck brigde");
+        // Debug.Log("I going to recheck brigde");
 
-        Debug.Log(" ///////// After //////");
-        foreach (DirectionMove.OptionMovements dir in _directionAvaibleMovement)
-        {
-            Debug.Log("Direction : " + dir);
+        // Debug.Log(" ///////// After //////");
+        // foreach (DirectionMove.OptionMovements dir in _directionAvaibleMovement)
+        // {
+        //     Debug.Log("Direction : " + dir);
 
-        }
-        Debug.Log(" ///////// After end //////");
+        // }
+        // Debug.Log(" ///////// After end //////");
 
     }
 
@@ -456,9 +424,42 @@ public class PointInteractive : MonoBehaviour
                     {
                         CreateTreasureAround();
                     }
+                    else
+                    {
+                        break;
+                    }
                 }
             }
         }
 
     }
+
+    public void CreateEnemieInMap()
+    {
+        if (_directionAvaibleMovement.Count != 0)
+        {
+            int createEnemy = Random.Range(1, 101);
+
+            // 10%
+            if (createEnemy <= 70)
+            {
+                int quantityEnemiesAroundThisPoint = RandomHelper.GetRandomValueByProbabilityAndValues(theListProbEnemies);
+                // Not working whith 2 or more enemies in same point
+                // int quantityEnemiesAroundThisPoint = 1;
+                for (int i = 0; i < quantityEnemiesAroundThisPoint; i++)
+                {
+                    if (_sideAvaibles.Count > 0)
+                    {
+                        CreateEnemyAround();
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+
+    }
+
 }

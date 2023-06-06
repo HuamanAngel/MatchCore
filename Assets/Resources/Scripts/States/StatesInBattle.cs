@@ -65,15 +65,15 @@ public class StatesInBattle
         _totalElementsInMap = 0;
     }
 
-    public bool EndCreatedEnemiesAndTreasures()
-    {
-        if (_counterQuantityElements == _totalElementsInMap)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
+    // public bool EndCreatedEnemiesAndTreasures()
+    // {
+    //     if (_counterQuantityElements == _totalElementsInMap)
+    //     {
+    //         return true;
+    //     }
+    //     else
+    //     {
+    //         return false;
+    //     }
+    // }
 }

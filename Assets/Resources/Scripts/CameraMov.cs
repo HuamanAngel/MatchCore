@@ -37,7 +37,24 @@ public class CameraMov : MonoBehaviour
             {
                 var translation = GetInputTranslationDirectionA() * Time.deltaTime;
                 translation *= 10.0f;
-                this.transform.position += translation;
+
+                // Check if i can movement
+                bool iCanMov = true;
+
+                RaycastHit objectHit;
+                Debug.DrawRay(transform.position, translation, Color.green, 30, false);
+                if (Physics.Raycast(transform.position, translation, out objectHit, 10.0f))
+                {
+                    iCanMov = false;
+
+                    // if (objectHit.collider.transform.gameObject.tag == "Point")
+                    // {
+                    // }
+                }
+                if (iCanMov)
+                {
+                    this.transform.position += translation;
+                }
             }
             else
             {
@@ -62,11 +79,11 @@ public class CameraMov : MonoBehaviour
         {
             // if (this.transform.position.z >= 44)
             // {
-                // direction = new Vector3(0, 0, 0);
+            // direction = new Vector3(0, 0, 0);
             // }
             // else
             // {
-                direction += Vector3.forward;
+            direction += Vector3.forward;
             // }
         }
         if (Input.GetKey(KeyCode.S))
@@ -77,7 +94,7 @@ public class CameraMov : MonoBehaviour
             // }
             // else
             // {
-                direction += Vector3.back;
+            direction += Vector3.back;
             // }
 
         }
@@ -89,7 +106,7 @@ public class CameraMov : MonoBehaviour
             // }
             // else
             // {
-                direction += Vector3.left;
+            direction += Vector3.left;
             // }
 
         }
@@ -101,7 +118,7 @@ public class CameraMov : MonoBehaviour
             // }
             // else
             // {
-                direction += Vector3.right;
+            direction += Vector3.right;
             // }
         }
         return direction;
@@ -130,4 +147,12 @@ public class CameraMov : MonoBehaviour
         return direction;
     }
 
+    private void OnCollisionEnter(Collision other)
+    {
+
+    }
+    private void OnCollisionExit(Collision other)
+    {
+
+    }
 }

@@ -75,6 +75,7 @@ public class HeroInMovement : MonoBehaviour
         if (UserController.GetInstance().StateInBattle.IsDeadCharacter)
         {
             _avaibleNextMovement = true;
+            // Check if exist another enemy in this point
         }
         else
         {
@@ -102,8 +103,8 @@ public class HeroInMovement : MonoBehaviour
                 directionRayCast[0] = Vector3.left * 3;
                 break;
         }
-
-        yield return new WaitUntil(() => UserController.GetInstance().StateInBattle.EndCreatedEnemiesAndTreasures());
+        // yield return new WaitUntil(() => UserController.GetInstance().StateInBattle.EndCreatedEnemiesAndTreasures());
+        yield return null;
 
         if (CheckIfEnemieExistInDirection(directionRayCast, out goEnemiesCollision))
         {
@@ -116,6 +117,7 @@ public class HeroInMovement : MonoBehaviour
         {
             // Debug.Log("La condicion es false : ");
         }
+
     }
     IEnumerator WaitForFinishAnimationDeadEnemy(bool isEnemyFinal)
     {
@@ -142,8 +144,9 @@ public class HeroInMovement : MonoBehaviour
 
             yield return new WaitUntil(() => UserController.GetInstance().StateInBattle.InterrupteMovement == false);
             // Debug.Log("Ok, already finish the movmenet retake");
-            CreateArrowDirection();
-            // Debug.Log(" Ok, i was create arrow directions");
+
+
+            CheckIfCanInitBattle();
         }
     }
     // Update is called once per frame
@@ -304,7 +307,9 @@ public class HeroInMovement : MonoBehaviour
 
             List<Charac> allCharactersEnemiesCollision = new List<Charac>();
             allCharactersEnemiesCollision = goEnemiesCollision[0].GetComponent<EnemyInMovement>().TheCharacters;
+
             CreateIconAfterBattle(goEnemiesCollision[0].GetComponent<EnemyInMovement>().DirectionBelongToPoint);
+            UserController.GetInstance().StateInBattle.DirectionEnemyTakeIt = goEnemiesCollision[0].GetComponent<EnemyInMovement>().DirectionBelongToPoint;
             StartCoroutine(TransitionToBattle(allCharactersEnemiesCollision));
 
         }
