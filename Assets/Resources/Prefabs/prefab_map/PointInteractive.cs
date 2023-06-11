@@ -95,8 +95,8 @@ public class PointInteractive : MonoBehaviour
                 {
                     if (UserController.GetInstance().NumberPositionMap == belongToNumberPositionMap)
                     {
-                        CreateEnemieInMap();
-                        CreateTreasureInMap();
+                        // CreateEnemieInMap();
+                        // CreateTreasureInMap();
                     }
                 }
                 // Directiones Movement block way, just treasures 

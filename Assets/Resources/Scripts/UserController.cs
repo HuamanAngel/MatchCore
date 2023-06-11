@@ -40,7 +40,6 @@ public class UserController : MonoBehaviour
         }
 
         _startMap = false;
-        _numberPositionMap = 1;
         user = new User();
         userEnemy = new User();
         _stateInBattle = new StatesInBattle();

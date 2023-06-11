@@ -19,7 +19,8 @@ public class ElementsInteractuable
         CHEST_BASIC,
         CHEST_MEDIUM,
         CHEST_BIG,
-        KEY_NEXT_LEVEL
+        KEY_NEXT_LEVEL,
+        FOUNTAIN_BASIC
     }
     public enum OptionTale
     {
@@ -43,6 +44,9 @@ public class ElementsInteractuable
                 break;
             case ElementsInteractuable.OptionReward.KEY_NEXT_LEVEL:
                 textt = Resources.Load<Texture>("Images/RewardIcons/i_key_nextlevel");
+                break;
+            case ElementsInteractuable.OptionReward.FOUNTAIN_BASIC:
+                textt = Resources.Load<Texture>("Images/RewardIcons/i_fountain");
                 break;
             default:
                 textt = Resources.Load<Texture>("Images/RewardIcons/i_key_basic");

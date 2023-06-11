@@ -52,7 +52,15 @@ public class RewardInMovement : ElementInteractuableBase
         LogicGameInMovement.GetInstance().panelCard.SetActive(true);
         if (typeReward != ElementsInteractuable.OptionReward.CHEST_BASIC && typeReward != ElementsInteractuable.OptionReward.CHEST_MEDIUM && typeReward != ElementsInteractuable.OptionReward.CHEST_BIG)
         {
-            GameObject goR = CreateCardReward(ElementsInteractuable.GetTextureByElementInteractuable(typeReward), "1", new Vector3(0, 0, 0));
+            if(typeReward == ElementsInteractuable.OptionReward.FOUNTAIN_BASIC )
+            {
+                GameObject goR = CreateCardReward(ElementsInteractuable.GetTextureByElementInteractuable(typeReward), "1", new Vector3(0, 0, 0));
+                // Restore Life 20%
+                // 
+            }else
+            {
+                GameObject goR = CreateCardReward(ElementsInteractuable.GetTextureByElementInteractuable(typeReward), "1", new Vector3(0, 0, 0));
+            }
 
             // behaviar ass element only in the map
         }

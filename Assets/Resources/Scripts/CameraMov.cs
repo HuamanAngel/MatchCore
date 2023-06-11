@@ -42,7 +42,7 @@ public class CameraMov : MonoBehaviour
                 bool iCanMov = true;
 
                 RaycastHit objectHit;
-                Debug.DrawRay(transform.position, translation, Color.green, 30, false);
+                // Debug.DrawRay(transform.position, translation, Color.green, 30, false);
                 if (Physics.Raycast(transform.position, translation, out objectHit, 10.0f))
                 {
                     iCanMov = false;
