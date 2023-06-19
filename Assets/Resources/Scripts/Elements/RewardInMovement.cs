@@ -52,15 +52,81 @@ public class RewardInMovement : ElementInteractuableBase
         LogicGameInMovement.GetInstance().panelCard.SetActive(true);
         if (typeReward != ElementsInteractuable.OptionReward.CHEST_BASIC && typeReward != ElementsInteractuable.OptionReward.CHEST_MEDIUM && typeReward != ElementsInteractuable.OptionReward.CHEST_BIG)
         {
-            if(typeReward == ElementsInteractuable.OptionReward.FOUNTAIN_BASIC )
+            GameObject goR;
+            switch (typeReward)
             {
-                GameObject goR = CreateCardReward(ElementsInteractuable.GetTextureByElementInteractuable(typeReward), "1", new Vector3(0, 0, 0));
-                // Restore Life 20%
-                // 
-            }else
-            {
-                GameObject goR = CreateCardReward(ElementsInteractuable.GetTextureByElementInteractuable(typeReward), "1", new Vector3(0, 0, 0));
+                case ElementsInteractuable.OptionReward.FOUNTAIN_BASIC:
+                    goR = CreateCardReward(ElementsInteractuable.GetTextureByElementInteractuable(typeReward), "+ 50%", new Vector3(0, 0, 0));
+                    // Restore Life
+                    HeroInMovement.GetInstance().IncrementLife(isPercent: true, value: 50.0f);
+                    // Add Icon
+                    HeroInMovement.GetInstance().SetIconBuff(ElementBuff.BuffOption.BUFF_INCREMENT_LIFE);
+
+                    break;
+                case ElementsInteractuable.OptionReward.BASKET_BASIC:
+                    goR = CreateCardReward(ElementsInteractuable.GetTextureByElementInteractuable(typeReward), "+ 50%", new Vector3(0, 0, 0));
+                    // Restore Life
+                    HeroInMovement.GetInstance().IncrementLife(isPercent: true, value: 50.0f);
+                    // Add Icon
+                    HeroInMovement.GetInstance().SetIconBuff(ElementBuff.BuffOption.BUFF_INCREMENT_LIFE);
+
+                    break;
+                case ElementsInteractuable.OptionReward.CALDERON_BASIC:
+                    goR = CreateCardReward(ElementsInteractuable.GetTextureByElementInteractuable(typeReward), "+ 50%", new Vector3(0, 0, 0));
+                    // Restore Life
+                    HeroInMovement.GetInstance().IncrementLife(isPercent: true, value: 50.0f);
+                    // Add Icon
+                    HeroInMovement.GetInstance().SetIconBuff(ElementBuff.BuffOption.BUFF_INCREMENT_ARMOR);
+
+                    break;
+                case ElementsInteractuable.OptionReward.CALDERON_LONG:
+                    goR = CreateCardReward(ElementsInteractuable.GetTextureByElementInteractuable(typeReward), "+ 50%", new Vector3(0, 0, 0));
+                    // Restore Life
+                    HeroInMovement.GetInstance().IncrementLife(isPercent: true, value: 50.0f);
+                    // Add Icon
+                    HeroInMovement.GetInstance().SetIconBuff(ElementBuff.BuffOption.BUFF_INCREMENT_DAMAGE);
+
+                    break;
+                case ElementsInteractuable.OptionReward.CIRCUS_1:
+                    goR = CreateCardReward(ElementsInteractuable.GetTextureByElementInteractuable(typeReward), "+ 50%", new Vector3(0, 0, 0));
+                    // Restore Life
+                    HeroInMovement.GetInstance().IncrementLife(isPercent: true, value: 50.0f);
+                    // Add Icon
+                    HeroInMovement.GetInstance().SetIconBuff(ElementBuff.BuffOption.BUFF_INCREMENT_DAMAGE);
+
+                    break;
+
+
+                case ElementsInteractuable.OptionReward.SWORD_ROCK_1:
+                case ElementsInteractuable.OptionReward.SWORD_ROCK_2:
+                case ElementsInteractuable.OptionReward.SWORD_ROCK_3:
+                case ElementsInteractuable.OptionReward.SWORD_ROCK_4:
+                    goR = CreateCardReward(ElementsInteractuable.GetTextureByElementInteractuable(typeReward), "+ 50%", new Vector3(0, 0, 0));
+                    // Restore Life
+                    HeroInMovement.GetInstance().IncrementLife(isPercent: true, value: 50.0f);
+                    // Add Icon
+                    HeroInMovement.GetInstance().SetIconBuff(ElementBuff.BuffOption.BUFF_INCREMENT_DAMAGE);
+
+                    break;
+
+                default:
+                    goR = CreateCardReward(ElementsInteractuable.GetTextureByElementInteractuable(typeReward), "x1", new Vector3(0, 0, 0));
+                    break;
+
             }
+            // if (typeReward == ElementsInteractuable.OptionReward.FOUNTAIN_BASIC)
+            // {
+            //     GameObject goR = CreateCardReward(ElementsInteractuable.GetTextureByElementInteractuable(typeReward), "+ 50%", new Vector3(0, 0, 0));
+            //     // Restore Life
+            //     HeroInMovement.GetInstance().IncrementLife(isPercent: true, value: 50.0f);
+            //     // Add Icon
+            //     HeroInMovement.GetInstance().SetIconBuff(ElementBuff.BuffOption.BUFF_INCREMENT_LIFE);
+
+            // }
+            // else if ()
+            // {
+            //     GameObject goR = CreateCardReward(ElementsInteractuable.GetTextureByElementInteractuable(typeReward), "x1", new Vector3(0, 0, 0));
+            // }
 
             // behaviar ass element only in the map
         }
@@ -82,26 +148,26 @@ public class RewardInMovement : ElementInteractuableBase
             if (quantityAddKeyBasic != 0)
             {
                 allRewardShowInCanvas[ContentChest.ContentChestType.REWARD_KEY_BASIC] = quantityAddKeyBasic;
-                GameObject goR = CreateCardReward(theReward[ContentChest.ContentChestType.REWARD_KEY_BASIC].GetTextureFromIcon(), "" + quantityAddKeyBasic, GetAditionalPosition(quantityCard));
+                GameObject goR = CreateCardReward(theReward[ContentChest.ContentChestType.REWARD_KEY_BASIC].GetTextureFromIcon(), "x" + quantityAddKeyBasic, GetAditionalPosition(quantityCard));
                 quantityCard++;
             }
             if (quantityAddKeyMedium != 0)
             {
                 allRewardShowInCanvas[ContentChest.ContentChestType.REWARD_KEY_MEDIUM] = quantityAddKeyMedium;
-                GameObject goR = CreateCardReward(theReward[ContentChest.ContentChestType.REWARD_KEY_MEDIUM].GetTextureFromIcon(), "" + quantityAddKeyMedium, GetAditionalPosition(quantityCard));
+                GameObject goR = CreateCardReward(theReward[ContentChest.ContentChestType.REWARD_KEY_MEDIUM].GetTextureFromIcon(), "x" + quantityAddKeyMedium, GetAditionalPosition(quantityCard));
                 quantityCard++;
             }
             if (quantityAddKeyBig != 0)
             {
 
                 allRewardShowInCanvas[ContentChest.ContentChestType.REWARD_KEY_BIG] = quantityAddKeyBig;
-                GameObject goR = CreateCardReward(theReward[ContentChest.ContentChestType.REWARD_KEY_BIG].GetTextureFromIcon(), "" + quantityAddKeyBig, GetAditionalPosition(quantityCard));
+                GameObject goR = CreateCardReward(theReward[ContentChest.ContentChestType.REWARD_KEY_BIG].GetTextureFromIcon(), "x" + quantityAddKeyBig, GetAditionalPosition(quantityCard));
                 quantityCard++;
             }
             if (quantityAddMovements != 0)
             {
                 allRewardShowInCanvas[ContentChest.ContentChestType.REWARD_MOVEMENT] = quantityAddMovements;
-                GameObject goR = CreateCardReward(theReward[ContentChest.ContentChestType.REWARD_MOVEMENT].GetTextureFromIcon(), "" + quantityAddMovements, GetAditionalPosition(quantityCard));
+                GameObject goR = CreateCardReward(theReward[ContentChest.ContentChestType.REWARD_MOVEMENT].GetTextureFromIcon(), "x" + quantityAddMovements, GetAditionalPosition(quantityCard));
                 quantityCard++;
             }
             HeroInMovement.GetInstance().ModifyValuesFromHero(addKeyBasic: quantityAddKeyBasic, addKeyMedium: quantityAddKeyMedium, addKeyBig: quantityAddKeyBig, addMovement: quantityAddMovements);
@@ -133,22 +199,22 @@ public class RewardInMovement : ElementInteractuableBase
         typeReward = ElementsInteractuable.OptionReward.NOTHING;
         // Aditional action
         this.gameObject.SetActive(false);
-        Debug.Log("/////Remove init");
-        foreach(var a in _goParent.GetComponent<PointInteractive>().TreasuresAround)
+        // Debug.Log("/////Remove init");
+        foreach (var a in _goParent.GetComponent<PointInteractive>().TreasuresAround)
         {
             Debug.Log(a.Key);
-        } 
-        Debug.Log("/////Remove init");
-        Debug.Log("Elemento to remove : " + _theDirection);
+        }
+        // Debug.Log("/////Remove init");
+        // Debug.Log("Elemento to remove : " + _theDirection);
 
         // _goParent.GetComponent<PointInteractive>().TreasuresAround = _goParent.GetComponent<PointInteractive>().TreasuresAround.Remove(_theDirection);
         _goParent.GetComponent<PointInteractive>().RemoveTreasureByKey(_theDirection);
-        Debug.Log("/////Remove end");
-        foreach(var a in _goParent.GetComponent<PointInteractive>().TreasuresAround)
+        // Debug.Log("/////Remove end");
+        foreach (var a in _goParent.GetComponent<PointInteractive>().TreasuresAround)
         {
             Debug.Log(a.Key);
-        } 
-        Debug.Log("/////Remove end");
+        }
+        // Debug.Log("/////Remove end");
         HeroInMovement.GetInstance().TryCreationArrowDirection();
         Destroy(this.gameObject);
     }
@@ -166,7 +232,7 @@ public class RewardInMovement : ElementInteractuableBase
 
 
         goImageReward.GetComponent<RawImage>().texture = theTexture;
-        goQuantityReward.GetComponent<TMP_Text>().text = "x" + quantityText;
+        goQuantityReward.GetComponent<TMP_Text>().text = "" + quantityText;
         return goInstanceCard;
     }
     public Vector3 GetAditionalPosition(int numCard)

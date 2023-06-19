@@ -7,5 +7,7 @@ AnimatorOverrideController:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: FountainReward
-  m_Controller: {fileID: 0}
-  m_Clips: []
+  m_Controller: {fileID: 9100000, guid: 24d20d9a04ab96a4381088bdd6852a45, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: 7400000, guid: dfed3e2544376fa4f8c2d252309ea880, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: c33a8fcd646c4a941ab4c14389c20d99, type: 2}

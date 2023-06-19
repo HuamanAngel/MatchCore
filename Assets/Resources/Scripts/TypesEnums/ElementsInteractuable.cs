@@ -20,7 +20,15 @@ public class ElementsInteractuable
         CHEST_MEDIUM,
         CHEST_BIG,
         KEY_NEXT_LEVEL,
-        FOUNTAIN_BASIC
+        FOUNTAIN_BASIC,
+        BASKET_BASIC,
+        CALDERON_BASIC,
+        CALDERON_LONG,
+        SWORD_ROCK_1,
+        SWORD_ROCK_2,
+        SWORD_ROCK_3,
+        SWORD_ROCK_4,
+        CIRCUS_1,
     }
     public enum OptionTale
     {
@@ -48,6 +56,27 @@ public class ElementsInteractuable
             case ElementsInteractuable.OptionReward.FOUNTAIN_BASIC:
                 textt = Resources.Load<Texture>("Images/RewardIcons/i_fountain");
                 break;
+            case ElementsInteractuable.OptionReward.BASKET_BASIC:
+                textt = Resources.Load<Texture>("Images/RewardIcons/i_fountain");
+                break;
+            case ElementsInteractuable.OptionReward.CALDERON_BASIC:
+                textt = Resources.Load<Texture>("Images/RewardIcons/i_armor");
+                break;                
+            case ElementsInteractuable.OptionReward.CALDERON_LONG:
+                textt = Resources.Load<Texture>("Images/RewardIcons/i_damage");
+                break;                                
+            case ElementsInteractuable.OptionReward.CIRCUS_1:
+                // Add experiencia all heroes in combat 
+                textt = Resources.Load<Texture>("Images/RewardIcons/i_damage");
+                break;                                
+
+            case ElementsInteractuable.OptionReward.SWORD_ROCK_1:
+            case ElementsInteractuable.OptionReward.SWORD_ROCK_2:
+            case ElementsInteractuable.OptionReward.SWORD_ROCK_3:
+            case ElementsInteractuable.OptionReward.SWORD_ROCK_4:
+                textt = Resources.Load<Texture>("Images/RewardIcons/i_damage");
+                break;                                
+
             default:
                 textt = Resources.Load<Texture>("Images/RewardIcons/i_key_basic");
                 break;

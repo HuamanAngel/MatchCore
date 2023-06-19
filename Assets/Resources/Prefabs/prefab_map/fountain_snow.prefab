@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 7949751951711453445}
   - component: {fileID: 1148339365}
   - component: {fileID: 1148339368}
+  - component: {fileID: 1148339369}
   m_Layer: 0
   m_Name: fountain_snow
   m_TagString: Untagged
@@ -118,6 +119,26 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 3.6702688, y: 3.6702683, z: 2.882608}
   m_Center: {x: -0.00000017881392, y: -0.000000331324, z: 1.4413038}
+--- !u!95 &1148339369
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7949751951709200325}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 22100000, guid: f77aa0985caac9549a0b4dd73eca0b4c, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1001 &722900986
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -237,7 +258,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: c9c3797c5d4107747a25bfa19fd7ae39, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.081916936
+      value: 0.08191694
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: c9c3797c5d4107747a25bfa19fd7ae39, type: 3}
       propertyPath: m_LocalPosition.x
@@ -327,7 +348,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: c9c3797c5d4107747a25bfa19fd7ae39, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.19661795
+      value: 0.1966179
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: c9c3797c5d4107747a25bfa19fd7ae39, type: 3}
       propertyPath: m_LocalPosition.x

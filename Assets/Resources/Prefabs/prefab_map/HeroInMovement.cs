@@ -35,6 +35,7 @@ public class HeroInMovement : MonoBehaviour
     public TMP_Text tmpKeyMedium;
     public TMP_Text tmpKeyBig;
     public TMP_Text tmpKeyNextLvl;
+    public List<GameObject> panelHero;
     public int QuantityKeyBasic { get => _quantityKeyBasic; set => _quantityKeyBasic = value; }
     public int QuantityKeyMedium { get => _quantityKeyMedium; set => _quantityKeyMedium = value; }
     public int QuantityKeyBig { get => _quantityKeyBig; set => _quantityKeyBig = value; }
@@ -53,6 +54,9 @@ public class HeroInMovement : MonoBehaviour
 
     void Start()
     {
+        // Set character in canvas
+        SetCharacterInCanvas();
+
         // Set quantity movement
         if (UserController.GetInstance().StateInBattle.QuantityMovementAvaible != 0)
         {
@@ -176,6 +180,8 @@ public class HeroInMovement : MonoBehaviour
         GameObject goPoint = GetPointInteractiveOverHere();
         if (goPoint != null)
         {
+            // Consume turn of buff
+            ConsumeTimeBuff();
 
             // Check if is final point
             if (goPoint.GetComponent<PointInteractive>().isFinalPoint)
@@ -618,6 +624,144 @@ public class HeroInMovement : MonoBehaviour
         else
         {
             return null;
+        }
+    }
+
+    public void SetCharacterInCanvas()
+    {
+        int iter = 0;
+        List<Charac> charInCombatUser = UserController.GetInstance().user.CharInCombat;
+        foreach (var goHero in panelHero)
+        {
+            GameObject toIcon = UtilitiesClass.FindChildByName(goHero, "ImageIcon");
+            GameObject toNumberLife = UtilitiesClass.FindChildByName(goHero, "NumberLife");
+            GameObject toSkill = UtilitiesClass.FindChildByName(goHero, "Abilities");
+
+            if (charInCombatUser.Count > iter)
+            {
+                toIcon.GetComponent<RawImage>().texture = charInCombatUser[iter].iconChar;
+                toNumberLife.GetComponent<TMP_Text>().text = "" + charInCombatUser[iter].lifeTotal;
+                foreach (Transform transformObject in toSkill.transform)
+                {
+                    GameObject theSkillContainer = transformObject.gameObject;
+                    theSkillContainer.SetActive(false);
+                }
+            }
+            else
+            {
+                goHero.SetActive(false);
+            }
+            iter++;
+        }
+    }
+
+    public void IncrementLife(bool isPercent, float value)
+    {
+        int iter = 0;
+        foreach (var goHero in panelHero)
+        {
+            // GameObject toIcon = UtilitiesClass.FindChildByName(goHero, "ImageIcon");
+            GameObject toNumberLife = UtilitiesClass.FindChildByName(goHero, "NumberLife");
+            // GameObject toSkill = UtilitiesClass.FindChildByName(goHero, "Abilities");
+
+
+            if (UserController.GetInstance().user.CharInCombat.Count > iter)
+            {
+                if (isPercent)
+                {
+                    UserController.GetInstance().user.CharInCombat[iter].lifeTotal = UserController.GetInstance().user.CharInCombat[iter].lifeTotal + (int)(UserController.GetInstance().user.CharInCombat[iter].lifeTotal * value / 100);
+                }
+                else
+                {
+                    UserController.GetInstance().user.CharInCombat[iter].lifeTotal = UserController.GetInstance().user.CharInCombat[iter].lifeTotal + (int)value;
+                }
+                // toIcon.GetComponent<RawImage>().texture = charInCombatUser[iter].iconChar;
+                toNumberLife.GetComponent<TMP_Text>().text = "" + UserController.GetInstance().user.CharInCombat[iter].lifeTotal;
+            }
+            iter++;
+        }
+
+    }
+
+    public void SetIconBuff(ElementBuff.BuffOption theBuff)
+    {
+        int iter = 0;
+        int iterBuff = 0;
+        foreach (var goHero in panelHero)
+        {
+            // GameObject toNumberLife = UtilitiesClass.FindChildByName(goHero, "NumberLife");
+            GameObject toSkill = UtilitiesClass.FindChildByName(goHero, "Abilities");
+
+            if (UserController.GetInstance().user.CharInCombat.Count > iter)
+            {
+                foreach (Transform transformObject in toSkill.transform)
+                {
+                    // Exist buff avaible
+                    if (!UserController.GetInstance().user.BuffCurrent[iter][iterBuff].isAvaible || UserController.GetInstance().user.BuffCurrent[iter][iterBuff].quantityTurn > 0)
+                    {
+                        iterBuff++;
+                        continue;
+                    }
+                    else
+                    {
+                        // Dont exist buff avaible in this side
+
+                        GameObject theSkillContainer = transformObject.gameObject;
+                        theSkillContainer.SetActive(true);
+                        GameObject iconBuff = UtilitiesClass.FindChildByName(theSkillContainer, "IconBuff");
+                        iconBuff.GetComponent<RawImage>().texture = ElementBuff.GetTextureByElementBuff(theBuff);
+
+                        // Save state
+                        List<BuffStruct> listBuffStruct = new List<BuffStruct>();
+                        BuffStruct theBuffStruct = new BuffStruct();
+
+                        listBuffStruct = UserController.GetInstance().user.BuffCurrent[iter];
+                        theBuffStruct.quantityTurn = 10;
+                        theBuffStruct.theBuff = theBuff;
+                        theBuffStruct.isAvaible = false;
+                        listBuffStruct[iterBuff] = theBuffStruct;
+
+                        UserController.GetInstance().user.BuffCurrent[iter] = listBuffStruct;
+                        iterBuff++;
+                        break;
+
+                    }
+
+                }
+            }
+            iterBuff = 0;
+            iter++;
+        }
+
+    }
+    public void ConsumeTimeBuff()
+    {
+        int iter = 0;
+        int iterBuff = 0;
+        foreach (List<BuffStruct> listItemBuff in UserController.GetInstance().user.BuffCurrent)
+        {
+            foreach (BuffStruct itemBuff in listItemBuff)
+            {
+                if (!itemBuff.isAvaible)
+                {
+                    if ((itemBuff.quantityTurn - 1) > 0)
+                    {
+                        itemBuff.quantityTurn -= 1;
+                    }
+                    else
+                    {
+                        // Remove the buff
+                        itemBuff.isAvaible = true;
+                        GameObject toSkill = UtilitiesClass.FindChildByName(panelHero[iter], "Abilities");
+                        Transform theBuffToRemove = toSkill.transform.GetChild(iterBuff);
+                        theBuffToRemove.gameObject.SetActive(false);
+                    }
+                }
+
+                iterBuff++;
+            }
+            iterBuff = 0;
+            iter++;
         }
     }
 }
